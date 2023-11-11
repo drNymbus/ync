@@ -1,3 +1,3 @@
-.dockerignore
-package-lock.json
-node_modules/*
+ync-node-app/.dockerignore
+ync-node-app/package-lock.json
+ync-node-app/node_modules/*
