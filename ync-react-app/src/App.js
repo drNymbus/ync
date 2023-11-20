@@ -1,25 +1,30 @@
-import logo from './logo.svg';
+import { React } from 'react';
+// import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function Logo () {
+    return (
+        <video width='480' height='300' loop autoPlay muted>
+            <source src='./logo_yng_animated.mp4' type='video/mp4'/>
+        </video>
+    );
 }
 
-export default App;
+function Connect() {
+    let connect = () => {
+        window.location.href = 'http://localhost:3001/auth/discord';
+    };
+
+    return (<button onClick={connect}>Connect</button>);
+}
+
+export default function App () {
+
+    return (
+        <div className="App">
+            <Logo/>
+            <br/>
+            <Connect/>
+        </div>
+    );
+};
