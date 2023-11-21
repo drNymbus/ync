@@ -1,0 +1,19 @@
+,{
+  "id": "203171061049589761",
+  "username": "dr_nymbus",
+  "avatar": "024562260d1c49e9fdb2a8b6e2388a17",
+  "discriminator": "0",
+  "public_flags": 0,
+  "premium_type": 0,
+  "flags": 0,
+  "banner": null,
+  "accent_color": null,
+  "global_name": "Nymbus.yng",
+  "avatar_decoration_data": null,
+  "banner_color": null,
+  "mfa_enabled": false,
+  "locale": "fr",
+  "provider": "discord",
+  "accessToken": "7oBviejSOYUX6qbL93OdWWPTu7Apvw",
+  "fetchedAt": "2023-11-20T21:17:45.687Z"
+}
