@@ -8,13 +8,13 @@ const port = process.env.PORT || 3001;
 // Connect to CassandraDB
 
 // Routes
-app.get('/create', (req, res) => {
+app.get('/basket/create', (req, res) => {
 
 });
-app.get('/insert', (req, res) => {
+app.get('/basket/insert', (req, res) => {
 
 });
-app.get('/remove', (req, res) => {
+app.get('/basket/remove', (req, res) => {
 
 });
 
