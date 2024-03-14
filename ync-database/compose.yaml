@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  main_cluster:
+    image: cassandra:latest
+    container_name: cassandra_cluster
+    environment:
+      - CASSANDRA_CLUSTER_NAME=ync_cluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    networks:
+      - ync
+
+  interface:
+    image: ync-database:latest
+    container_name: database_init
+    depends_on:
+      - main_cluster
+    networks:
+      - ync
+
+networks:
+  ync:
+    driver: bridge
