@@ -3,16 +3,19 @@ version: '3.7'
 services:
   main_cluster:
     image: cassandra:latest
-    container_name: cassandra_cluster
+    container_name: cassandra-cluster
     environment:
-      - CASSANDRA_CLUSTER_NAME=ync_cluster
+      - CASSANDRA_CLUSTER_NAME=ync-cluster
+      - CASSANDRA_DC=spade
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    ports:
+      - "9042:9042"
     networks:
       - ync
 
-  interface:
+  initializer:
     image: ync-database:latest
-    container_name: database_init
+    container_name: database-init
     depends_on:
       - main_cluster
     networks:
