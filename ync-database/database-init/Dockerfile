@@ -1,5 +1,7 @@
 FROM cassandra:latest
 
+ENV CLUSTER_NAME="cassandra-cluster"
+
 # Copy the schema CQL file into the container
 COPY init-db.cql /init-db.cql
 
@@ -8,4 +10,4 @@ COPY init-cluster.sh /init-cluster.sh
 RUN chmod +x /init-cluster.sh
 
 # Run the initialization script
-CMD ["/init-cluster.sh"]
+ENTRYPOINT ["/init-cluster.sh"]

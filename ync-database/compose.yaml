@@ -16,6 +16,8 @@ services:
   initializer:
     image: ync-database:latest
     container_name: database-init
+    environment:
+      - CLUSTER_NAME=cassandra-cluster
     depends_on:
       - main_cluster
     networks:
