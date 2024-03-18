@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 
 // Set up express app
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 // Connect to CassandraDB
 const client = new cassandra.Client({
@@ -16,12 +16,17 @@ const client = new cassandra.Client({
 
 app.use(cookieParser()); // Hand over the secret string for signed cookies
 
+let visits = {'/home':0, '/insert':0, '/delete':0};
+
 // Routes
 app.get('/', (req, res) => {
-    console.log('Hi from /' + req.cookies);
-    client.execute('SELECT * FROM store.basket;')
-        .then(result => console.log(result));
-      // Get cookie in req
+    visits['/home'] += 1;
+    console.log(visits);
+
+    // client.execute('SELECT * FROM store.basket;')
+    //     .then(result => console.log(result));
+
+    // Get cookie in req
     // If cookie in DB
         // Return all basket data
     // If no cookie in DB
@@ -29,16 +34,22 @@ app.get('/', (req, res) => {
 });
 
 app.post('/basket/insert', (req, res) => {
-    console.log('Hi from /basket/insert' + req.cookies);
-    client.execute('SELECT * FROM store.basket;')
-        .then(result => console.log(result));
+    visits['/insert'] += 1;
+    console.log(visits);
+
+    // client.execute('SELECT * FROM store.basket;')
+    //     .then(result => console.log(result));
+
     // Get cookie in req
 });
 
 app.delete('/basket/remove', (req, res) => {
-    console.log('Hi from /basket/remove' + req.cookies);
-    client.execute('SELECT * FROM store.basket;')
-        .then(result => console.log(result));
+    visits['/delete'] += 1;
+    console.log(visits);
+
+    // client.execute('SELECT * FROM store.basket;')
+    //     .then(result => console.log(result));
+
     // Get cookie in req
     // SELECT * FROM store.basket WHERE 
 });
