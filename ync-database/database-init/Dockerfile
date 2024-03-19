@@ -1,11 +1,13 @@
 FROM cassandra:latest
 
-# Copy the schema CQL into the image
-COPY init_db.cql /scripts/init_db.cql
+ENV CLUSTER_NAME="cassandra-cluster"
 
-# # Change entrypoint to execute CQL after launching cluster
-COPY init_cluster.sh /scripts/init_cluster.sh
-RUN chmod +x /scripts/init_cluster.sh
+# Copy the schema CQL file into the container
+COPY init-db.cql /init-db.cql
 
-# CMD ["cqlsh", "-f", "/init-db.cql"]
-ENTRYPOINT ["/scripts/init_cluster.sh"]
+# Copy & run the initialization script into the container
+COPY init-cluster.sh /init-cluster.sh
+RUN chmod +x /init-cluster.sh
+
+# Run the initialization script
+ENTRYPOINT ["/init-cluster.sh"]
