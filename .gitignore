@@ -1,4 +1,5 @@
 little-secrets-shall-be-kept.json
+docker_secret.json
 
 ync-node-app/.dockerignore
 ync-node-app/package-lock.json

@@ -7,10 +7,14 @@ COPY package*.json ./
 RUN npm install
 
 ENV CASSANDRA_CONTACT_POINTS='127.0.0.1'
+ENV PORT=3000
 
 # If you are building your code for production
 # RUN npm ci --omit=dev
 
 COPY . .
-EXPOSE 3000
-CMD ["node", "index.js"]
+
+EXPOSE 3000/tcp
+EXPOSE 3000/udp
+
+ENTRYPOINT ["node", "index.js"]

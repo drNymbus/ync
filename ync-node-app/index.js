@@ -3,6 +3,8 @@ const fs = require('fs');
 const cassandra = require('cassandra-driver');
 const cookieParser = require('cookie-parser');
 
+const utils = require('./js/utils.js');
+
 // Set up express app
 const app = express();
 const port = process.env.PORT || 3000;
@@ -10,49 +12,54 @@ const port = process.env.PORT || 3000;
 // Connect to CassandraDB
 const client = new cassandra.Client({
     contactPoints: [process.env.CASSANDRA_CONTACT_POINTS || '127.0.0.1'],
-    localDataCenter: 'spade',
+    localDataCenter: 'datacenter1',
     keyspace: 'store'
 });
 
+const cookie = 'toto';
+
 app.use(cookieParser()); // Hand over the secret string for signed cookies
 
-let visits = {'/home':0, '/insert':0, '/delete':0};
-
 // Routes
-app.get('/', (req, res) => {
-    visits['/home'] += 1;
-    console.log(visits);
+app.route('/store')
+    .get((req, res) => {
+        // Get cookie in req
+        //req.cookies;
 
-    // client.execute('SELECT * FROM store.basket;')
-    //     .then(result => console.log(result));
+        client.execute(utils.session.select, [cookie]).then(async (result) => {
+            if (result.rowLength === 0) {
+                await client.execute(utils.session.insert, [cookie, false, Date.now()]); // create session
+                await client.execute(utils.basket.insert, [cookie]); // create basket
 
-    // Get cookie in req
-    // If cookie in DB
-        // Return all basket data
-    // If no cookie in DB
-        // Create new basket in DB with associated cookie
-});
+                client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
+                    res.json(result.rows[0]); // send basket
+                });
+            } else {
+                await client.execute(utils.session.update, [Date.now(), cookie]); // update session
+                client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
+                    res.json(result.rows[0]); // send basket
+                });
+            }
+        });
+    })
+    .post(async (req, res) => {
+        // Get cookie in req
 
-app.post('/basket/insert', (req, res) => {
-    visits['/insert'] += 1;
-    console.log(visits);
+        await client.execute(utils.basket.add_item, ['item', cookie]); // update basket with new item
+        await client.execute(utils.session.update, [Date.now(), cookie]); // update session
+        client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
+            res.json(result.rows[0]); // send basket
+        });
+    })
+    .delete(async (req, res) => {
+        // Get cookie in req
 
-    // client.execute('SELECT * FROM store.basket;')
-    //     .then(result => console.log(result));
-
-    // Get cookie in req
-});
-
-app.delete('/basket/remove', (req, res) => {
-    visits['/delete'] += 1;
-    console.log(visits);
-
-    // client.execute('SELECT * FROM store.basket;')
-    //     .then(result => console.log(result));
-
-    // Get cookie in req
-    // SELECT * FROM store.basket WHERE 
-});
+        await client.execute(utils.basket.remove_item, ['item', cookie]); // update basket with item removed
+        await client.execute(utils.session.update, [Date.now(), cookie]); // update session
+        client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
+            res.json(result.rows[0]); // send basket
+        });
+    });
 
 // Start the server
 app.listen(port, () => {
