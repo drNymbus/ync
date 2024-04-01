@@ -1,0 +1,113 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 100vh; /* La vidéo prendra la totalité de la hauteur de l'écran */
+  overflow: hidden;
+}
+
+.video-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* La vidéo sera ajustée pour remplir la div */
+}
+
+body {
+  font-size: 16px; /* Taille de la police de base */
+}
+
+.custom-bandeau {
+  width: 118.1em; /* Converti depuis 1890px */
+  height: 2.5em; /* Converti depuis 40px */
+  font-family: "Necto Mono", monospace;
+}
+
+.sub-menu {
+  width: 5.9em; /* Converti depuis 94px */
+  height: 1.2em; /* Converti depuis 19px */
+  margin: 0;
+  font-size: 1em; /* Converti depuis 16px */
+  line-height: 1.2em; /* Converti depuis 19px */
+}
+
+.sub-menu:hover:first-child {
+  text-decoration: underline; /* Soulignement noir pour YYY au survol */
+}
+
+.custom-section-container {
+  width: 35.9em; /* Converti depuis 574px */
+  height: 6.2em; /* Converti depuis 100px */
+}
+
+.custom-section-image {
+  width: 6.25em; /* Converti depuis 100px */
+  height: 6.25em; /* Converti depuis 100px */
+  text-align: center;
+  float: left;
+}
+
+.custom-section-title {
+  width: 28.1em; /* Converti depuis 449px */
+  height: 3.25em; /* Converti depuis 52px */
+  text-align: left;
+  float: left;
+}
+
+.custom-section-title p {
+  font-size: 2.5em; /* Converti depuis 40px */
+  color: black;
+  margin-top: 0.9375em; /* Converti depuis 15px */
+  margin-left: 1.5625em; /* Converti depuis 25px */
+}
+
+.custom-content-container {
+  width: 43.5em; /* Converti depuis 828px */
+  height: 27.9em; /* Converti depuis 526px */
+  margin-left: 39.6em; /* Converti depuis 762px */
+  margin-top: 11.1em; /* Converti depuis 151px */
+  position: relative;
+}
+
+.custom-content-image {
+  width: 21.8em; /* Converti depuis 328px */
+  height: 29.1em; /* Converti depuis 437px */
+  margin: 0 1.6em 1.6em 0; /* Converti depuis 34px */
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.custom-content-description {
+  width: 30.1em; /* Converti depuis 481px */
+  height: 9.1em; /* Converti depuis 145px */
+  font-family: "Necto Mono", monospace;
+  letter-spacing: 0.125em; /* Converti depuis 2px */
+  color: black;
+  margin-top: 1.25em; /* Ajuster la marge en fonction de vos besoins */
+}
+
+.custom-content-prix {
+  width: 10.4em; /* Converti depuis 200px */
+  height: 3.1em; /* Converti depuis 50px */
+  margin-left: 4.3em; /* Converti depuis 83px */
+  margin-bottom: 0;
+  position: absolute;
+  bottom: 0;
+}
+
+.custom-content-prix p {
+  text-align: center;
+}
+
+.custom-content-container img {
+  width: 100%;
+  height: 100%;
+  border: 0.0625em solid #bc2efe; /* Converti depuis 1px */
+}
