@@ -8,9 +8,9 @@ const generate_cookie = () => {
 };
 exports.generate_cookie = generate_cookie;
 
-/* @desc: Verify if a cookie is valid, and return the response status code
+/* @desc: Verify if a cookie is valid, and return the response status code.
  * @param {Object} cookie: The cookie object to be asserted.
- * @return {Integer}: The response status code
+ * @return {Integer}: The response status code.
  */
 const assert_cookie = (cookie) => {
     if (cookie === undefined) return false;
@@ -18,9 +18,11 @@ const assert_cookie = (cookie) => {
 }
 exports.assert_cookie = assert_cookie;
 
-/* @desc: Verify if a cookie is valid, and return the response status code
- * @param {Object} cookie: The cookie object to be asserted.
- * @return {Integer}: The response status code
+/* @desc: Send a bad request error message to the client with the appropriate status code.
+ * @param {Object} response: The response object handled by express.
+ * @param {Integer} status: The status to be sent to the client.
+ * @param {Object} error: The error object to be sent to the client.
+ * @return {undefined}: Nothing is returned.
  */
 const failed_request = (response, status, error) => { return response.status(status).json(error); }
 exports.failed_request = failed_request;

@@ -33,7 +33,10 @@ app.route('/store')
                 await client.execute(utils.session.insert, [cookie, false, Date.now()]); // create session
                 await client.execute(utils.basket.insert, [cookie]); // create basket
                 client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
-                    res.cookie('ync-shop', cookie, {path: '/store', signed: true});
+                    const expiry_date = new Date(Date.now());
+                    expiry_date.setDate(expiry_date.getDate() + 3);
+
+                    res.cookie('ync-shop', cookie, {path: '/store', expires: expiry_date.toString(), signed: true});
                     res.status(200).json(result.rows[0]); // send basket
                 });
             } else {
