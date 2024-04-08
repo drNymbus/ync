@@ -23,7 +23,7 @@ app.use(cookieParser(secrets.cookie)); // Hand over the secret string for signed
 app.route('/store')
     .get((req, res) => {
         let cookie = req.signedCookies.ync_shop;
-        // let status = utils.assert_cookie(cookie);
+        // if (!utils.assert_cookie(cookie)) utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
         client.execute(utils.session.select, [(cookie ? cookie : 'none')]).then(async (result) => {
             if (result.rowLength === 0) {
@@ -33,13 +33,13 @@ app.route('/store')
                 await client.execute(utils.session.insert, [cookie, false, Date.now()]); // create session
                 await client.execute(utils.basket.insert, [cookie]); // create basket
                 client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
-                    res.cookie('ync-shop', utils.generate_cookie(), {path: '/store', signed: true});
-                    res.json(result.rows[0]); // send basket
+                    res.cookie('ync-shop', cookie, {path: '/store', signed: true});
+                    res.status(200).json(result.rows[0]); // send basket
                 });
             } else {
                 await client.execute(utils.session.update, [Date.now(), cookie]); // update session
                 client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
-                    res.json(result.rows[0]); // send basket
+                    res.status(200).json(result.rows[0]); // send basket
                 });
             }
         });
@@ -47,21 +47,23 @@ app.route('/store')
     .post(async (req, res) => {
         // Get cookie in req
         const cookie = req.signedCookies.ync_shop;
+        if (!utils.assert_cookie(cookie)) utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
         await client.execute(utils.basket.add_item, ['item', cookie]); // update basket with new item
         await client.execute(utils.session.update, [Date.now(), cookie]); // update session
         client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
-            res.json(result.rows[0]); // send basket
+            res.status(200).json(result.rows[0]); // send basket
         });
     })
     .delete(async (req, res) => {
         // Get cookie in req
         const cookie = req.signedCookies.ync_shop;
+        if (!utils.assert_cookie(cookie)) utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
         await client.execute(utils.basket.remove_item, ['item', cookie]); // update basket with item removed
         await client.execute(utils.session.update, [Date.now(), cookie]); // update session
         client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
-            res.json(result.rows[0]); // send basket
+            res.status(200).json(result.rows[0]); // send basket
         });
     });
 
