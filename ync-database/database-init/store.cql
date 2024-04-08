@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS store.session (
     unperishable boolean,
     last_update timestamp
 );
+-- INSERT INTO IF NOT EXISTS store.session(cookie_id, unperishable, last_update) VALUES ('none', true, -1);
 
 -- @desc: Basket associated to session
 CREATE TABLE IF NOT EXISTS store.basket (
@@ -35,7 +36,8 @@ CREATE TABLE IF NOT EXISTS store.command (
 -- @desc: Item
 CREATE TABLE IF NOT EXISTS store.item(
     item_id varchar PRIMARY KEY,
+    image blob,
     display_name varchar,
     description varchar,
-    price bigint
+    price decimal
 );
