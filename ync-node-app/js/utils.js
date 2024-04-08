@@ -1,3 +1,23 @@
+const crypto = require('crypto');
+
+/* @desc: Return the token to be stored in the cookie
+ * @return {bytes}: The encrypted random string
+ */
+const generate_cookie = () => {
+    return crypto.randomBytes(32).toString('hex');
+};
+exports.generate_cookie = generate_cookie;
+
+/* @desc: Verify if a cookie is valid, and return the response status code
+ * @param {Object} cookie: The cookie object to be asserted.
+ * @return {Integer}: The response status code
+ */
+const assert_cookie = (cookie) => {
+    if (cookie === undefined) return 401;
+    return 200;
+}
+exports.assert_cookie = assert_cookie;
+
 const session = {
     select: 'SELECT * FROM store.session WHERE cookie_id = ?',
     insert: 'INSERT INTO store.session (cookie_id,unperishable,last_update) VALUES (?, ?, ?)',
