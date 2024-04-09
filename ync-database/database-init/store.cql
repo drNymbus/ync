@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS store.command (
     first_name varchar,
     mail varchar,
     phone varchar,
+    available boolean,
     PRIMARY KEY (cookie_id, command_id)
 );
 

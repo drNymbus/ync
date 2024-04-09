@@ -1,9 +1,5 @@
 # ync-database
 
-- Build ync-database image to init Cassandra keyspace
+## Deployment
 
-    docker build -t ync-database database-init/.
-
-- Launch docker compose
-
-    docker compose up
+You can execute the start and shutdown bash scripts ('./start.sh' & './shutdown.sh') for a quick and efficient deployment on docker of the ync-database.
