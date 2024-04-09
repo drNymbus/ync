@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import CustomBandeau from "./BandeauComponent";
-import CustomSection from "./SectionComponent";
-import CustomContent from "./ContentComponent";
+import CstmBandeau from "./composantes/Bandeau";
+import CstmSection from "./composantes/Section";
+import CstmContenu from "./composantes/Contenu";
 import "../styles.css";
 
-function CustomFullPageContent() {
+function CstmAccueil() {
   // State
   const sectionProps = useState([
     { id: 1, image: "images/ellipse.png", name: "Quelconque" },
@@ -20,13 +20,14 @@ function CustomFullPageContent() {
   ]);
 
   const [firstsection] = sectionProps[0];
+  5;
   const [firstcontent] = contentProps[0];
 
   return (
     <div className="custom-full-page-content">
-      <CustomBandeau />
-      <CustomSection image={firstsection.image} name={firstsection.name} />
-      <CustomContent
+      <CstmBandeau />
+      <CstmSection image={firstsection.image} name={firstsection.name} />
+      <CstmContenu
         image={firstcontent.image}
         description={firstcontent.description}
         prix={firstcontent.prix}
@@ -35,4 +36,4 @@ function CustomFullPageContent() {
   );
 }
 
-export default CustomFullPageContent;
+export default CstmAccueil;

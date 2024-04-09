@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import CustomSubMenu from "./subcomponents/SubMenuComponent";
-import "../styles.css";
+import CstmBoutonMenu from "./sous_composantes/BoutonMenu";
+import "../../styles.css";
 
-function CustomBandeau() {
+function CstmBandeau() {
   const [submenuProps, setSubmenuProps] = useState([
-    { id: 1, text: "YNG SHOP", color: "#000000" },
-    { id: 2, text: "PANIER", color: "#B311FF" },
+    { id: 0, text: "YNG SHOP", color: "#000000" },
+    { id: 1, text: "PANIER", color: "#B311FF" },
   ]);
 
   return (
     <div className="custom-bandeau">
       {submenuProps.map((submenuprop) => (
-        <CustomSubMenu
+        <CstmBoutonMenu
           key={submenuprop.id}
           text={submenuprop.text}
           color={submenuprop.color}
@@ -21,4 +21,4 @@ function CustomBandeau() {
   );
 }
 
-export default CustomBandeau;
+export default CstmBandeau;

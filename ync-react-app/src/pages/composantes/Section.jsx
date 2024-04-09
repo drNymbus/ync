@@ -1,7 +1,7 @@
 import React from "react";
-import "../styles.css";
+import "../../styles.css";
 
-function CustomSection({ image, name }) {
+function CstmSection({ image, name }) {
   return (
     <div className="custom-section-container">
       <div className="custom-section-image">
@@ -14,4 +14,4 @@ function CustomSection({ image, name }) {
   );
 }
 
-export default CustomSection;
+export default CstmSection;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "../styles.css";
+import "../../styles.css";
 
-function CustomContent({ image, description, prix }) {
+function CstmContenu({ image, description, prix }) {
   // State
   const [showPrice, setShowPrice] = useState(false);
 
@@ -34,4 +34,4 @@ function CustomContent({ image, description, prix }) {
   );
 }
 
-export default CustomContent;
+export default CstmContenu;
