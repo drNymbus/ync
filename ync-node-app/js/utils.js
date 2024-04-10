@@ -14,6 +14,7 @@ exports.generate_cookie = generate_cookie;
  */
 const assert_cookie = (cookie) => {
     if (cookie === undefined) return false;
+    console.log('Cookie asserted: ' + cookie.toString());
     return true;
 }
 exports.assert_cookie = assert_cookie;
@@ -41,3 +42,10 @@ const basket = {
     remove_item: 'UPDATE store.basket SET items = items - [?], item_count = item_count - 1 WHERE cookie_id = ?'
 };
 exports.basket = basket;
+
+const item = {
+    select_all: 'SELECT item_id FROM store.item;',
+    select: 'SELECT * FROM store.item WHERE item_id = ?',
+    insert: 'INSERT INTO store.item (item_id, image, display_name, description, price) VALUES (?, ?, ?, ?, ?)',
+};
+exports.item = item;

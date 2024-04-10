@@ -22,44 +22,65 @@ app.use(cookieParser(secrets.cookie)); // Hand over the secret string for signed
 
 // Routes
 app.route('/store')
-    .connect((req, res) => {
+    .get(async (req, res) => {
         // Attempt to retrieve signed cookie from client
         let cookie = req.signedCookies.ync_shop;
+        console.log(req.query);
 
-        client.execute(utils.session.select, [(cookie ? cookie : 'none')]).then(async (result) => {
-            if (result.rowLength === 0) {
-                // No existing session: generate and sign a new cookie
-                cookie = utils.generate_cookie();
+        if (req.query.connect === 'true') {
+            client.execute(utils.session.select, [(cookie ? cookie : 'none')]).then(async (result) => {
+                if (result.rowLength === 0) {
+                    // No existing session: generate and sign a new cookie
+                    cookie = utils.generate_cookie();
 
-                await client.execute(utils.session.insert, [cookie, false, Date.now()]); // create session
-                await client.execute(utils.basket.insert, [cookie]); // create basket
-                client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
-                    const expiry_date = new Date(Date.now());
-                    expiry_date.setDate(expiry_date.getDate() + 3);
+                    const timestamp = Date.now();
+                    const datetime = new Date(timestamp);
 
-                    res.cookie('ync-shop', cookie, {path: '/store', expires: expiry_date.toString(), signed: true});
-                    res.status(200).json(result.rows[0]); // send basket
-                });
-            } else {
-                // Existing session: update the cookie and retrieve basket
-                await client.execute(utils.session.update, [Date.now(), cookie]); // update session
-                // update cookie session
-                client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
-                    res.status(200).json(result.rows[0]); // send basket
-                });
-            }
-        });
+                    await client.execute(utils.session.insert, [cookie, false, timestamp]); // create session
+                    await client.execute(utils.basket.insert, [cookie]); // create basket
+                    client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
+                        res.cookie('ync_shop', cookie, {path: '/store', signed: true});
+                        res.status(200).json(result.rows[0]); // send basket
+                    });
+                } else {
+                    // Existing session: update the cookie and retrieve basket
+                    await client.execute(utils.session.update, [Date.now(), cookie]); // update session
+                    // update cookie session
+                    client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
+                        res.status(200).json(result.rows[0]); // send basket
+                    });
+                }
+            });
+        } else if (req.query.item === 'true') {
+            if (!utils.assert_cookie(cookie)) utils.failed_request(res, 401, {'error': 'Invalid cookie'});
+
+            await client.execute(utils.session.update, [Date.now(), cookie]); // update session
+            client.execute(utils.item.select, [req.query.id]).then((result) => { // retrieve item
+                res.status(200).json(result.rows[0]); // send item
+            });
+        } else { utils.failed_request(res, 400, {'error': 'Bad request'}); }
     })
     .post(async (req, res) => {
         // Retrieve cookie and add an element to the basket
         const cookie = req.signedCookies.ync_shop;
         if (!utils.assert_cookie(cookie)) utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
-        await client.execute(utils.basket.add_item, ['item', cookie]); // update basket with new item
-        await client.execute(utils.session.update, [Date.now(), cookie]); // update session
-        client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
-            res.status(200).json(result.rows[0]); // send basket
-        });
+        if (req.query.basket === true) {
+            await client.execute(utils.basket.add_item, ['item', cookie]); // update basket with new item
+            await client.execute(utils.session.update, [Date.now(), cookie]); // update session
+            client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
+                res.status(200).json(result.rows[0]); // send basket
+            });
+        } else if (req.query.item === true) {
+            const item = [];
+            for (let att in req.body.item) item.push(req.body.item[att]);
+
+            await client.execute(utils.item.insert, [item]); // update basket with new item
+            await client.execute(utils.session.update, [Date.now(), cookie]); // update session
+            client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
+                res.status(200).json(result.rows[0]); // send basket
+            });
+        }
     })
     .delete(async (req, res) => {
         // Retrieve cookie and remove an element to the basket

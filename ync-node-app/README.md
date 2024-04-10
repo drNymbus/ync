@@ -6,7 +6,7 @@ This application uses Express and CassandraDB to manage a simple shopping cart s
 
 ### store
 
-- **CONNECT `/store`**: Retrieves the user's shopping cart. If no cart exists, a new one is created.
+- **GET `/store?connect=true`**: Retrieves the user's shopping cart. If no cart exists, a new one is created.
 
         {
             'cookie_id':string,
@@ -14,7 +14,7 @@ This application uses Express and CassandraDB to manage a simple shopping cart s
             'items list': string
         }
 
-- **GET `/store?item=<item_id>`**: Retrieves all attributes from item_id. If no attribute exists, the list of all item ids available in the shop is sent.
+- **GET `/store?item=true&id=<item_id>`**: Retrieves all attributes from item_id. If no attribute exists, the list of all item ids available in the shop is sent.
 
         {
             'item_id': string,
@@ -24,12 +24,19 @@ This application uses Express and CassandraDB to manage a simple shopping cart s
             'price': decimal
         }
 
-- **POST `/store`**: Adds a new item to the user's cart then retrieve the basket.
+- **POST `/store?basket=true`**: Adds a new item to the user's cart then retrieve the basket.
 
         {
             'cookie_id':string,
-            'item_count': int,
-            'items_list': string
+            'item_id': string,
+            'output': string
+        }
+
+- **POST `/store?item=true`**: Adds a new item to the items table then retrieve the data from table.
+
+        {
+            'item_id': string,
+            'output': string
         }
 
 - **DELETE `/store`**: Removes an item from the user's cart.
