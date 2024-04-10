@@ -43,7 +43,8 @@ app.route('/store')
                         res.status(200).json(result.rows[0]); // send basket
                     });
                 } else {
-                    // Existing session: update the cookie and retrieve basket
+                    // Existing session: verify/update the cookie and retrieve basket
+                    if (!utils.assert_cookie(client, cookie)) utils.failed_request(res, 401, {'error': 'Invalid cookie'});
                     await client.execute(utils.session.update, [Date.now(), cookie]); // update session
                     // update cookie session
                     client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
@@ -52,18 +53,26 @@ app.route('/store')
                 }
             });
         } else if (req.query.item === 'true') {
-            if (!utils.assert_cookie(cookie)) utils.failed_request(res, 401, {'error': 'Invalid cookie'});
+            console.log(cookie);
+            if (!utils.assert_cookie(client, cookie)) utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
-            await client.execute(utils.session.update, [Date.now(), cookie]); // update session
-            client.execute(utils.item.select, [req.query.id]).then((result) => { // retrieve item
-                res.status(200).json(result.rows[0]); // send item
-            });
+            if (req.query.id === undefined) {
+                await client.execute(utils.session.update, [Date.now(), cookie]); // update session
+                client.execute(utils.item.select_all).then((result) => { // retrieve item
+                    res.status(200).json(result.rows); // send item
+                });
+            } else {
+                await client.execute(utils.session.update, [Date.now(), cookie]); // update session
+                client.execute(utils.item.select, [req.query.id]).then((result) => { // retrieve item
+                    res.status(200).json(result.rows[0]); // send item
+                });
+            }
         } else { utils.failed_request(res, 400, {'error': 'Bad request'}); }
     })
     .post(async (req, res) => {
         // Retrieve cookie and add an element to the basket
         const cookie = req.signedCookies.ync_shop;
-        if (!utils.assert_cookie(cookie)) utils.failed_request(res, 401, {'error': 'Invalid cookie'});
+        if (!utils.assert_cookie(client, cookie)) utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
         if (req.query.basket === true) {
             await client.execute(utils.basket.add_item, ['item', cookie]); // update basket with new item
@@ -85,7 +94,7 @@ app.route('/store')
     .delete(async (req, res) => {
         // Retrieve cookie and remove an element to the basket
         const cookie = req.signedCookies.ync_shop;
-        if (!utils.assert_cookie(cookie)) utils.failed_request(res, 401, {'error': 'Invalid cookie'});
+        if (!utils.assert_cookie(client, cookie)) utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
         await client.execute(utils.basket.remove_item, ['item', cookie]); // update basket with item removed
         await client.execute(utils.session.update, [Date.now(), cookie]); // update session

@@ -1,6 +1,5 @@
-INSERT INTO store.item
-    (item_id, image, display_name, description, price)
-VALUES
-    ('quelconque_1', '', 'Quelconque', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Velit dignissim sodales ut eu. Et odio pellentesque diam volutpat commodo sed egestas egestas fringilla. Dui accumsan sit amet nulla facilisi. Risus viverra adipiscing at in tellus integer. Egestas purus viverra accumsan in. Accumsan sit amet nulla facilisi morbi tempus iaculis. Ultricies integer quis auctor elit. Tempor orci dapibus ultrices in iaculis nunc. Tortor consequat id porta nibh venenatis cras sed felis. Diam maecenas ultricies mi eget mauris pharetra. Sapien pellentesque habitant morbi tristique senectus et netus.', 10.99),
-    ('quelconque_2', '', 'Quelque chose', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Velit dignissim sodales ut eu. Et odio pellentesque diam volutpat commodo sed egestas egestas fringilla. Dui accumsan sit amet nulla facilisi. Risus viverra adipiscing at in tellus integer. Egestas purus viverra accumsan in. Accumsan sit amet nulla facilisi morbi tempus iaculis. Ultricies integer quis auctor elit. Tempor orci dapibus ultrices in iaculis nunc. Tortor consequat id porta nibh venenatis cras sed felis. Diam maecenas ultricies mi eget mauris pharetra. Sapien pellentesque habitant morbi tristique senectus et netus.', 25.99)
-IF NOT EXSITS;
+-- No use of batch settings, Cassandra distribute the write operations optimally
+INSERT INTO store.item (item_id, display_name, description, price) VALUES
+    ('quelconque_1', 'Quelconque', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit', 10.99);
+INSERT INTO store.item (item_id, display_name, description, price) VALUES
+    ('quelconque_2', 'Quelque chose', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit', 25.99);

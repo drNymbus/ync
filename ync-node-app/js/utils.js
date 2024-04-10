@@ -12,10 +12,14 @@ exports.generate_cookie = generate_cookie;
  * @param {Object} cookie: The cookie object to be asserted.
  * @return {Integer}: The response status code.
  */
-const assert_cookie = (cookie) => {
-    if (cookie === undefined) return false;
-    console.log('Cookie asserted: ' + cookie.toString());
-    return true;
+const assert_cookie = async (client, cookie) => {
+    let asserted = true;
+    if (cookie === undefined) asserted = false;
+    client.execute(session.select, [cookie]).then((result) => {
+        if (result.length === 0)
+            asserted = false;
+        else asserted = true;
+    });
 }
 exports.assert_cookie = assert_cookie;
 
