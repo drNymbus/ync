@@ -1,36 +1,30 @@
-import React, { useState } from "react";
+import React, {useContext, useState } from "react";
+import ArticleContext from "../context/ArticleContextProvider";
+import Props from "../context/PropsProvider";
 import CstmBandeau from "./composantes/Bandeau";
 import CstmSection from "./composantes/Section";
 import CstmContenu from "./composantes/Contenu";
 import "../styles.css";
 
 function CstmAccueil() {
-  // State
-  const sectionProps = useState([
-    { id: 1, image: "images/ellipse.png", name: "Quelconque" },
-    { id: 2, image: "???", name: "Panier" },
-  ]);
-  const contentProps = useState([
-    {
-      id: 1,
-      image: "images/tab.png",
-      description: "Description 1",
-      prix: 10.99,
-    },
-  ]);
 
-  const [firstsection] = sectionProps[0];
-  5;
-  const [firstcontent] = contentProps[0];
+// Utilisation du hook useContext pour accéder aux données du contexte
+const {article} = useContext(ArticleContext);
+const [premierArticle] = article[0];
+
+const {props} = useContext(Props);
+const [p_sectionProps] = props.sectionProps[0];
+
+const recup_id = useState(null);
 
   return (
     <div className="custom-full-page-content">
-      <CstmBandeau />
-      <CstmSection image={firstsection.image} name={firstsection.name} />
+      <CstmBandeau list_btn_ids={recup_id} />
+      <CstmSection image={p_sectionProps.image} name={p_sectionProps.name} />
       <CstmContenu
-        image={firstcontent.image}
-        description={firstcontent.description}
-        prix={firstcontent.prix}
+        image={premierArticle.image}
+        description={premierArticle.description}
+        prix={premierArticle.price}
       />
     </div>
   );

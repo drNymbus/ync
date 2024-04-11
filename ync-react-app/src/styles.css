@@ -12,11 +12,16 @@
 
 .video-container video {
   position: absolute;
-  top: 0;
-  left: 0;
+
+  /* Centre la vidéo et la recale en haut à gauche du contenant avec le translate */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
-  object-fit: cover; /* La vidéo sera ajustée pour remplir la div */
+
+  /* La vidéo sera ajustée pour remplir la div */
+  object-fit: cover;
 }
 
 body {
@@ -24,12 +29,20 @@ body {
 }
 
 .custom-bandeau {
-  width: 118.1em; /* Converti depuis 1890px */
-  height: 2.5em; /* Converti depuis 40px */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #F8F8F8;
+  margin-top: 15px;
+  margin-left: 15px;
+  margin-right: 15px;
+  width: auto;
+  height: 50px;
   font-family: "Necto Mono", monospace;
 }
 
 .sub-menu {
+  display: inline-block;
   width: 5.9em; /* Converti depuis 94px */
   height: 1.2em; /* Converti depuis 19px */
   margin: 0;
@@ -42,20 +55,20 @@ body {
 }
 
 .custom-section-container {
-  width: 35.9em; /* Converti depuis 574px */
-  height: 6.2em; /* Converti depuis 100px */
+  width: 18.6458%; /* Converti depuis 574px */
+  height: 5.7407%; /* Converti depuis 100px */
 }
 
 .custom-section-image {
-  width: 6.25em; /* Converti depuis 100px */
-  height: 6.25em; /* Converti depuis 100px */
+  width: 3.2552%; /* Converti depuis 100px */
+  height: 3.2552%; /* Converti depuis 100px */
   text-align: center;
   float: left;
 }
 
 .custom-section-title {
-  width: 28.1em; /* Converti depuis 449px */
-  height: 3.25em; /* Converti depuis 52px */
+  width: 14.6354%; /* Converti depuis 449px */
+  height: 3.369%; /* Converti depuis 52px */
   text-align: left;
   float: left;
 }

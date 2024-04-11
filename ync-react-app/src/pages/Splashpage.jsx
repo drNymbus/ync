@@ -13,7 +13,7 @@ function LogoComponent({ content }) {
     <div className="video-container">
       {!videoEnded ? (
         <video autoPlay muted onEnded={handleVideoEnd}>
-          <source src="/videos/logo.mp4" type="video/mp4" />
+          <source src="/videos/logo_yng.mp4" type="video/mp4" />
           Votre navigateur ne supporte pas la lecture de vidéos.
         </video>
       ) : (

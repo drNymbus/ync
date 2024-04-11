@@ -1,9 +1,14 @@
-import { Link } from "react-router-dom";
+import React from "react";
+import CstmBandeau from "./composantes/Bandeau";
+import CstmSection from "./composantes/Section";
+import "../styles.css";
 
 function CstmPaiement() {
+
   return (
     <div>
-      <Link to="/CustomFullPageContent.jsx"></Link>
+      <CstmBandeau />
+      <CstmSection image={firstsection.image} name={firstsection.name} />
     </div>
   );
 }

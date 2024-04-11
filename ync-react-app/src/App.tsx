@@ -1,21 +1,33 @@
 import React from "react";
+import { ArticleContextProvider } from "./context/ArticleContextProvider";
+import { PropsProvider } from "./context/PropsProvider";
 import { Routes, Route } from "react-router-dom";
 import LogoComponent from "./pages/Splashpage";
 import CstmAccueil from "./pages/Accueil";
 import CstmPanier from "./pages/Panier";
+import CstmPaiement from "./pages/Paiement";
 import "./styles.css";
 
+
 export default function App() {
+
   return (
     <div className="App">
-      <Routes>
-        <Route
-          exact
-          path="/"
-          element={<LogoComponent content={<CstmAccueil />} />}
-        />
-        <Route exact path="/Panier" element={<CstmPanier />} />
-      </Routes>
+
+
+      <ArticleContextProvider>
+        <PropsProvider>
+
+          <Routes>
+            <Route path="/" element={<LogoComponent content={<CstmAccueil />} />} />
+            <Route path="/Panier" element={<CstmPanier />} />
+            <Route path="/Paiement" element={<CstmPaiement />} />
+          </Routes>
+
+        </PropsProvider>
+      </ArticleContextProvider>
+
+
     </div>
   );
 }
