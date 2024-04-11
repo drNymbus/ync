@@ -29,3 +29,6 @@ __Routes__:
 ## ync-react-app
 
 Website frontend
+
+# Deployment
+
