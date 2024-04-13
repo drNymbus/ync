@@ -1,61 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cassandra
+  labels:
+    run: cassandra
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    run: cassandra
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-    name: cassandra
-    labels:
-        app: cassandra
+  name: ync-database
 spec:
-    serviceName: cassandra
-    replicas: 3
-    selector:
-        matchLabels:
-            app: cassandra
-    template:
-        metadata:
-        labels:
-            app: cassandra
-        spec:
-        volumes:
-            - name: cassandra-config-volume
-              configMap:
-                name: cassandra-config
-        containers:
-            - name: cassandra
-              image: cassandra:latest
-              ports:
-                - containerPort: 7000
-                  name: intra-node
-                - containerPort: 7001
-                  name: tls-intra-node
-                - containerPort: 7199
-                  name: jmx
-                - containerPort: 9042
-                  name: cql
-              volumeMounts:
-                - name: cassandra-cql
-                  mountPath: /scripts/
-              env:
-                - name: MAX_HEAP_SIZE
-                  value: 512M
-                - name: HEAP_NEWSIZE
-                  value: 100M
-                - name: CASSANDRA_SEEDS
-                  value: "cassandra-0.cassandra.default.svc.cluster.local"
-                - name: CASSANDRA_CLUSTER_NAME
-                  value: "ync-database"
-                - name: CASSANDRA_DC
-                  value: "spade"
-                - name: CASSANDRA_RACK
-                  value: "Rack1"
-                - name: POD_IP
-                  valueFrom:
-                    fieldRef:
-                        fieldPath: status.podIP
-              readinessProbe:
-                exec:
-                    command:
-                    - /bin/bash
-                    - -c
-                    - /ready-probe.sh
-                initialDelaySeconds: 15
-                timeoutSeconds: 5
+  selector:
+    matchLabels:
+      run: ync-database
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: ync-database
+    spec:
+      containers:
+      - name: ync-database
+        image: nginx
+        ports:
+        - containerPort: 80
+

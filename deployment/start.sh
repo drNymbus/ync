@@ -1,4 +1,5 @@
-#!bin/bash
+#!/bin/bash
+
 # Set namespace
 kubectl create namespace ync-app
 kubectl config set-context --current --namespace=ync-app
