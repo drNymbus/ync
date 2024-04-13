@@ -1,1 +1,0 @@
-docker container stop cassandra_cluster
