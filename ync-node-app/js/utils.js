@@ -1,10 +1,12 @@
+const uuid = require('cassandra-driver').types.Uuid;
 const crypto = require('crypto');
 
 /* @desc: Return the token to be stored in the cookie
  * @return {bytes}: The encrypted random string
  */
 const generate_cookie = () => {
-    return crypto.randomBytes(8).toString('hex');
+    // return crypto.randomBytes(16).toString('hex');
+    return uuid.random();
 };
 exports.generate_cookie = generate_cookie;
 
@@ -12,14 +14,18 @@ exports.generate_cookie = generate_cookie;
  * @param {Object} cookie: The cookie object to be asserted.
  * @return {Integer}: The response status code.
  */
-const assert_cookie = async (client, cookie) => {
+const assert_cookie = (client, cookie) => {
     let asserted = true;
-    if (cookie === undefined) asserted = false;
-    client.execute(session.select, [cookie]).then((result) => {
-        if (result.length === 0)
-            asserted = false;
-        else asserted = true;
-    });
+
+    if (cookie === undefined || cookie === false) {
+        asserted = false;
+    } else {
+        client.execute(session.select, [cookie]).then((result) => {
+            if (result.rows.length === 0) asserted = false;
+        });
+    }
+
+    return asserted;
 }
 exports.assert_cookie = assert_cookie;
 
@@ -52,9 +58,8 @@ exports.basket = basket;
 
 const item = {
     select_all: "SELECT item_id FROM store.item;",
-    // select: "SELECT * FROM store.item WHERE item_id = ?",
-    select: "SELECT * FROM store.item WHERE item_id IN (?)",
-    insert: "INSERT INTO store.item (item_id, image, display_name, description, price) VALUES (?, textAsBlob(?), ?, ?, ?)",
-    delete: "DELETE FROM store.item WHERE item_id = ?"
+    select: "SELECT * FROM store.item WHERE item_id IN ?",
+    insert: "INSERT INTO store.item (item_id, image, display_name, description, price) VALUES (:id, textAsBlob(:image), :display_name, :description, :price)",
+    delete: "DELETE FROM store.item WHERE item_id IN ?"
 };
 exports.item = item;

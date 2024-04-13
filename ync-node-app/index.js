@@ -3,6 +3,7 @@ const express = require('express');
 // Request parsers
 const { queryParser } = require('express-query-parser');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 // Cookie parsers
 const fs = require('fs');
@@ -13,7 +14,6 @@ const cassandra = require('cassandra-driver');
 
 // Utils functions
 const routes = require('./js/routes.js');
-// const utils = require('./js/utils.js');
 
 // Set up express app
 const app = express();
@@ -30,6 +30,8 @@ app.use(
       parseList: true
     })
 );
+app.use(cors());
+
 // Loading secrets for signature's cookies
 const secrets = JSON.parse(fs.readFileSync('./do_not_share.json', 'utf8')); // Retrieve secrets
 app.use(cookieParser(secrets.cookie)); // Hand over the secret string for signed cookies
