@@ -13,7 +13,7 @@ export const CookieProvider = ({ children }) => {
     const fetchData = async () => {
       try {
         // Effectue une requête GET à l'adresse spécifiée de votre serveur Node.js
-        const response = await axios.get('http://localhost:3001/cookie');
+        const response = await axios.get('http://localhost:3001/store?connect=true');
         // Met à jour l'état avec les données récupérées depuis le serveur
         setCookie(response.data);
       } catch (error) {

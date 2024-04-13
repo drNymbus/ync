@@ -11,6 +11,9 @@ import "./styles.css";
 
 export default function App() {
 
+// Contexte fourni aux composants enfants : <ArticleContextProvider>, <PropsProvider> (On englobe les composantes de notre application pour que le contexte soit disponible partout dans celle-ci)
+// + Déclaration des routes de l'application avec <Routes> de la composante <BrowserRouter> ("/" --> CstAccueil; "/Panier" --> CstmPanier; "/Paiement" --> CstmPaiement)
+
   return (
     <div className="App">
 

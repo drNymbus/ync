@@ -1,11 +1,16 @@
+// Import des modules et composants React nécessaires
 import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import App from "./App";
 
+// Sélection de l'élément DOM où l'application sera rendue et créartion d'une variable capable de rendre dynamiquement l'application
 const rootElement = document.getElementById("root")!;
-const root = ReactDOM.createRoot(rootElement);
+const root = createRoot(rootElement);
 
+// Rendu de l'application
+// StrictMode activé pour demander à React de détecter et expliciter plus de problèmes potentiels
+// BrowserRouter est une composante qui nous permet de gérer la navigation entre les pages de l'application
 root.render(
   <React.StrictMode>
     <BrowserRouter>
