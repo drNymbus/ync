@@ -1,33 +1,36 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: cassandra
-  labels:
-    run: cassandra
-spec:
-  ports:
-  - port: 80
-    protocol: TCP
-  selector:
-    run: cassandra
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: ync-database
+  name: cassandra
+  labels:
+    app: cassandra
 spec:
+  serviceName: "cassandra"
+  replicas: 1
   selector:
     matchLabels:
-      run: ync-database
-  replicas: 2
+      app: cassandra
   template:
     metadata:
       labels:
-        run: ync-database
+        app: cassandra
     spec:
       containers:
-      - name: ync-database
-        image: nginx
+      - name: cassandra
+        image: cassandra:latest
         ports:
-        - containerPort: 80
-
+        - containerPort: 9042
+          name: cql
+        volumeMounts:
+        - name: cassandra-data
+          mountPath: /var/lib/cassandra
+        - name: cassandra-cql
+          mountPath: /scripts
+  volumeClaimTemplates:
+  - metadata:
+      name: cassandra-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi

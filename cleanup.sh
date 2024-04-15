@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 sed -i 's/\r$//' deployment/start.sh
 sed -i 's/\r$//' deployment/shutdown.sh

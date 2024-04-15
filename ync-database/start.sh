@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # Create cassandra cluster
 docker run -d --name=cassandra_cluster -p 9042:9042 -v ./database-init/:/scripts/ cassandra:latest
