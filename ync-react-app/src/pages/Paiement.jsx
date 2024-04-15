@@ -3,6 +3,7 @@ import CstmBandeau from "./composantes/Bandeau";
 import CstmSection from "./composantes/Section";
 import "../styles.css";
 
+// Paiement --> appelle les composantes Bandeau, Section, ???
 function CstmPaiement() {
 
   return (

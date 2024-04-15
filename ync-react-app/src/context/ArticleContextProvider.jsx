@@ -20,7 +20,7 @@ export const ArticleContextProvider = ({ children }) => {
   // Le json des données brutes stockées coté React,
   // Le json des paramètres et propriétés du site.
   // Ce dernier permet de récupérer les ids des informations qu'on ira extraire de l'API, dans différentes tables mais aussi 
-  [{accueil:{}}{panier:{}}{paiement:{}}{erreur:{}}]
+  // [{accueil:{}}{panier:{}}{paiement:{}}{erreur:{}}]
   
 
   const config = {

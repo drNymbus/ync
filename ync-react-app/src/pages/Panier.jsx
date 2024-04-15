@@ -7,12 +7,12 @@ import CstmPanierHaut from "./composantes/PanierHaut";
 import CstmPanierBas from "./composantes/PanierBas";
 import "../styles.css";
 
+// Panier --> appelle les composantes Bandeau, Section, PanierHaut, PanierBas
 function CstmPanier() {
 
-// Utilisation du hook useContext pour accéder aux données du contexte
+// Hook useContext pour accéder aux données du contexte article et props qui contiennent /// ///
 const {article} = useContext(ArticleContext);
 const [premierArticle] = article[0];
-
 const {props} = useContext(Props);
 const [p_sectionProps] = props.sectionProps[1];
 

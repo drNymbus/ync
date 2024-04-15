@@ -9,12 +9,11 @@ import "../styles.css";
 // Composante Acceuil --> appelle les composantes Bandeau, Section, Contenu
 function CstmAccueil() {
 
-// Utilisation du hook useContext pour accéder aux données des contextes
-const {article} = useContext(ArticleContext) || [{}]; // Vérifie si article est null, et affecte un objet vide par défaut
-const [premierArticle] = article[0] || [{}]; // Vérifie si article est null, et affecte un tableau vide par défaut
+// Hook useContext pour accéder aux données des contextes
+const {article} = useContext(ArticleContext) || [{}];
+const [premierArticle] = article[0] || [{}];
 const {props} = useContext(Props) || []; 
 const [p_sectionProps] = props.sectionProps[0] || [];
-
 const recup_id = useState(null);
 
   return (

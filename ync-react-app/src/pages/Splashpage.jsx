@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import "../styles.css";
 
 function LogoComponent({ content }) {
-  // States
-  // Comportements
   const [videoEnded, setVideoEnded] = useState(false);
+
+  // Fonction pour mettre à jour l'état de la vidéo lorsqu'elle se termine
   const handleVideoEnd = () => {
     setVideoEnded(true);
   };
-  // Affichages
+
+  // Affiche la vidéo si elle n'est pas terminée, sinon affiche le contenu alternatif {content}
   return (
     <div className="video-container">
       {!videoEnded ? (

@@ -1,7 +1,7 @@
 import React from "react";
 import "../errorstyles.css";
 
-// Composant qui reçoit en props le numéro de l'erreur et la description de l'erreur, puis les affiche pour le client.
+// Composant Erreur : reçoit le numéro de l'erreur et la description de l'erreur puis les affiche pour le client.
 function CstmErreur({ erreur, descriptionErreur }) {
 
   return (
