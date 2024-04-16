@@ -4,6 +4,7 @@ metadata:
   name: cassandra
   labels:
     app: cassandra
+    namespace: ync-app
 spec:
   serviceName: "cassandra"
   replicas: 1
@@ -21,16 +22,16 @@ spec:
         ports:
         - containerPort: 9042
           name: cql
-        volumeMounts:
-        - name: cassandra-data
-          mountPath: /var/lib/cassandra
-        - name: cassandra-cql
-          mountPath: /scripts
-  volumeClaimTemplates:
-  - metadata:
-      name: cassandra-data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
+  #       volumeMounts:
+  #       - name: cassandra-data
+  #         mountPath: /var/lib/cassandra
+  #       - name: cassandra-cql
+  #         mountPath: /scripts
+  # volumeClaimTemplates:
+  # - metadata:
+  #     name: cassandra-data
+  #   spec:
+  #     accessModes: [ "ReadWriteOnce" ]
+  #     resources:
+  #       requests:
+  #         storage: 1Gi

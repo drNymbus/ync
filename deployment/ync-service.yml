@@ -4,6 +4,7 @@ metadata:
   name: cassandra
   labels:
     app: cassandra
+    namespace: ync-app
 spec:
   clusterIP: None
   selector:
