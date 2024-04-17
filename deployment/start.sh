@@ -4,7 +4,9 @@
 minikube start
 eval $(minikube -p minikube docker-env)
 
+# For Powershell versions, either line will do the trick
 # minikube -p minikube docker-env --shell powershell | Invoke-Expression
+# minikube docker-env --shell powershell | Invoke-Expression
 
 minikube tunnel &
 
