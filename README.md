@@ -35,3 +35,4 @@ To learn about how to deploy this component, go to the 'deployment' or ync-node-
 
 # Deployment
 
+To run this locally, you'll first need to have a minikube working (some help can be found in the 'deployment' folder of this repository). You can deploy all components thanks to the 'deployment/start.sh' bash file in a single command line ! If you wish to get deeper explanations on how each component is deployed, go to the 'deployment' folder of this repository.

@@ -1,48 +1,39 @@
 # YNS Deployment
 
 All yaml files to start and shutdown the Young New Service.
-You can find all commands needed in the bash files './start.sh' and './shutdown.sh';
+You can find all commands needed to startup the entire YNC service in the bash files './start.sh' and './shutdown.sh';
 
-// TODO:
-- Configure Volume Storage
-- Configure Cassandra Service
-- Configure Cassandra StatefulSet
+All components are under the same namespace: ync-app. If you want to deploy locally the all service you'll need docker and minikube installed.
 
-- Configure Node API Service
-- Configure Node API Deployment
-
-- How do I connect cassandra and node communicate without exposing cassandra ?
-
-All components will be under the same namespace: ync-app. Now let's break down how every component is deployed.
-
-If you want to deploy locally the all service you'll need docker and minikube installed.
-
-    systemctl start dockerd
+    systemctl start dockerd # Ensure that docker daemon is running
     minikube start
 
-To be able to deploy local docker images, you'll need to configure your minikube cluster to use the docker-env:
-
-Under UNIX environment:
+To be able to deploy local docker images, you'll need to configure your minikube cluster to use the docker-env, for UNIX users this would be:
 
     eval $(minikube -p minikube docker-env)
 
-For DOS, you'll need to use Powershell:
+And for DOS users, you'll need to use Powershell:
 
-    minikube -p minikube docker-env --shell powershell | Invoke-Expression # Powershell
+    minikube -p minikube docker-env --shell powershell | Invoke-Expression
 
-For all services to be able to work properly on a local setting, you'll need to run on a separate terminal (https://minikube.sigs.k8s.io/docs/handbook/accessing/#using-minikube-tunnel):
+(In case this command fails, try removing 'minikube -p')
 
-    minikube tunnel
+<!-- For all services to be able to work properly on a local setting, you'll need to run on a separate terminal (https://minikube.sigs.k8s.io/docs/handbook/accessing/#using-minikube-tunnel):
 
-# ync-database
+    minikube tunnel -->
 
-Create a volume to contain all the initialization files for the cassandra cluster
+Once your minikube is set up, you'll be able to run the bash file 'start.sh'. To delete all ync-app resources without effort, execute 'shutdown.sh' file.
 
-    kubectl create configmap cassandra-cql --from-file=../ync-database/database-init/
+## ync-database
 
-Once all volumes are created we need to launch the loadBalancer for the cassandra StatefulSet
+A configMap volume is created to allow keyspaces to be created when a pod is started. Once the configMap is up, the cassandra StatefulSet can be launched alongside the LoadBalancer service.
 
-    kubectl apply -f ./ync-service.yml # Launch the node API
-    kubectl apply -f ./ync-database.yml
+## ync-api
 
-# ync-node-app
+A simple deployment configuration. The image is locally pulled but that could change if we decide to put all our images on dockerhub or a similar provider. The CASSANDRA_CONTACT_POINT is defined accordingly to the ync-database yaml configuration file (Service.LoadBalancer.spec.clusterIP).
+
+# TODO
+
+- Configure Node API Service
+- Init keyspace automatically after cassandra pod starts
+- How to expose minikube services to the world wide web 

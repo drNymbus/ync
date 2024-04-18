@@ -69,3 +69,5 @@ Then run the container:
     docker run -p 3000:3000 --env CASSANDRA_CONTACT_POINTS=[<cassandra-cluster-ip1>,] --name=store_api ync-node-api
 
 You're good to go :)
+
+If you wish to deploy this component through kubernetes and wish to link it to the ync-database component, you'll find some help in the 'deployment' folder of the repository.

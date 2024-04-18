@@ -5,7 +5,7 @@ docker run -d --name=cassandra_cluster -p 9042:9042 -v ./database-init/:/scripts
 
 # Wait for cluster to be ready then run store.cql script
 while ! docker exec -it cassandra_cluster cqlsh -f '/scripts/store.cql'; do
-	sleep 10
+	sleep 10 # Wait extra time before running the same command
 done
 
 # Execute other scripts

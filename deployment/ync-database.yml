@@ -28,7 +28,9 @@ spec:
       - name: init-volume
         configMap:
           name: cassandra-cql
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:

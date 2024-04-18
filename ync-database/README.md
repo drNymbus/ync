@@ -3,7 +3,9 @@
 ## Deployment
 
 You can execute the start and shutdown bash scripts ('./start.sh' & './shutdown.sh') for a quick and efficient deployment on docker of the ync-database.
-Every step is commented.
+Every steps are commented.
+
+If you wish to deploy this component on kubernetes, you'll eventually find some resources in the 'deployment' folder of this repository.
 
 ## Keyspace: __Store__
 
@@ -41,3 +43,7 @@ __Table: Item__
 - display_name varchar: name of the item to be displayed in the shop
 - description varchar: the description of the item -- to be displayed or not
 - price decimal: item's price to be displayed
+
+## TODO
+
+- BIG QUESTION: Do we init keyspaces in the docker image or at container startup ? (This make big changes in kubernetes deployment)
