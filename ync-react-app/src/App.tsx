@@ -1,6 +1,6 @@
 import React from "react";
-import { ArticleContextProvider } from "./context/ArticleContextProvider";
-import { PropsProvider } from "./context/PropsProvider";
+import { DataProvider } from "./context/BrutDataProvider";
+import { ArticleContextProvider } from "./context/ArticleDataProvider";
 import { Routes, Route } from "react-router-dom";
 import LogoComponent from "./pages/Splashpage";
 import CstmAccueil from "./pages/Accueil";
@@ -17,18 +17,15 @@ export default function App() {
   return (
     <div className="App">
 
-
-      <ArticleContextProvider>
-        <PropsProvider>
-
+      <DataProvider>
+        <ArticleContextProvider>
           <Routes>
             <Route path="/" element={<LogoComponent content={<CstmAccueil />} />} />
             <Route path="/Panier" element={<CstmPanier />} />
             <Route path="/Paiement" element={<CstmPaiement />} />
           </Routes>
-
-        </PropsProvider>
-      </ArticleContextProvider>
+        </ArticleContextProvider>
+      </DataProvider>
 
 
     </div>

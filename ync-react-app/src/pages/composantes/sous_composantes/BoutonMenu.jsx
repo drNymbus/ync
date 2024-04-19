@@ -1,19 +1,24 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../../../styles.css";
 
-function CstmBoutonMenu({ id, text, style, includeOnClick}) {
-  const navigate = useNavigate();
+function CstmBoutonMenu({ key, text, style, includeOnClick}) {
 
-  const on_click = () => { if (includeOnClick) navigate("/Panier"); };
+// <CstmBoutonMenu 
+//   key={button.id} 
+//   text={button.text} 
+//   style={button.style} 
+//   includeOnClick={button.includeOnClick} 
+// />
+
+  const navigate = useNavigate();
+  
+  const on_click = () => { 
+    if (includeOnClick) navigate("/Panier"); 
+  };
 
   return (
-    <p
-      className="sub-menu"
-      id={id}
-      style={style}
-      onClick={on_click}
-    >
+    <p className="sub-menu" id={key} style={style} onClick={on_click}>
       {text}
     </p>
   );

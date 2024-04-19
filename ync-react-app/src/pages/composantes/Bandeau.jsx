@@ -1,29 +1,51 @@
-import React, { useContext, useState } from "react";
-import Props from "../../context/PropsProvider";
+import React from "react";
 import CstmBoutonMenu from "./sous_composantes/BoutonMenu";
 import "../../styles.css";
 
-function CstmBandeau({list_btn_ids}) {
+function CstmBandeau({buttons}) {
 
-const {props} = useContext(Props);
-const [submenuProps] = props.submenuProps;
-
-// Convertir les IDs en un tableau pour pouvoir utiliser includes
-const list_btn_ids_array = Object.keys(list_btn_ids);
-// Filtrer les submenuProps pour ne conserver que ceux correspondant aux IDs dans list_btn_ids_array
-const filteredSubmenuProps = submenuProps.filter(submenu => list_btn_ids_array.includes(submenu.id.toString()));
+  //<CstmBandeau buttons={pageData.buttonData} />
+    //   [{ "id": "0",
+    //     "text": "YNG SHOP", 
+    //     "style": { 
+    //       "marginLeft": "10px",
+    //       "justifyContent": "space-between",
+    //       "color": "#000000"
+    //     },
+    //     "includeOnClick":false
+    //   },
+    //   { "id": "1",
+    //     "text": "Panier", 
+    //     "style": { 
+    //       "marginLeft": "10px", 
+    //       "justifyContent": "space-between", 
+    //       "color": "#111111" 
+    //       },
+    //       "includeOnClick":true
+    //   }]
 
   return (
 
     <div className="custom-bandeau">
 
       <div className="gauche">
-        {filteredSubmenuProps.length > 0 && (
-         <CstmBoutonMenu key={filteredSubmenuProps[0].id} text={filteredSubmenuProps[0].text} style={filteredSubmenuProps[0].style} includeOnClick={filteredSubmenuProps[0].includeOnClick} />)}
+        {buttons.length > 0 && (
+          <CstmBoutonMenu 
+            key={buttons[0].id} 
+            text={buttons[0].text} 
+            style={buttons[0].style} 
+            includeOnClick={buttons[0].includeOnClick} 
+          />)}
       </div>
 
       <div className="droite">
-        {filteredSubmenuProps.slice(1).map((submenuprop) => (<CstmBoutonMenu key={submenuprop.id} text={submenuprop.text} style={submenuprop.style} includeOnClick={submenuprop.includeOnClick} />))}
+        {buttons.slice(1).map((button) => (
+          <CstmBoutonMenu 
+            key={button.id} 
+            text={button.text} 
+            style={button.style} 
+            includeOnClick={button.includeOnClick} 
+          />))}
       </div>
 
     </div>

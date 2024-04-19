@@ -1,0 +1,18 @@
+{
+    "accueil":{
+        "lists_ids":[0,1],
+        "section":0
+        },
+    "panier":{
+        "lists_ids":[0,2],
+        "section":1
+        },
+    "paiement":{
+        "lists_ids":[0,2],
+        "section":2
+        },
+    "erreur":{
+        "lists_ids":[0,2],
+        "section":3
+    }
+}

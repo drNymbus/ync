@@ -1,10 +1,12 @@
+const uuid = require('cassandra-driver').types.Uuid;
 const crypto = require('crypto');
 
 /* @desc: Return the token to be stored in the cookie
  * @return {bytes}: The encrypted random string
  */
 const generate_cookie = () => {
-    return crypto.randomBytes(32).toString('hex');
+    // return crypto.randomBytes(16).toString('hex');
+    return uuid.random();
 };
 exports.generate_cookie = generate_cookie;
 
@@ -12,9 +14,18 @@ exports.generate_cookie = generate_cookie;
  * @param {Object} cookie: The cookie object to be asserted.
  * @return {Integer}: The response status code.
  */
-const assert_cookie = (cookie) => {
-    if (cookie === undefined) return false;
-    return true;
+const assert_cookie = (client, cookie) => {
+    let asserted = true;
+
+    if (cookie === undefined || cookie === false) {
+        asserted = false;
+    } else {
+        client.execute(session.select, [cookie]).then((result) => {
+            if (result.rows.length === 0) asserted = false;
+        });
+    }
+
+    return asserted;
 }
 exports.assert_cookie = assert_cookie;
 
@@ -27,17 +38,28 @@ exports.assert_cookie = assert_cookie;
 const failed_request = (response, status, error) => { return response.status(status).json(error); }
 exports.failed_request = failed_request;
 
+const log_query = (m, req) => { console.log({method: m, cookie: req.signedCookies, url: req.url, query: req.query, body: req.body}); }
+exports.log_query = log_query;
+
 const session = {
-    select: 'SELECT * FROM store.session WHERE cookie_id = ?',
-    insert: 'INSERT INTO store.session (cookie_id,unperishable,last_update) VALUES (?, ?, ?)',
-    update: 'UPDATE store.session SET last_update = ? WHERE cookie_id = ?'
+    select: "SELECT * FROM store.session WHERE cookie_id = ?",
+    insert: "INSERT INTO store.session (cookie_id,unperishable,last_update) VALUES (?, ?, ?)",
+    update: "UPDATE store.session SET last_update = ? WHERE cookie_id = ?"
 };
 exports.session = session;
 
 const basket = {
-    select: 'SELECT * FROM store.basket WHERE cookie_id = ?',
-    insert: 'INSERT INTO store.basket (cookie_id, item_count, items) VALUES (?, 0, [])',
-    add_item: 'UPDATE store.basket SET items = items + [?], item_count = item_count + 1 WHERE cookie_id = ?',
-    remove_item: 'UPDATE store.basket SET items = items - [?], item_count = item_count - 1 WHERE cookie_id = ?'
+    select: "SELECT items FROM store.basket WHERE cookie_id = ?",
+    insert: "INSERT INTO store.basket (cookie_id, items) VALUES (?, {})",
+    add_item: "UPDATE store.basket SET items = items + ? WHERE cookie_id = ?",
+    remove_item: "UPDATE store.basket SET items = items - ? WHERE cookie_id = ?"
 };
 exports.basket = basket;
+
+const item = {
+    select_all: "SELECT item_id FROM store.item;",
+    select: "SELECT * FROM store.item WHERE item_id IN ?",
+    insert: "INSERT INTO store.item (item_id, image, display_name, description, price) VALUES (:id, textAsBlob(:image), :display_name, :description, :price)",
+    delete: "DELETE FROM store.item WHERE item_id IN ?"
+};
+exports.item = item;
