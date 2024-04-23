@@ -1,7 +1,8 @@
 {
     "accueil":{
         "lists_ids":[0,1],
-        "section":0
+        "section":0,
+        "id_article_accueil":"quelconque_1"
         },
     "panier":{
         "lists_ids":[0,2],

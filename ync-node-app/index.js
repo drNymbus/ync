@@ -17,7 +17,7 @@ const routes = require('./js/routes.js');
 
 // Set up express app
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 // Parse body in case of POST method
 app.use(bodyParser.json());
@@ -30,7 +30,7 @@ app.use(
       parseList: true
     })
 );
-app.use(cors());
+app.use(cors({ credentials: true, origin: true }));
 
 // Loading secrets for signature's cookies
 const secrets = JSON.parse(fs.readFileSync('./do_not_share.json', 'utf8')); // Retrieve secrets

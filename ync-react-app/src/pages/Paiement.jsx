@@ -4,7 +4,7 @@ import CstmSection from "./composantes/Section";
 import DataContext from "../context/BrutDataProvider";
 import "../styles.css";
 
-// Paiement --> appelle les composantes Bandeau, Section, ???
+// Paiement --> Bandeau, Section, ???
 function CstmPaiement() {
 
   // Utilisation du hook useContext pour accéder au contexte DataContext, à sa variable pageData et fonction fetchDataForPage

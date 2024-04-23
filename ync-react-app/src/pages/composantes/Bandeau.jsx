@@ -2,28 +2,10 @@ import React from "react";
 import CstmBoutonMenu from "./sous_composantes/BoutonMenu";
 import "../../styles.css";
 
+// Bandeau --> BoutonMenu
 function CstmBandeau({buttons}) {
 
-  //<CstmBandeau buttons={pageData.buttonData} />
-    //   [{ "id": "0",
-    //     "text": "YNG SHOP", 
-    //     "style": { 
-    //       "marginLeft": "10px",
-    //       "justifyContent": "space-between",
-    //       "color": "#000000"
-    //     },
-    //     "includeOnClick":false
-    //   },
-    //   { "id": "1",
-    //     "text": "Panier", 
-    //     "style": { 
-    //       "marginLeft": "10px", 
-    //       "justifyContent": "space-between", 
-    //       "color": "#111111" 
-    //       },
-    //       "includeOnClick":true
-    //   }]
-
+  // Utilisation de la propriété key avec des valeurs uniques pour chaque élément de la liste (key={button.id})
   return (
 
     <div className="custom-bandeau">
@@ -31,7 +13,6 @@ function CstmBandeau({buttons}) {
       <div className="gauche">
         {buttons.length > 0 && (
           <CstmBoutonMenu 
-            key={buttons[0].id} 
             text={buttons[0].text} 
             style={buttons[0].style} 
             includeOnClick={buttons[0].includeOnClick} 
@@ -53,3 +34,23 @@ function CstmBandeau({buttons}) {
 }
 
 export default CstmBandeau;
+
+//<CstmBandeau buttons={pageData.buttonData} />
+    //   [{ "id": "0",
+    //     "text": "YNG SHOP", 
+    //     "style": { 
+    //       "marginLeft": "10px",
+    //       "justifyContent": "space-between",
+    //       "color": "#000000"
+    //     },
+    //     "includeOnClick":false
+    //   },
+    //   { "id": "1",
+    //     "text": "Panier", 
+    //     "style": { 
+    //       "marginLeft": "10px", 
+    //       "justifyContent": "space-between", 
+    //       "color": "#111111" 
+    //       },
+    //       "includeOnClick":true
+    //   }]
