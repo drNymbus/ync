@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../styles.css";
+import "../style/styles.css";
 
 function CstmContenu({ image, description, prix }) {
   // State

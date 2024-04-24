@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles.css";
+import "./style/styles.css";
 
 function LogoComponent({ content }) {
   const [videoEnded, setVideoEnded] = useState(false);
@@ -14,7 +14,7 @@ function LogoComponent({ content }) {
     <div className="video-container">
       {!videoEnded ? (
         <video autoPlay muted onEnded={handleVideoEnd}>
-          <source src="/videos/logo_yng.mp4" type="video/mp4" />
+          <source src="/assets/logo_yng.mp4" type="video/mp4" />
           Votre navigateur ne supporte pas la lecture de vidéos.
         </video>
       ) : (

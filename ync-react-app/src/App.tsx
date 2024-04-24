@@ -1,12 +1,12 @@
 import React from "react";
-import { DataProvider } from "./context/BrutDataProvider";
-import { ArticleContextProvider } from "./context/ArticleDataProvider";
+import { DataProvider } from "./pages/context/BrutDataProvider";
+import { ArticleContextProvider } from "./pages/context/ArticleDataProvider";
 import { Routes, Route } from "react-router-dom";
 import LogoComponent from "./pages/Splashpage";
 import CstmAccueil from "./pages/Accueil";
 import CstmPanier from "./pages/Panier";
 import CstmPaiement from "./pages/Paiement";
-import "./styles.css";
+import "./pages/style/styles.css";
 
 
 export default function App() {

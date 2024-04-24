@@ -1,6 +1,6 @@
 import React from "react";
 import CstmBoutonMenu from "./sous_composantes/BoutonMenu";
-import "../../styles.css";
+import "../style/styles.css";
 
 // Bandeau --> BoutonMenu
 function CstmBandeau({buttons}) {

@@ -1,8 +1,8 @@
 import React, {useContext, useEffect} from "react";
 import CstmBandeau from "./composantes/Bandeau";
 import CstmSection from "./composantes/Section";
-import DataContext from "../context/BrutDataProvider";
-import "../styles.css";
+import DataContext from "./context/BrutDataProvider";
+import "./style/styles.css";
 
 // Paiement --> Bandeau, Section, ???
 function CstmPaiement() {

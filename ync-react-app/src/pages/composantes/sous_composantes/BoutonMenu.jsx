@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "../../../styles.css";
+import "../../style/styles.css";
 
 function CstmBoutonMenu({ text, style, includeOnClick}) {
 

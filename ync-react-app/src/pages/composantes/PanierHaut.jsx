@@ -1,6 +1,6 @@
 import React from "react";
 import CstmArticle from "./sous_composantes/Article";
-import "../../styles.css";
+import "../style/styles.css";
 
 function CstmPanierHaut() {
   return (
