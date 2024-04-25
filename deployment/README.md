@@ -24,6 +24,10 @@ For all services to be able to work properly on a local setting, you'll need to 
 
 Once your minikube is set up, you'll be able to run the bash file 'start.sh'. To delete all ync-app resources without effort, execute 'shutdown.sh' file.
 
+### *Build*
+
+The 'build.sh' file can be used to build docker images to be used on the kubernetes cluster, the last lines are here to register those images to a k3s cluster. On a local setting you should comment out those lines.
+
 ## ync-database
 
 A configMap volume is created to allow keyspaces to be created when a pod is started. Once the configMap is up, the cassandra StatefulSet can be launched alongside the LoadBalancer service.

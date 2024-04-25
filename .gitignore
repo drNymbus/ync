@@ -1,3 +1,5 @@
+.gitignore
+
 little-secrets-shall-be-kept.json
 docker_secret.json
 
