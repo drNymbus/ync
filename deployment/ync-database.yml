@@ -41,6 +41,6 @@ spec:
     - protocol: TCP
       port: 9042
       targetPort: 9042
-  clusterIP: 10.43.6.7
+  clusterIP: 10.43.6.0
   selector:
     app: cassandra

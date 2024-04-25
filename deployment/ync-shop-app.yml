@@ -1,41 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: node
+  name: shop-app
   labels:
-    app: node
+    app: shop-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: node
+      app: shop-app
   template:
     metadata:
       labels:
-        app: node
+        app: shop-app
     spec:
       containers:
-      - name: node
-        image: ync-node-app:latest
+      - name: shop-app
+        image: ync-shop-app:latest
         imagePullPolicy: Never
         ports:
         - containerPort: 3000
         env:
-        - name: CASSANDRA_CONTACT_POINTS
-          value: "10.43.6.7"
+        - name: API_CONTACT_POINT
+          value: "10.43.6.1"
+        - name: API_PORT
+          value: 3001
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: node
+  name: shop-app
 spec:
   type: NodePort
   ports:
     - protocol: TCP
       port: 3000
       targetPort: 3000
-      nodePort: 15779
+      nodePort: 15778
+  clusterIP: 10.43.6.1
   selector:
-    app: node
+    app: shop-app

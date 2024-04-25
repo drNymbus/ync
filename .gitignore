@@ -1,7 +1,7 @@
 little-secrets-shall-be-kept.json
 docker_secret.json
 
-ync-node-app/.dockerignore
-ync-node-app/package-lock.json
-ync-node-app/node_modules/*
-ync-node-app/do_not_share.json
+ync-shop-api/.dockerignore
+ync-shop-api/package-lock.json
+ync-shop-api/node_modules/*
+ync-shop-api/do_not_share.json
