@@ -17,9 +17,9 @@ Docker is needed to run in local, a kubernetes deployment is also available to r
 
 The 'ync-database' component is destined to grow if need be, other keyspaces and tables may be created.
 
-## ync-node-app
+## ync-shop-api
 
-This API is intended to operate on the 'store' keyspace of the 'ync-database' component. Multiple operations can be performed such as:
+This API is intended to operate on the 'store' keyspace of the 'ync-database' component. Multiple operations can be performed:
 
 - **GET `/store?connect=true`**: Retrieves the user's shopping cart. If no cart exists, a new one is created.
 - **GET `/store?item=true&id=<item_id>`**: Retrieves all attributes from item_id. If no attribute exists, the list of all item ids available in the shop is sent.
@@ -29,7 +29,7 @@ This API is intended to operate on the 'store' keyspace of the 'ync-database' co
 
 To learn about how to deploy this component, go to the 'deployment' or ync-node-app sections.
 
-## ync-react-app
+## ync-shop-app
 
 // TO FILL
 

@@ -18,9 +18,9 @@ And for DOS users, you'll need to use Powershell:
 
 (In case this command fails, try removing 'minikube -p')
 
-<!-- For all services to be able to work properly on a local setting, you'll need to run on a separate terminal (https://minikube.sigs.k8s.io/docs/handbook/accessing/#using-minikube-tunnel):
+For all services to be able to work properly on a local setting, you'll need to run on a separate terminal (https://minikube.sigs.k8s.io/docs/handbook/accessing/#using-minikube-tunnel):
 
-    minikube tunnel -->
+    minikube tunnel
 
 Once your minikube is set up, you'll be able to run the bash file 'start.sh'. To delete all ync-app resources without effort, execute 'shutdown.sh' file.
 
@@ -28,7 +28,7 @@ Once your minikube is set up, you'll be able to run the bash file 'start.sh'. To
 
 A configMap volume is created to allow keyspaces to be created when a pod is started. Once the configMap is up, the cassandra StatefulSet can be launched alongside the LoadBalancer service.
 
-## ync-api
+## ync-shop-api
 
 A simple deployment configuration. The image is locally pulled but that could change if we decide to put all our images on dockerhub or a similar provider. The CASSANDRA_CONTACT_POINT is defined accordingly to the ync-database yaml configuration file (Service.LoadBalancer.spec.clusterIP).
 

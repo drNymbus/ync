@@ -44,9 +44,6 @@ const client = new cassandra.Client({
 });
 
 // Routes
-app.get('/', (_, res) => {
-    res.send("Hello World!");
-});
 app.route('/store')
     .get((req, res) => { routes.store_get(req, res, client); })
     .post((req, res) => { routes.store_post(req, res, client); })

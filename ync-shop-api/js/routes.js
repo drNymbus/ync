@@ -21,7 +21,6 @@ const store_get = async (req, res, client) => {
             // Existing session: verify/update the cookie and retrieve basket
             if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
-            await client.execute(utils.session.update, [Date.now(), cookie]); // update session
             // Send another/new cookie to the user ?
             client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
                 res.status(200).json(result.rows[0]); // send basket
@@ -30,12 +29,10 @@ const store_get = async (req, res, client) => {
     } else if (req.query.item === true) { // Retrieve some or all store items
 
         if (req.query.id === undefined) { // Retrieve all store items
-            await client.execute(utils.session.update, [Date.now(), cookie]); // update session
             client.execute(utils.item.select_all).then((result) => { // retrieve item
                 res.status(200).json(result.rows); // send item
             });
         } else { // Retrieve items specified in query id field
-            await client.execute(utils.session.update, [Date.now(), cookie]); // update session
             client.execute(utils.item.select, [req.query.id.split(',')]).then((result) => { // retrieve item
                 res.status(200).json(result.rows); // send item
             });
@@ -54,8 +51,6 @@ const store_post = async (req, res, client) => {
 
     if (req.query.basket === true) {
         await client.execute(utils.basket.add_item, [req.query.id.split(','), cookie]); // update basket with new item.s
-        await client.execute(utils.session.update, [Date.now(), cookie]); // update session
-
         client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
             res.status(200).json(result.rows[0]); // send basket
         });
@@ -70,7 +65,6 @@ const store_post = async (req, res, client) => {
                 .catch(() => {unvalid_ids.push(id);}); // If promise failed add id to unvalid ids
         }
 
-        await client.execute(utils.session.update, [Date.now(), cookie]); // update session
         res.status(200).json({completed: valid_ids, rejected: unvalid_ids}); // send all ids (completed & rejected)
 
     } else { utils.failed_request(res, 400, {'error': 'Bad Request'}); }
@@ -86,16 +80,12 @@ const store_delete = async (req, res, client) => {
 
     if (req.query.basket === true) {
         await client.execute(utils.basket.remove_item, [req.query.id.split(','), cookie]); // update basket with new item.s
-        await client.execute(utils.session.update, [Date.now(), cookie]); // update session
-
         client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
             res.status(200).json(result.rows[0]); // send basket
         });
 
     } else if (req.query.item === true) {
         await client.execute(utils.item.delete, [req.query.id.split(',')]); // update basket with item removed
-        await client.execute(utils.session.update, [Date.now(), cookie]); // update session
-
         client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
             res.status(200).json(result.rows[0]); // send basket
         });
