@@ -68,5 +68,6 @@ exports.item = item;
 const command = {
     select: "SELECT (command_id, item_count, items, address, postal_code, country, name, first_name, mail, phone, processed) FROM store.command WHERE cookie_id = ?;",
     insert: "INSERT INTO store.command (cookie_id, command_id, item_count, items, address, postal_code, country, name, first_name, mail, phone, processed) VALUES (:cookie, :id, :item_count, :items, :address, :postal_code, :country, :name, :first_name, :mail, :phone, false)",
+    delete: "DELETE FROM store.command WHERE command_id = ?"
 };
 exports.command = command;

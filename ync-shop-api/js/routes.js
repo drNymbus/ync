@@ -3,7 +3,7 @@ const utils = require('./utils.js');
 // Method: GET, Route: /store
 const store_get = async (req, res, client) => {
     utils.log_query('get', req);
-    
+
     try {
         // Retrieve cookie in request
         let cookie = req.signedCookies.ync_shop;
@@ -49,8 +49,8 @@ const store_get = async (req, res, client) => {
         } else { utils.failed_request(res, 400, {'error': 'Bad Request'}); }
 
     } catch (err) {
-        console.log({"error": err});
-        utils.failed_request(res, 500, {'error': "Something went wrong..."});
+        console.log({'error': err});
+        utils.failed_request(res, 500, {'error': 'Something went wrong...'});
     } // Any error that occurred will essentially be a bad query done against cassandra
 };
 exports.store_get = store_get;
@@ -85,14 +85,14 @@ const store_post = async (req, res, client) => {
         } else if (req.query.command === true) { // Add command to database
             let command = {cookie: cookie, ...req.body};
             await client.execute(utils.command.insert, command, {prepare:true}).then(() => { // add command to table
-                res.status(200).json({"message": "Command has been correctly processed"});
+                res.status(200).json({'message': 'Command has been correctly processed'});
             });
 
         } else { utils.failed_request(res, 400, {'error': 'Bad Request'}); }
 
     } catch (err) {
-        console.log({"error": err});
-        utils.failed_request(res, 500, {'error': "Something went wrong..."});
+        console.log({'error': err});
+        utils.failed_request(res, 500, {'error': 'Something went wrong...'});
     } // Any error that occurred will essentially be a bad query done against cassandra
 };
 exports.store_post = store_post;
@@ -114,15 +114,21 @@ const store_delete = async (req, res, client) => {
 
         } else if (req.query.item === true) {
             await client.execute(utils.item.delete, [req.query.id.split(',')]); // delete item from database
-            client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
-                res.status(200).json({"message": "Item deleted"}); // send basket
+            client.execute(utils.basket.select, [cookie]).then(() => { // retrieve basket
+                res.status(200).json({'message': 'Item deleted'}); // send basket
+            });
+
+        } else if (req.query.item === true) {
+            await client.execute(utils.command.delete, [req.query.id.split(',')]); // delete item from database
+            client.execute(utils.basket.select, [cookie]).then(() => { // retrieve basket
+                res.status(200).json({'message': 'Item deleted'}); // send basket
             });
 
         } else { utils.failed_request(res, 400, {'error': 'Bad Request'}); }
 
     } catch (err) { 
-        console.log({"error": err});
-        utils.failed_request(res, 500, {'error': "Something went wrong..."});
+        console.log({'error': err});
+        utils.failed_request(res, 500, {'error': 'Something went wrong...'});
     } // Any error that occurred will essentially be a bad query done against cassandra
 
 };

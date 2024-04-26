@@ -1,10 +1,10 @@
 # YNC Node API
 
-This application uses Express and CassandraDB to manage a simple shopping cart system.
+This application uses Express and CassandraDB to manage a simple shopping cart system. Not only the user's cart can be managed from this API, but also items present in the shop and commands passed by users.
 
 ## Exposed Routes and Methods
 
-### store
+### /store
 
 - **GET `/store?connect=true`**: Retrieves the user's shopping cart. If no cart exists, a new one is created.
 
@@ -12,7 +12,7 @@ This application uses Express and CassandraDB to manage a simple shopping cart s
             "items": [string, ]
         }
 
-- **GET `/store?item=true&id=<item_id>`**: Retrieves all attributes from item_id, all item ids should be separated by a comma. If no attribute exists, the list of all item ids available in the shop is sent.
+- **GET `/store?item=true&id=<item_id#1>[, <item_id#2>, ...]`**: Retrieves all attributes from item_id, all item ids should be separated by a comma. If no attribute exists, the list of all item ids available in the shop is sent.
 
         {
             "item_id": string,
@@ -32,7 +32,7 @@ This application uses Express and CassandraDB to manage a simple shopping cart s
             }, ...
         ]
 
-- **GET `/store?command=true`**: Retrieves the user's shopping cart. If no cart exists, a new one is created.
+- **GET `/store?command=true`**: Retrieves the user's previous commands. If no commands are found an empty json object is returned.
 
         {
             "command_id": string,
@@ -48,31 +48,32 @@ This application uses Express and CassandraDB to manage a simple shopping cart s
             "processed": bool
         }
 
-- **POST `/store?basket=true`**: Adds a new item to the user's cart then retrieve the basket.
+- **POST `/store?basket=true&id=<item_id#1>[,<item_id#2>, ...]`**: Adds a new item to the user's cart then retrieve the updated basket.
 
         {
             "items": [string, ],
-            "output": string
         }
 
-- **POST `/store?item=true`**: Adds a new item to the items table then retrieve the data from table. All items inserted into the table can be retrieved from the "item_id" field. An output message in also sent to describe the result of the request accompanied by any Object where a warning or error occurred
+- **POST `/store?item=true`**: Adds one or several new items to the item table. The response object contains two fields containing item ids: 'completed' for every succesful item insertionl and 'rejected' for every failed item insertion.
 
         {
-            "item_id": string | [string, ],
-            "output": [string, [Object, ]]
+            "completed": [string, ],
+            "rejected": [string, ]
         }
 
-- **POST `/store?command=true`**: Adds a new command to the commands table then returns the status of the query (200 if successful, 500 otherwise). Only one command can be posted at a time.
+- **POST `/store?command=true`**: Adds a new command to the commands table then returns the status of the query: 200 if successful, 500 otherwise. Only one command can be posted at a time.
 
-- **DELETE `/store?basket=true&item=<item_id>`**: Removes one or several items from the user's cart, all item ids should be separated by a comma.
+- **DELETE `/store?basket=true&id=<item_id#1>[, <item_id#2>, ...]`**: Removes one or several items from the user's cart, all item ids should be separated by a comma.
 
         {
             "items_list": [string, ]
         }
 
-- **DELETE `/store?item=true&item=<item_id>`**: Removes an item from the items table then returns the status of the query ().
+- **DELETE `/store?item=true&id=<item_id>`**: Removes an item from the items table then returns the status of the query: 200 if successful, 500 otherwise.
 
-Each action requires the user to be authenticated via a signed cookie. The system generates and updates these cookies as needed to track session and cart information securely.
+- **DELETE `/store?command=true&id=<item_id>`**: Removes an item from the items table then returns the status of the query: 200 if successful, 500 otherwise.
+
+Each action requires the user to be authenticated via a signed cookie. The system generates and updates these cookies as needed (through the 'connect' route under the method GET) to track session and cart information securely.
 
 In case a request cannot be completed or fails the response will update the status accordingly to the error type and contain an error message under a json format:
 
