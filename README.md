@@ -1,6 +1,13 @@
 # YNC (Young new code)
 
-Site infrastructure for the [YNG (Young New Gamers) project](./).
+Site infrastructure for the [YNC (Young New Corporation) project](http://88.174.59.203:15779/).
+
+This projecet aims to provide a wide range of services for different applications. The stack is composed in three layers:
+
+- Database: a Cassandra database deployed as a StatefulSet.
+- APIs: a set of interfaces will be available to handle different keyspaces in the database. Those APIs should be exposed to the WAN so that anyone can re-use a previously created API for different purposes.
+- Applications: the frontend and final layer of the infrastructure. All applications should not operate on the database directly, the APIs are handling all data consistency.
+
 
 ## ync-database
 

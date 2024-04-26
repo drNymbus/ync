@@ -48,7 +48,10 @@ const store_get = async (req, res, client) => {
 
         } else { utils.failed_request(res, 400, {'error': 'Bad Request'}); }
 
-    } catch (err) { utils.failed_request(res, 500, {'error': "Something went wrong..."}); }
+    } catch (err) {
+        console.log({"error": err});
+        utils.failed_request(res, 500, {'error': "Something went wrong..."});
+    } // Any error that occurred will essentially be a bad query done against cassandra
 };
 exports.store_get = store_get;
 
@@ -87,7 +90,10 @@ const store_post = async (req, res, client) => {
 
         } else { utils.failed_request(res, 400, {'error': 'Bad Request'}); }
 
-    } catch (err) { utils.failed_request(res, 500, {'error': "Something went wrong..."}); } // Any error that occurred will essentially be a bad query done against cassandra
+    } catch (err) {
+        console.log({"error": err});
+        utils.failed_request(res, 500, {'error': "Something went wrong..."});
+    } // Any error that occurred will essentially be a bad query done against cassandra
 };
 exports.store_post = store_post;
 
@@ -109,12 +115,15 @@ const store_delete = async (req, res, client) => {
         } else if (req.query.item === true) {
             await client.execute(utils.item.delete, [req.query.id.split(',')]); // delete item from database
             client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
-                res.status(200).json(result.rows[0]); // send basket
+                res.status(200).json({"message": "Item deleted"}); // send basket
             });
 
         } else { utils.failed_request(res, 400, {'error': 'Bad Request'}); }
 
-    } catch (err) { utils.failed_request(res, 500, {'error': "Something went wrong..."}); }
+    } catch (err) { 
+        console.log({"error": err});
+        utils.failed_request(res, 500, {'error': "Something went wrong..."});
+    } // Any error that occurred will essentially be a bad query done against cassandra
 
 };
 exports.store_delete = store_delete;

@@ -7,3 +7,8 @@ ync-shop-api/.dockerignore
 ync-shop-api/package-lock.json
 ync-shop-api/node_modules/*
 ync-shop-api/do_not_share.json
+
+ync-shop-app/.dockerignore
+ync-shop-app/package-lock.json
+ync-shop-app/node_modules/*
+ync-shop-app/do_not_share.json

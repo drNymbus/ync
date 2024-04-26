@@ -1,5 +1,14 @@
 # ync-database
 
+As specified before, the ync-database uses Cassandra to store __EVERYTHING__. You can find all different keyspaces in the database-init directory. Each keyspace is associated to folder, containing at least a 'keyspace.cql' file defining all tables and a 'roles.cql' defining all user roles. You can also find the script used to initialize keyspaces and user-roles in 'database-init/init.sh'. Additionally, the 'superuser.cql' file defines a role able to operate on the entire database.
+
+## User Roles
+
+For each keyspace in the database, different roles and users are needed to operate on it. Users can operate solely on a defined keyspace and should not be able to access multiple keyspaces. If you encounter a situation where a role needs to access several keyspaces simultaneously try extending the keyspace tables or create a new keyspace custom tailored to that role. Ideally each keyspace should have two type of roles:
+
+- Manager: acts as a superuser dedicated to the keyspace. This role is able to perform any action on all tables in the keyspace. (It is not recommended to have multiple manager roles in the same keyspace)
+- Worker: has a limited range of action on the keyspace. Each worker would restricted depending on the utility of the API linked to it.
+
 ## Deployment
 
 You can execute the start and shutdown bash scripts ('./start.sh' & './shutdown.sh') for a quick and efficient deployment on docker of the ync-database.
@@ -46,4 +55,7 @@ __Table: Item__
 
 ## TODO
 
-- BIG QUESTION: Do we init keyspaces in the docker image or at container startup ? (This make big changes in kubernetes deployment)
+- Do we need a custom docker image for ync-database or should it be initialized by hand?
+- How should a cassandra container (a.k.a node) should be initialized?
+    - Should the container contain files to initialize keyspaces and user-roles?
+    - Will the container duplicate data base on master node?
