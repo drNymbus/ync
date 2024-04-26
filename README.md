@@ -5,8 +5,9 @@ Site infrastructure for the [YNC (Young New Corporation) project](http://88.174.
 This projcet aims to provide a wide range of services for different applications. The stack is composed of three layers:
 
 - Database: a Cassandra database deployed as a StatefulSet. This will store any useful information in different keyspaces with a basic user-roles management for each distinct keyspace. The database should be hidden as much as possible.
+
 - APIs: a set of interfaces with the sole purpose to manage the database keyspaces. This layer's role is to ensure data consistency across different tables, Cassandra being NoSQL no foreign keys are specified, and allows the next layer to be able to gather and post data to the database.
-<!-- - APIs: a set of interfaces will be available to handle different keyspaces in the database. Those APIs should be exposed to the WAN so that anyone can re-use a previously created API for different purposes. -->
+
 - Applications: the frontend and final layer of the infrastructure. All applications should not operate on the database directly, the APIs are handling all data consistency.
 
 # Database: ync-database
