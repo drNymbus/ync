@@ -44,7 +44,8 @@ exports.log_query = log_query;
 const session = {
     select: "SELECT * FROM store.session WHERE cookie_id = ?",
     insert: "INSERT INTO store.session (cookie_id,unperishable,last_update) VALUES (?, ?, ?)",
-    update: "UPDATE store.session SET last_update = ? WHERE cookie_id = ?"
+    update: "UPDATE store.session SET last_update = ? WHERE cookie_id = ?",
+    unperishable: "UPDATE store.session SET unperishable = true WHERE cookie_id = ?"
 };
 exports.session = session;
 
@@ -63,3 +64,9 @@ const item = {
     delete: "DELETE FROM store.item WHERE item_id IN ?"
 };
 exports.item = item;
+
+const command = {
+    select: "SELECT * FROM store.command WHERE cookie_id = ?;",
+    insert: "INSERT INTO store.command (cookie_id, command_id, item_count, items, address, postal_code, country, name, first_name, mail, phone, processed) VALUES (:cookie, :id, :item_count, :items, :address, :postal_code, :country, :name, :first_name, :mail, :phone, false)",
+};
+exports.command = command;
