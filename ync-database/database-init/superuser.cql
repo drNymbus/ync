@@ -1,1 +1,0 @@
-CREATE ROLE admin WITH SUPERUSER = true AND LOGIN = true AND PASSWORD = ':]necrqf&';

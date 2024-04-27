@@ -21,13 +21,6 @@ spec:
         ports:
         - containerPort: 9042
           name: cql
-        volumeMounts:
-        - name: init-volume
-          mountPath: /scripts
-      volumes:
-      - name: init-volume
-        configMap:
-          name: cassandra-cql
 
 ---
 

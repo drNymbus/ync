@@ -1,10 +1,16 @@
 #!/bin/bash
 
-cd database-init
+# Create folder to store cql scripts
+kubectl exec -it cassandra-0 -- mkdir "/etc/init.d/$1"
 
-# Apply all CQL scripts found in the specified directory to Cassandra's master node
-for script in /$1/*.cql; do
-    kubectl exec -it cassandra-0 -- "cqlsh -f $script"
+cd cql
+
+for script in `ls $1/*.cql`; do
+    # Copy script to pod
+    kubectl cp $script cassandra-0:/etc/init.d/$script
+    # Execute script
+    COMMAND="cqlsh -f /scripts/$script"
+    kubectl exec -it cassandra-0 -- $COMMAND
 done
 
 cd ..
