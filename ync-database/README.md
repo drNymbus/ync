@@ -9,27 +9,33 @@ For each keyspace in the database, different roles and users are needed to opera
 - Manager: acts as a superuser dedicated to the keyspace. This role is able to perform any action on all tables in the keyspace. (It is not recommended to have multiple manager roles in the same keyspace)
 - Worker: has a limited range of action on the keyspace. Each worker would restricted depending on the utility of the API linked to it.
 
-## Deployment
+# Deployment
+
+## Docker
 
 You can execute the start and shutdown bash scripts ('./start.sh' & './shutdown.sh') for a quick and efficient deployment on docker of the ync-database.
 Every steps are commented.
 
 If you wish to deploy this component on kubernetes, you'll eventually find some resources in the 'deployment' folder of this repository.
 
-## Keyspace: __Store__
+## Minikube
 
-__Table: Session__
+# Keyspace
+
+## Store's tables
+
+__Session__
 
 - cookie_id UUID [PRIMARY KEY]: cookie string to be encoded, hence the session identifier
 - unperishable boolean: wether the session should be persistent or not
 - last_update timestamp: timestamp of the last action performed with this session
 
-__Table: Basket__
+__Basket__
 
 - cookie_id UUID [PRIMARY KEY]: the session identifier
 - items set<varchar>: items currently in the basket, we currently don't support multiple baskets for a single session
 
-__Table: Command__
+__Command__
 
 - cookie_id UUID: the session identifier
 - command_id varchar: command identifier (in case of multiple buys from a single person, should be retained until the command is arrived and well closed)
@@ -45,7 +51,7 @@ __Table: Command__
 
 *PRIMARY KEY (cookie_id: command_id)*
 
-__Table: Item__
+__Item__
 
 - item_id varchar [PRIMARY KEY]: shop's item identifier
 - image blob: image associated to the item

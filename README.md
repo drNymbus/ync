@@ -38,8 +38,8 @@ This API is intended to operate on the 'store' keyspace of the 'ync-database' co
 - **POST `/store?item=true`**: Adds one or several new items to the item table. The response object contains two fields containing item ids: 'completed' for every succesful item insertionl and 'rejected' for every failed item insertion.
 - **POST `/store?command=true`**: Adds a new command to the commands table then returns the status of the query: 200 if successful, 500 otherwise. Only one command can be posted at a time.
 - **DELETE `/store?basket=true&id=<item_id#1>[, <item_id#2>, ...]`**: Removes one or several items from the user's cart, all item ids should be separated by a comma.
-- **DELETE `/store?item=true&id=<item_id>`**: Removes an item from the items table then returns the status of the query: 200 if successful, 500 otherwise.
-- **DELETE `/store?command=true&id=<item_id>`**: Removes an item from the items table then returns the status of the query: 200 if successful, 500 otherwise.
+- **DELETE `/store?item=true&id=<item_id>`**: Removes an item from the table then returns the status of the query: 200 if successful, 500 otherwise.
+- **DELETE `/store?command=true&id=<item_id>`**: Removes a command from the table then returns the status of the query: 200 if successful, 500 otherwise.
 
 To learn about how to deploy this component, go to the 'deployment' or 'ync-node-app' section.
 
