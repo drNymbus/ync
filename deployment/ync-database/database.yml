@@ -6,7 +6,7 @@ metadata:
     app: cassandra
 spec:
   serviceName: "cassandra"
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: cassandra
@@ -21,6 +21,19 @@ spec:
         ports:
         - containerPort: 9042
           name: cql
+        volumeMounts:
+        - name: data
+          mountPath: /var/data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      storageClassName: manual
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
 
 ---
 
