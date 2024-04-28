@@ -1,5 +1,6 @@
 const uuid = require('cassandra-driver').types.Uuid;
 const crypto = require('crypto');
+const fs = require('fs');
 
 /* @desc: Return the token to be stored in the cookie
  * @return {bytes}: The encrypted random string
@@ -44,7 +45,8 @@ exports.log_query = log_query;
 const session = {
     select: "SELECT * FROM store.session WHERE cookie_id = ?",
     insert: "INSERT INTO store.session (cookie_id,unperishable,last_update) VALUES (?, ?, ?)",
-    update: "UPDATE store.session SET last_update = ? WHERE cookie_id = ?"
+    update: "UPDATE store.session SET last_update = ? WHERE cookie_id = ?",
+    unperishable: "UPDATE store.session SET unperishable = true WHERE cookie_id = ?"
 };
 exports.session = session;
 
@@ -60,6 +62,14 @@ const item = {
     select_all: "SELECT item_id FROM store.item;",
     select: "SELECT * FROM store.item WHERE item_id IN ?",
     insert: "INSERT INTO store.item (item_id, image, display_name, description, price) VALUES (:id, textAsBlob(:image), :display_name, :description, :price)",
-    delete: "DELETE FROM store.item WHERE item_id IN ?"
+    delete: "DELETE FROM store.item WHERE item_id IN ?",
+    image: "SELECT image FROM store.item WHERE item_id IN ?"
 };
 exports.item = item;
+
+const command = {
+    select: "SELECT (command_id, item_count, items, address, postal_code, country, name, first_name, mail, phone, processed) FROM store.command WHERE cookie_id = ?;",
+    insert: "INSERT INTO store.command (cookie_id, command_id, item_count, items, address, postal_code, country, name, first_name, mail, phone, processed) VALUES (:cookie, :id, :item_count, :items, :address, :postal_code, :country, :name, :first_name, :mail, :phone, false)",
+    delete: "DELETE FROM store.command WHERE command_id = ?"
+};
+exports.command = command;

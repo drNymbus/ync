@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sed -i 's/\r$//' deployment/build.sh
 sed -i 's/\r$//' deployment/start.sh
 sed -i 's/\r$//' deployment/shutdown.sh
 
