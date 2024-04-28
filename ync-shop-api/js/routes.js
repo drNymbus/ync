@@ -36,14 +36,21 @@ const store_get = async (req, res, client) => {
                     res.status(200).json(result.rows); // send item
                 });
             } else { // Retrieve items specified in query id field
-                client.execute(utils.item.select, [req.query.id.split(',')]).then((result) => { // retrieve item
-                    res.status(200).json(result.rows); // send item
+                client.execute(utils.item.select, [req.query.id.split(',')]).then((result) => { // retrieve item.s
+                    let data = result.rows;
+                    for (let i = 0; i < data.length; i++) {
+                        const blob = data[i].image;
+                        const image = blob.toString('base64');
+                        data[i].image = `data:image/jpeg;base64,${image}`;
+                    }
+
+                    res.status(200).json(data); // send item.s
                 });
             }
 
         } else if (req.query.command === true) { // Retrieve one or several commands
-            client.execute(utils.command.select, [req.query.id.split(',')]).then((result) => { // retrieve item
-                res.status(200).json(result.rows); // send item
+            client.execute(utils.command.select, [req.query.id.split(',')]).then((result) => { // retrieve command
+                res.status(200).json(result.rows); // send command
             });
 
         } else { utils.failed_request(res, 400, {'error': 'Bad Request'}); }

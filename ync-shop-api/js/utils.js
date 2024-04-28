@@ -1,5 +1,6 @@
 const uuid = require('cassandra-driver').types.Uuid;
 const crypto = require('crypto');
+const fs = require('fs');
 
 /* @desc: Return the token to be stored in the cookie
  * @return {bytes}: The encrypted random string
@@ -61,7 +62,8 @@ const item = {
     select_all: "SELECT item_id FROM store.item;",
     select: "SELECT * FROM store.item WHERE item_id IN ?",
     insert: "INSERT INTO store.item (item_id, image, display_name, description, price) VALUES (:id, textAsBlob(:image), :display_name, :description, :price)",
-    delete: "DELETE FROM store.item WHERE item_id IN ?"
+    delete: "DELETE FROM store.item WHERE item_id IN ?",
+    image: "SELECT image FROM store.item WHERE item_id IN ?"
 };
 exports.item = item;
 
