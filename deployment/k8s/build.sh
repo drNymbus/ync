@@ -1,17 +1,30 @@
 #!/usr/bin/bash
 
+cd ../..
+
+# Build API images
+cd ync-api
+for api in `ls -d */`; do
+    echo "\n##############\nBuilding ${api}...\n##############\n"
+
+    cd ${api}
+    docker build -t ${api} .
+    docker save ${api}:latest | sudo k3s ctr images import -
+    cd ..
+
+    echo "\n##############\nSuccessfully built: ${api}\n##############\n\n"
+done
 cd ..
 
-# Build API image
-cd ync-shop-api
-docker build -t ync-shop-api .
-cd ..
-
-# Build React image
-cd ync-shop-app
-docker build -t ync-shop-app .
+# Build Application images
+cd ync-app
+for app in `ls -d */`; do
+    echo ${app}
+    cd ${app}
+    docker build -t ${app} .
+    cd ..
+done
 cd ..
 
 # Register custom images to k3s
-docker save ync-node-app:latest | sudo k3s ctr images import -
 # docker save ync-react-app:latest | sudo k3s ctr images import -
