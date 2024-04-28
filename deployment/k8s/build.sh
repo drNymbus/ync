@@ -3,13 +3,13 @@
 cd ..
 
 # Build API image
-cd ync-node-app
-docker build -t ync-node-app .
+cd ync-shop-api
+docker build -t ync-shop-api .
 cd ..
 
 # Build React image
-cd ync-react-app
-docker build -t ync-react-app .
+cd ync-shop-app
+docker build -t ync-shop-app .
 cd ..
 
 # Register custom images to k3s
