@@ -69,9 +69,9 @@ This application uses Express and CassandraDB to manage a simple shopping cart s
             "items_list": [string, ]
         }
 
-- **DELETE `/store?item=true&id=<item_id>`**: Removes an item from the items table then returns the status of the query: 200 if successful, 500 otherwise.
+- **DELETE `/store?item=true&id=<item_id>`**: Removes an item from the table then returns the status of the query: 200 if successful, 500 otherwise.
 
-- **DELETE `/store?command=true&id=<item_id>`**: Removes an item from the items table then returns the status of the query: 200 if successful, 500 otherwise.
+- **DELETE `/store?command=true&id=<item_id>`**: Removes a command from the table then returns the status of the query: 200 if successful, 500 otherwise.
 
 Each action requires the user to be authenticated via a signed cookie. The system generates and updates these cookies as needed (through the 'connect' route under the method GET) to track session and cart information securely.
 
@@ -82,6 +82,8 @@ In case a request cannot be completed or fails the response will update the stat
     }
 
 ## Deployment
+
+# Docker
 
 You can generate an image of this API with the help of Docker:
 
@@ -94,3 +96,5 @@ Then run the container:
 You're good to go :)
 
 If you wish to deploy this component through kubernetes and wish to link it to the ync-database component, you'll find some help in the 'deployment' folder of the repository.
+
+# Minikube
