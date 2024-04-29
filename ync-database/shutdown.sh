@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# Stop cassandra cluster
-docker container stop cassandra_cluster
+if [ "$1" == "docker" ]; then
+    docker container stop cassandra_cluster
+    docker system prune
 
-# Remove useless containers
-docker container prune
+elif [ "$1" == "k8s" ]; then
+    kubectl delete statefulset cassandra
+    kubectl delete pvc --all && kubectl delete pv cassandra-pv
+fi
