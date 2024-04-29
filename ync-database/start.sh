@@ -20,6 +20,10 @@ if [ "$1" == "docker"]; then
     docker exec -it cassandra_cluster bash
 fi
 
-if [ "$1" == "kube" ]; then
+if [ "$1" == "k8s" ]; then
+    kubectl cp ./superuser.cql cassandra-0:/etc/init.d/superuser.cql
+    kubectl exec -it cassandra-0 -- cqlsh -u cassandra -p cassandra -f '/etc/init.d/superuser.cql'
+    for $keyspace in `ls -d cql/*/`; do ./deploy_keyspace "$keyspace"; done
+
     echo "Not implemented yet."
 fi

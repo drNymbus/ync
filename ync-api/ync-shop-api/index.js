@@ -17,7 +17,7 @@ const routes = require('./js/routes.js');
 
 // Set up express app
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 // Parse body in case of POST method
 app.use(bodyParser.json());
@@ -38,7 +38,7 @@ app.use(cookieParser(secrets.cookie)); // Hand over the secret string for signed
 
 // Connect to CassandraDB
 const client = new cassandra.Client({
-    contactPoints: [process.env.CASSANDRA_CONTACT_POINTS || '127.0.0.1'],
+    contactPoints: [process.env.CASSANDRA_CONTACT_POINTS],
     localDataCenter: 'datacenter1',
     keyspace: 'store'
 });
