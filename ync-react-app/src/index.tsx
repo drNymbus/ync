@@ -8,13 +8,19 @@ import App from "./App";
 const rootElement = document.getElementById("root")!;
 const root = createRoot(rootElement);
 
-// Rendu de l'application //
+// Render //
 // StrictMode activé pour demander à React de détecter et expliciter plus de problèmes potentiels
 // BrowserRouter est une composante qui nous permet de gérer la navigation entre les pages de l'application
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
+
+    <React.StrictMode>
+
+        <BrowserRouter>
+
+            <App />
+
+        </BrowserRouter>
+
+    </React.StrictMode>
+
 );

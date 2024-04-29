@@ -25,6 +25,16 @@
                 "color": "#B311FF" 
             },
             "includeOnClick":"/"
+        },
+        "3":{ 
+            "id": "3",
+            "text": "JE PASSE A LA SUITE", 
+            "style": { 
+                "marginRight": "10px",
+                "justifyContent": "space-between",
+                "color": "#B311FF" 
+            },
+            "includeOnClick":"/paiement"
         }
     },
     "section_id":{
