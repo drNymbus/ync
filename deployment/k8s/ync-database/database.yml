@@ -22,18 +22,12 @@ spec:
         - containerPort: 9042
           name: cql
         volumeMounts:
-        - name: data
-          mountPath: /var/data
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      storageClassName: manual
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 800M
+        - name: cassandra-storage
+          mountPath: /var/lib/cassandra
+      volumes:
+      - name: cassandra-storage
+        persistentVolumeClaim:
+          claimName: cassandra-pv-claim
 
 ---
 

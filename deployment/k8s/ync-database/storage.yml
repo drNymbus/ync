@@ -3,13 +3,29 @@ kind: PersistentVolume
 metadata:
   name: cassandra-pv
   labels:
+    app: cassandras
     type: local
 spec:
   storageClassName: manual
   capacity:
-    storage: 1500Gi
+    storage: 500Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /mnt/data/cassandra
-    type: DirectoryOrCreate
+    path: "/mnt/data/mysql"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cassandra-pv-claim
+  labels:
+    app: cassandra
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Gi
