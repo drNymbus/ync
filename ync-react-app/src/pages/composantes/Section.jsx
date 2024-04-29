@@ -5,23 +5,25 @@ import "../style/styles.css";
 function CstmSection({ image, name }) {
 
 // Render
-    return (
+return (
 
-        <div className="custom-section-container">
+<div className="custom-section-container">
 
-      <div className="custom-section-image">
+    <div className="custom-section-image">
+
         <img src={image} alt="Home Icon" />
-      </div>
 
-            <div className="custom-section-title">
+    </div>
 
-                <p>{name}</p>
+    <div className="custom-section-title">
 
-            </div>
+        <p>{name}</p>
 
-        </div>
+    </div>
 
-    );
+</div>
+
+);
 
 }
 
