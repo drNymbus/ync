@@ -3,9 +3,7 @@
         "0":{ 
             "id": "0",
             "text": "YNG SHOP", 
-            "style": { 
-                "marginLeft": "10px", 
-                "justifyContent": "space-between", 
+            "style": {  
                 "color": "#000000" 
             },
             "includeOnClick":null
@@ -14,8 +12,6 @@
             "id": "1",
             "text": "PANIER", 
             "style": { 
-                "marginRight": "10px",
-                "justifyContent": "space-between",
                 "color": "#B311FF" 
             },
             "includeOnClick":"/panier"
@@ -33,8 +29,8 @@
     },
     "section_id":{
         "0":{ 
-            "image": "assets/sectionQuelconque.png", 
-            "name": "Quelconque" 
+            "image": "assets/home_icon.svg", 
+            "name": "Icone Accueil" 
         },
         "1":{ 
             "image": "assets/sectionPanier.png", 

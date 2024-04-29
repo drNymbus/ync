@@ -10,7 +10,7 @@ function CstmBandeau({buttons}) {
 
     <div className="custom-bandeau">
 
-      <div className="gauche">
+      <div className="bandeau_gauche">
         {buttons.length > 0 && (
           <CstmBoutonMenu 
             text={buttons[0].text} 
@@ -19,7 +19,7 @@ function CstmBandeau({buttons}) {
           />)}
       </div>
 
-      <div className="droite">
+      <div className="bandeau_droite">
         {buttons.slice(1).map((button) => (
           <CstmBoutonMenu 
             key={button.id} 

@@ -1,18 +1,13 @@
 .App {
-  font-family: sans-serif;
-  text-align: center;
+  font-family: "Necto Mono", monospace; /*Police de base des textes du site*/
 }
 
 .video-container {
-  position: relative;
-  width: 100%;
-  height: 100vh; /* La vidéo prendra la totalité de la hauteur de l'écran */
-  overflow: hidden;
+  width: auto;
 }
 
 .video-container video {
   position: absolute;
-
   /* Centre la vidéo et la recale en haut à gauche du contenant avec le translate */
   top: 50%;
   left: 50%;
@@ -26,101 +21,120 @@
 
 body {
   font-size: 16px; /* Taille de la police de base */
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-top: 15px;
 }
 
 .custom-bandeau {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-between; /*Crée l'espace entre la div gauche et la div droite séparant le bouton YNG SHOP du menu de droite*/
+  align-items: center; /*Aligne verticalement le texte dans le bandeau*/
+  
+  /*Dans "sub-menu", Display:Inline-Block prend le dessus sur la verticalité
+
+  text-align: center; /*Centre les textes qui seront présents dans le bandeau*/
   background-color: #F8F8F8;
-  margin-top: 15px;
-  margin-left: 15px;
-  margin-right: 15px;
   width: auto;
   height: 50px;
   font-family: "Necto Mono", monospace;
 }
 
-.sub-menu {
-  display: inline-block;
-  width: 5.9em; /* Converti depuis 94px */
-  height: 1.2em; /* Converti depuis 19px */
-  margin: 0;
-  font-size: 1em; /* Converti depuis 16px */
-  line-height: 1.2em; /* Converti depuis 19px */
+.bandeau_gauche {
+  padding-left: 20px;
 }
 
-.sub-menu:hover:first-child {
-  text-decoration: underline; /* Soulignement noir pour YYY au survol */
+.bandeau_gauche::after {
+  content: ""; /* Contenu vide car on veut juste une ligne */
+  display: inline-block;
+  width: 20px; /* Largeur de la ligne */
+  height: 1px; /* Épaisseur de la ligne */
+  background-color: #000; /* Couleur de la ligne */
+  margin-bottom: 4px;
+  margin-left: 10px;
+}
+
+.bandeau_droite {
+  margin-right: 20px;
+}
+
+.sub-menu {
+  display: inline-block;
+}
+
+.sub-menu:first-child {
+
 }
 
 .custom-section-container {
-  width: 18.6458%; /* Converti depuis 574px */
-  height: 5.7407%; /* Converti depuis 100px */
+  display: flex;
 }
 
 .custom-section-image {
-  width: 3.2552%; /* Converti depuis 100px */
-  height: 3.2552%; /* Converti depuis 100px */
-  text-align: center;
-  float: left;
+  padding-block: 20px;
+  padding-inline: 20px;
 }
 
 .custom-section-title {
-  width: 14.6354%; /* Converti depuis 449px */
-  height: 3.369%; /* Converti depuis 52px */
-  text-align: left;
-  float: left;
+  align-self: center;
 }
 
 .custom-section-title p {
-  font-size: 2.5em; /* Converti depuis 40px */
-  color: black;
-  margin-top: 0.9375em; /* Converti depuis 15px */
-  margin-left: 1.5625em; /* Converti depuis 25px */
+  color: rgb(10, 10, 10);
+  font-size: 30px;
 }
 
 .custom-content-container {
-  width: 43.5em; /* Converti depuis 828px */
-  height: 27.9em; /* Converti depuis 526px */
-  margin-left: 39.6em; /* Converti depuis 762px */
-  margin-top: 11.1em; /* Converti depuis 151px */
-  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 650px;
 }
 
 .custom-content-image {
-  width: 21.8em; /* Converti depuis 328px */
-  height: 29.1em; /* Converti depuis 437px */
-  margin: 0 1.6em 1.6em 0; /* Converti depuis 34px */
+  display: flex;
+  align-self: center;
+  position: relative;
+}
+
+.custom-content-image::after {
   position: absolute;
-  top: 0;
-  left: 0;
+  content: ""; /* Contenu vide car on veut juste une ligne */
+  display: inline-block;
+  width: 420px; /* Largeur de la ligne */
+  height: 1px; /* Épaisseur de la ligne */
+  background-color: #000; /* Couleur de la ligne */
+  margin-left: 265px;
 }
 
 .custom-content-description {
-  width: 30.1em; /* Converti depuis 481px */
-  height: 9.1em; /* Converti depuis 145px */
-  font-family: "Necto Mono", monospace;
-  letter-spacing: 0.125em; /* Converti depuis 2px */
+  position: absolute;
+  left: 275px;
   color: black;
-  margin-top: 1.25em; /* Ajuster la marge en fonction de vos besoins */
+  width: 400px;
+}
+
+.custom-content-description p {
+  margin-top: 10px;
+  margin-bottom: 50px;
+  position: relative;
 }
 
 .custom-content-prix {
-  width: 10.4em; /* Converti depuis 200px */
-  height: 3.1em; /* Converti depuis 50px */
-  margin-left: 4.3em; /* Converti depuis 83px */
-  margin-bottom: 0;
   position: absolute;
-  bottom: 0;
+  width: 150px;
+  height: 50px;
+  align-content: center;
+  text-align: center;
+
+  border: 1px solid #bc2efe;
 }
 
 .custom-content-prix p {
-  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
-.custom-content-container img {
-  width: 100%;
-  height: 100%;
-  border: 0.0625em solid #bc2efe; /* Converti depuis 1px */
+.custom-content-prix:hover{
+  background-color: #bc2efe;
+  cursor: grab;
 }

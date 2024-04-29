@@ -9,7 +9,7 @@ function CstmSection({ image, name }) {
     <div className="custom-section-container">
 
       <div className="custom-section-image">
-        <img src={image} alt="Section actuelle" />
+        <img src={image} alt="Home Icon" />
       </div>
 
       <div className="custom-section-title">
