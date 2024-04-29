@@ -1,6 +1,8 @@
 #!/bin/bash
 
-if [ "$1" == "docker"]; then
+echo $(pwd)
+
+if [ "$1" == "docker" ]; then
     # Init service
     docker run -d --name=cassandra_cluster -p 9042:9042 -v ./cql/:/scripts/ cassandra:latest
     # Init keyspaces: wait for cluster to be ready, then run cql scripts
@@ -16,17 +18,15 @@ if [ "$1" == "docker"]; then
         cd ..
     done
     cd ..
-    # Enter container bash
-    docker exec -it cassandra_cluster bash
 
 elif [ "$1" == "k8s" ]; then
     # Init service
-    kubectl apply -f storage.yml
-    kubectl apply -f database.yml
+    # kubectl apply -f storage.yml
+    # kubectl apply -f database.yml
     # Init keyspaces
-    kubectl cp ./superuser.cql cassandra-0:/etc/init.d/superuser.cql
+    kubectl cp ./cql/superuser.cql cassandra-0:/etc/init.d/superuser.cql
     kubectl exec -it cassandra-0 -- cqlsh -u cassandra -p cassandra -f '/etc/init.d/superuser.cql'
-    for $keyspace in `ls -d cql/*/`; do ./deploy_keyspace "$keyspace"; done
-    # enter container bash
-    kubectl exec -it cassandra-0 -- /bin/bash
+    for keyspace in `ls -d cql/*/`; do
+        sh ./deploy_keyspace.sh ${keyspace:4:-1};
+    done
 fi
