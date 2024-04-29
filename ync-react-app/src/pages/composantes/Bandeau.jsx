@@ -11,7 +11,7 @@ function CstmBandeau({buttons}) {
 
         <div className="custom-bandeau">
 
-            <div className="gauche">
+          <div className="bandeau_gauche">
 
               {buttons.length > 0 && (
                 <CstmBoutonMenu 
@@ -19,22 +19,17 @@ function CstmBandeau({buttons}) {
                   style={buttons[0].style}
                   includeOnClick={buttons[0].includeOnClick}
                 />)}
-            </div>
+          </div>
 
-            <div className="droite">
-
-                {buttons.slice(1).map((button) => (<CstmBoutonMenu key={button.id} text={button.text} style={button.style} includeOnClick={button.includeOnClick} />))}
-                
-            </div>
-      <div className="bandeau_droite">
-        {buttons.slice(1).map((button) => (
-          <CstmBoutonMenu 
-            key={button.id} 
-            text={button.text} 
-            style={button.style} 
-            includeOnClick={button.includeOnClick} 
-          />))}
-      </div>
+          <div className="bandeau_droite">
+            {buttons.slice(1).map((button) => (
+              <CstmBoutonMenu 
+                 key={button.id} 
+                 text={button.text} 
+                 style={button.style} 
+                 includeOnClick={button.includeOnClick} 
+              />))}
+          </div>
 
         </div>
     );
