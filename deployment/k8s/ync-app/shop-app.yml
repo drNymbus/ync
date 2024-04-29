@@ -24,7 +24,7 @@ spec:
         - name: API_CONTACT_POINT
           value: "10.43.6.1"
         - name: API_PORT
-          value: 3001
+          value: 15779
 
 ---
 
@@ -39,6 +39,6 @@ spec:
       port: 3000
       targetPort: 3000
       nodePort: 15778
-  clusterIP: 10.43.6.1
+  clusterIP: 10.43.6.2
   selector:
     app: shop-app

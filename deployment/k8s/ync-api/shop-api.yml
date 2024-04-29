@@ -23,6 +23,8 @@ spec:
         env:
         - name: CASSANDRA_CONTACT_POINTS
           value: "10.43.6.0"
+          name: PORT
+          value: 3001
 
 ---
 

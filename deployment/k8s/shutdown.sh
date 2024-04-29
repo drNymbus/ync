@@ -1,8 +1,11 @@
 #!/bin/bash
 
-#!alias k=kubectl
-
-for $component in `ls ync-app/*.yml`; do k delete -f ${component}; done
-for $component in `ls ync-api/*.yml`; do k delete -f ${component}; done
-for $component in `ls ync-database/*.yml`; do k delete -f ${component}; done
-kubectl delete namespace ync-app
+if [ "$1" == "k3s"]; then
+    systemctl stop k3s
+    /usr/local/bin/k3s-killall.sh
+elif [ "$1" == "minikube" ]; then
+    ./service.sh delete
+    minikube stop
+    minikube delete
+    docker system prune
+fi

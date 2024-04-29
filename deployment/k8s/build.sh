@@ -7,9 +7,12 @@ cd ync-api
 for api in `ls -d */`; do
     echo "Building ${api::-1}..."
 
+    # Build image and register it to k3s
     cd ${api}
     docker build -t ${api::-1} .
-    docker save ${api::-1}:latest | sudo k3s ctr images import -
+    if [ "$1" == "k3s" ]; then
+        docker save ${api::-1}:latest | sudo k3s ctr images import -;
+    fi
     cd ..
 
     echo "Successfully built: ${api::-1}."
@@ -23,11 +26,11 @@ for app in `ls -d */`; do
 
     cd ${app}
     docker build -t ${app::-1} .
+    # if [ "$1" == "k3s" ]; then
+    #     docker save ${api::-1}:latest | sudo k3s ctr images import -;
+    # fi
     cd ..
 
     echo "Successfully built: ${app::-1}."
 done
 cd ..
-
-# Register custom images to k3s
-# docker save ync-react-app:latest | sudo k3s ctr images import -
