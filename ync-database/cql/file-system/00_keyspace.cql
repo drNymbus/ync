@@ -3,7 +3,7 @@ CREATE KEYSPACE IF NOT EXISTS file_system WITH replication = {'class': 'SimpleSt
 
 -- @desc: Session record
 DROP TABLE IF EXISTS file_system.user;
-CREATE TABLE IF NOT EXISTS store.user (
+CREATE TABLE IF NOT EXISTS file_system.user (
     username varchar PRIMARY KEY,
     password varchar,
     last_update timestamp
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS store.user (
 
 -- @desc: Session record
 DROP TABLE IF EXISTS file_system.folder;
-CREATE TABLE IF NOT EXISTS store.folder (
+CREATE TABLE IF NOT EXISTS file_system.folder (
     username varchar,
     id varchar,
     display_name varchar,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS store.folder (
 
 -- @desc: Session record
 DROP TABLE IF EXISTS file_system.file;
-CREATE TABLE IF NOT EXISTS store.file (
+CREATE TABLE IF NOT EXISTS file_system.file (
     username varchar,
     id varchar,
     display_name varchar,
