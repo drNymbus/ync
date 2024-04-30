@@ -1,38 +1,56 @@
 DROP KEYSPACE IF EXISTS file_system;
 CREATE KEYSPACE IF NOT EXISTS file_system WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'};
 
--- @desc: Session record
+-- @desc: Metadata and content's file.
+DROP TABLE IF EXISTS file_system.file;
+CREATE TABLE IF NOT EXISTS file_system.file (
+    id UUID PRIMARY KEY,
+    display_name varchar,
+    owner varchar,
+    authorized list<varchar>, -- List of users allowed to access this resource
+    parent UUID, -- Null if root file
+    extension varchar,
+    content blob,
+    archive blob, -- Classic zip or tar archive
+);
+
+-- @desc: a Folder composed of folders and files.
+DROP TABLE IF EXISTS file_system.folder;
+CREATE TABLE IF NOT EXISTS file_system.folder (
+    id UUID PRIMARY KEY,
+    display_name varchar,
+    owner varchar,
+    authorized list<varchar>, -- List of users allowed to access this resource
+    parent UUID, -- Null if root folder
+    child_folders list<UUID>,
+    child_files list<UUID>,
+    archive blob -- Classic zip or tar archive
+);
+
+-- @desc: User file system's entrypoint.
 DROP TABLE IF EXISTS file_system.user;
 CREATE TABLE IF NOT EXISTS file_system.user (
     username varchar PRIMARY KEY,
     password varchar,
-    last_update timestamp
+    last_update timestamp,
+    public UUID,
+    shared UUID,
+    folders list <UUID>
 );
 
--- @desc: Session record
-DROP TABLE IF EXISTS file_system.folder;
-CREATE TABLE IF NOT EXISTS file_system.folder (
-    username varchar,
-    id varchar,
-    display_name varchar,
-    permissions list<varchar>,
-    parent varchar,
-    share_link varchar,
-    child_folders varchar,
-    child_files varchar,
-    PRIMARY KEY (username, id)
-);
-
--- @desc: Session record
+-- @desc: As to not corrupt and ensure full availability public resources are duplicated
 DROP TABLE IF EXISTS file_system.file;
-CREATE TABLE IF NOT EXISTS file_system.file (
-    username varchar,
-    id varchar,
+CREATE TABLE IF NOT EXISTS file_system.public_resource (
+    id UUID PRIMARY KEY,
     display_name varchar,
-    permissions list<varchar>,
-    parent varchar,
-    share_link varchar,
     extension varchar,
-    content blob,
-    PRIMARY KEY (username, id)
+    archive blob, -- Classic zip or tar archive
+    public timestamp -- Last time thise resource was posted in public, value is set to null in case of unperishable 
+);
+
+-- @desc: Session record
+DROP TABLE IF EXISTS file_system.public;
+CREATE TABLE IF NOT EXISTS file_system.public (
+    id UUID PRIMARY KEY,
+    items list<UUID>,
 );
