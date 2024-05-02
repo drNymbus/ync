@@ -1,6 +1,7 @@
 import React from "react";
 import { DataProvider } from "./pages/context/BrutDataProvider";
 import { ArticleContextProvider } from "./pages/context/ArticleDataProvider";
+import {BoutonProvider} from "./pages/context/BoutonProvider";
 import { Routes, Route } from "react-router-dom";
 import LogoComponent from "./pages/Splashpage";
 import CstmAccueil from "./pages/Accueil";
@@ -19,21 +20,25 @@ export default function App() {
 
         <div className="App">
 
-            <DataProvider>
+            <BoutonProvider>
 
-                <ArticleContextProvider>
+                <DataProvider>
 
-                    <Routes>
+                    <ArticleContextProvider>
 
-                        <Route path="/" element={<LogoComponent content={<CstmAccueil />} />} />
-                        <Route path="/Panier" element={<CstmPanier />} />
-                        <Route path="/Paiement" element={<CstmPaiement />} />
+                        <Routes>
 
-                    </Routes>
+                            <Route path="/" element={<LogoComponent content={<CstmAccueil />} />} />
+                            <Route path="/Panier" element={<CstmPanier />} />
+                            <Route path="/Paiement" element={<CstmPaiement />} />
 
-                </ArticleContextProvider>
+                        </Routes>
 
-            </DataProvider>
+                    </ArticleContextProvider>
+
+                </DataProvider>
+
+            </BoutonProvider>
 
 
         </div>

@@ -43,7 +43,7 @@ function CstmAccueil() {
 
         <div className="custom-full-page-content">
 
-            {pageData && <CstmBandeau buttons={pageData.buttonData} />}
+            {pageData && <CstmBandeau buttons={pageData.buttonDataBandeau} />}
 
             {pageData && <CstmSection image={pageData.sectionData.image} name={pageData.sectionData.name} />}
 
@@ -52,6 +52,7 @@ function CstmAccueil() {
                 image={"../../assets/tableau_quelconque.png"}
                 description={article.description}
                 prix={article.price}
+                buttons={pageData.buttonData}
             />}
 
         </div>

@@ -6,7 +6,9 @@
             "style": {  
                 "color": "#000000" 
             },
-            "includeOnClick":null
+            "navigation":null,
+            "functions":null,
+            "component_contents":["bouton_menu_defaut"]
         },
         "1":{ 
             "id": "1",
@@ -14,7 +16,9 @@
             "style": { 
                 "color": "#B311FF" 
             },
-            "includeOnClick":"/panier"
+            "navigation":"/panier",
+            "functions":["redirection"],
+            "component_contents":["bouton_menu_defaut","bouton_modal"]
         },
         "2":{ 
             "id": "2",
@@ -24,17 +28,29 @@
                 "justifyContent": "space-between",
                 "color": "#B311FF" 
             },
-            "includeOnClick":"/"
+            "navigation":"/",
+            "functions":["redirection"],
+            "component_contents":["bouton_menu_defaut"]
         },
         "3":{ 
             "id": "3",
-            "text": "JE PASSE A LA SUITE", 
+            "text": "Je le veux", 
             "style": { 
-                "marginRight": "10px",
-                "justifyContent": "space-between",
+                "color": "#BC2EFE"
+            },
+            "navigation":"/panier",
+            "functions":null,
+            "component_contents":["bouton_contenu"]
+        },
+        "4":{ 
+            "id": "4",
+            "text": "Passer à la suite", 
+            "style": { 
                 "color": "#B311FF" 
             },
-            "includeOnClick":"/paiement"
+            "navigation":"/paiement",
+            "functions":null,
+            "component_contents":null
         }
     },
     "section_id":{

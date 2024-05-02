@@ -1,102 +1,104 @@
 import React, { useEffect, useContext, useState } from "react";
-// import { Button, Modal, Backdrop, Fade } from '@mui/material';
+import { useNavigate } from "react-router-dom";
+import { Button, Modal, Backdrop, Fade } from '@mui/material';
 import ArticleContext from "../context/ArticleDataProvider";
 import "../style/styles.css";
 
-function CstmContenu({ id_article, image, description, prix }) {
-  // State
-  const [showPrice, setShowPrice] = useState(false); // false affiche le texte, au survol affiche le prix
-  const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
-  const [openAjoutModal, setOpenAjoutModal] = useState(false);
-  const [temps_affichage, setTemps_affichage] = useState(2000);
+function CstmContenu({ id_article, image, description, prix, buttons }) {
 
-  // useContex Hook
-  const { postPanierData } = useContext(ArticleContext);
+// State
+    const [showPrice, setShowPrice] = useState(false); // false affiche le texte, au survol affiche le prix
 
-  //Function
-  const togglePrice = () => {
-    setShowPrice(!showPrice);
-  };
-
-  const clickOnPrice = () => {
-    setOpenConfirmationModal(true); // Ouvre le modal confirmation
-};
-
-const closeConfirmationModal = () => {
-    setOpenConfirmationModal(false); // Ferme le modal confirmation
-    setShowPrice(!showPrice);
-};
-
-const closeAjoutModal = () => {
-    setOpenAjoutModal(false); // Ferme le modal
-    setShowPrice(!showPrice);
-};
+// useContext Hook
+    const { fetchPanierData, postPanierData } = useContext(ArticleContext);
 
 
-const handleConfirmation = () => {
-    setOpenConfirmationModal(false); // Ferme le modal confirmation
-    setOpenAjoutModal(true);
-};
+// useNavigate Hook
+    const navigate = useNavigate();
 
 
-// useEffect Hook
-useEffect(() => {
-    
-  if (openAjoutModal) {
+//Function
+    const togglePrice = () => {
+        setShowPrice(!showPrice);
+    };
 
-    postPanierData(id_article).then(newPanier => {
-      console.log(`${newPanier} "panier"`);
-      console.log(`${id_article} ajoutée`);    
-    })
-        
-    .catch(error => {
-      console.error("Une erreur s'est produite :", error.message);
-    });
+    const clickOnPrice = () => {
 
-    setTimeout(() => {
-      setOpenAjoutModal(false);
-    }, 2000); // Ferme le modal après 2 secondes
-    
-    setShowPrice(!showPrice);
-    }
+        fetchPanierData().then(panier => {  // Recupération du panier d'origine
 
-}, [openAjoutModal]);
+
+            console.log("panier.length", panier.length);
+            console.log("panier=", panier);
+
+
+            if (panier.length === 0){       // Si le panier est vide, ajout d'un article "id_article" au panier + renvoie du nouveau panier 
+
+
+                postPanierData(id_article).then(newPanier => {
+
+                    if (newPanier.length === 1){
+
+                        console.log("newPanier.length", newPanier.length);
+
+                        console.log(`${newPanier} "nouveau panier"`);
+                        console.log(`${id_article} ajoutée`);
+
+                    } else {
+                        navigate("erreur");//Redirection vers page erreur
+                    }
+                    
+                }).catch(error => {
+                    console.error("Une erreur s'est produite :", error.message);
+                });
+
+
+            }else {                         
+                navigate("panier");// Redirection page panier
+            }
+
+
+        }).catch(error => {
+            console.error("Une erreur s'est produite :", error.message);
+        });
+
+    };
 
 
 // Render
-return (
-<div className="custom-content-container">
+    return (
 
-  <div className="custom-content-image">
+        <div className="custom-content-container">
 
-    {/* Image du tableau Quelconque */}
-    <img src={image} alt="tableau actuel" />
+            <div className="custom-content-image">
 
-    {/* Div Description et prix de Quelconque */}
-    <div className="custom-content-description">
+                {/* Image du tableau Quelconque */}
+                <img src={image} alt="tableau actuel" />
 
-      {/* Description */}
-      <p>{description}</p>
+                {/* Div Description et prix de Quelconque */}
+                <div className="custom-content-description">
 
-      {/* Bouton Prix */}
-      <div className="custom-content-prix" onMouseEnter={togglePrice}
-                                           onMouseLeave={togglePrice}>
-        {showPrice ? 
-          (<p style={{ color: "#FFFFFF" }}>{prix}</p>) :
-          (<p style={{ color: "#BC2EFE" }} onClick={togglePrice}>Je le veux</p>)}
+                    {/* Description */}
+                    <p>{description}</p>
 
-      </div>
+                    {/* Bouton Prix */}
+                    {/* <CstmBoutonMenu 
+                        text={buttons.text} 
+                        style={buttons.style}
+                        navigation={buttons.navigation}
+                        functions={buttons.functions}
+                        component_contents={buttons.component_contents}
+                    /> */}
 
-    </div>
+                </div>
 
-        
+                    
 
-  </div>
-    
-</div>
+            </div>
+            
+        </div>
 
-);
+    );
 
-}
+    }
 
-export default CstmContenu;
+    export default CstmContenu;
