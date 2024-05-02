@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS storage.file (
     parent UUID, -- Null if root file
     extension varchar,
     content blob,
-    archive blob, -- Classic zip or tar archive
+    archive blob -- Classic zip or tar archive
 );
 
 -- @desc: a Folder composed of folders and files.
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS storage.user (
     last_update timestamp,
     public UUID,
     shared UUID,
-    folders list <UUID>
+    folders list<UUID>
 );
 
 -- @desc: As to not corrupt and ensure full availability public resources are duplicated
@@ -52,5 +52,5 @@ CREATE TABLE IF NOT EXISTS storage.public_resource (
 DROP TABLE IF EXISTS storage.public;
 CREATE TABLE IF NOT EXISTS storage.public (
     id UUID PRIMARY KEY,
-    items list<UUID>,
+    items list<UUID>
 );
