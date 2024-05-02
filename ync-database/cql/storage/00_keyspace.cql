@@ -1,9 +1,9 @@
-DROP KEYSPACE IF EXISTS file_system;
-CREATE KEYSPACE IF NOT EXISTS file_system WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'};
+DROP KEYSPACE IF EXISTS storage;
+CREATE KEYSPACE IF NOT EXISTS storage WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'};
 
 -- @desc: Metadata and content's file.
-DROP TABLE IF EXISTS file_system.file;
-CREATE TABLE IF NOT EXISTS file_system.file (
+DROP TABLE IF EXISTS storage.file;
+CREATE TABLE IF NOT EXISTS storage.file (
     id UUID PRIMARY KEY,
     display_name varchar,
     owner varchar,
@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS file_system.file (
 );
 
 -- @desc: a Folder composed of folders and files.
-DROP TABLE IF EXISTS file_system.folder;
-CREATE TABLE IF NOT EXISTS file_system.folder (
+DROP TABLE IF EXISTS storage.folder;
+CREATE TABLE IF NOT EXISTS storage.folder (
     id UUID PRIMARY KEY,
     display_name varchar,
     owner varchar,
@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS file_system.folder (
 );
 
 -- @desc: User file system's entrypoint.
-DROP TABLE IF EXISTS file_system.user;
-CREATE TABLE IF NOT EXISTS file_system.user (
+DROP TABLE IF EXISTS storage.user;
+CREATE TABLE IF NOT EXISTS storage.user (
     username varchar PRIMARY KEY,
     password varchar,
     last_update timestamp,
@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS file_system.user (
 );
 
 -- @desc: As to not corrupt and ensure full availability public resources are duplicated
-DROP TABLE IF EXISTS file_system.file;
-CREATE TABLE IF NOT EXISTS file_system.public_resource (
+DROP TABLE IF EXISTS storage.file;
+CREATE TABLE IF NOT EXISTS storage.public_resource (
     id UUID PRIMARY KEY,
     display_name varchar,
     extension varchar,
@@ -49,8 +49,8 @@ CREATE TABLE IF NOT EXISTS file_system.public_resource (
 );
 
 -- @desc: Session record
-DROP TABLE IF EXISTS file_system.public;
-CREATE TABLE IF NOT EXISTS file_system.public (
+DROP TABLE IF EXISTS storage.public;
+CREATE TABLE IF NOT EXISTS storage.public (
     id UUID PRIMARY KEY,
     items list<UUID>,
 );
