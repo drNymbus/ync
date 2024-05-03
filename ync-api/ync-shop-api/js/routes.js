@@ -23,7 +23,7 @@ const store_get = async (req, res, client) => {
                 // Existing session: verify/update the cookie and retrieve basket
                 if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
-                await client.execute(utils.session.update, [cookie]); // update session
+                await client.execute(utils.session.update, [Date.now(), cookie]); // update session
                 // Send another/new cookie to the user ?
                 client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
                     res.status(200).json(result.rows[0]); // send basket
@@ -40,7 +40,7 @@ const store_get = async (req, res, client) => {
                     let data = result.rows;
                     for (let i = 0; i < data.length; i++) {
                         const blob = data[i].image;
-                        const image = blob.toString('base64');
+                        const image = ((blob === undefined) ? blob : "something").toString('base64');
                         data[i].image = `data:image/jpeg;base64,${image}`;
                     }
 

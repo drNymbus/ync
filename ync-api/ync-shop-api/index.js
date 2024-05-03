@@ -17,7 +17,7 @@ const routes = require('./js/routes.js');
 
 // Set up express app
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3001;
 
 // Parse body in case of POST method
 app.use(bodyParser.json());
@@ -38,13 +38,12 @@ app.use(cookieParser(secrets.cookie)); // Hand over the secret string for signed
 
 // Connect to CassandraDB
 const client = new cassandra.Client({
-    contactPoints: [process.env.CASSANDRA_CONTACT_POINTS],
+    contactPoints: [process.env.CASSANDRA_CONTACT_POINTS || '127.0.0.1'],
     localDataCenter: 'datacenter1',
     keyspace: 'store'
 });
 
 // Routes
-app.get('/', (_, res) => { res.send("Hello World!"); });
 app.route('/store')
     .get((req, res) => { routes.store_get(req, res, client); })
     .post((req, res) => { routes.store_post(req, res, client); })
