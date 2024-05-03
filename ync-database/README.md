@@ -9,6 +9,10 @@ For each keyspace in the database, different roles and users are needed to opera
 - Manager: acts as a superuser dedicated to the keyspace. This role is able to perform any action on all tables in the keyspace. (It is not recommended to have multiple manager roles in the same keyspace)
 - Worker: has a limited range of action on the keyspace. Each worker would restricted depending on the utility of the API linked to it.
 
+'superuser.cql'
+
+[file credential login](https://cassandra.apache.org/doc/stable/cassandra/operating/security.html#operation-roles)
+
 # Deployment
 
 ## Docker
@@ -18,9 +22,72 @@ Every steps are commented.
 
 If you wish to deploy this component on kubernetes, you'll eventually find some resources in the 'deployment' folder of this repository.
 
-## Minikube
+## Kubernetes (k8s)
+
+PersistentVolume --> PersistentVolumeClaim (act as a template) --> StatefulSet
+
+ync-database/storage.yml
+ync-database/database.yml
+
+### Minikube
+
+Only statefulset is needed (database.yml). If you wish to keep data of StatefulSet you'll need PersistentVolume (+ PersistentVolumeClaim)
+
+### k3s
+
+storage.yml + database.yml
+
+Init master node: pod -> Execute cql scripts.
+zk exec master-pod -- cqlsh -f 'file.cql'
 
 # Keyspace
+
+## File system's tables
+
+__File__
+
+- id UUID [PRIMARY KEY]: file unique identifier
+- display_name varchar: string to be displayed instead of id
+- owner varchar: user author of the file
+- authorized list<varchar>: List of users allowed to access this resource
+- parent UUID: Parent directory, this can only be a folder's id. Null if root file
+- extension varchar: File metadata to help define content's type, nullable
+- content blob: entire binary representation of the file
+- archive blob: compressed binary representation of the file -- Classic zip or tar archive
+- public_id UUID: public archive identifier
+
+__Folder__
+
+- id UUID [PRIMARY KEY]: folder unique identifier
+- display_name varchar: string to be displayed instead of id
+- owner varchar: user author of the folder
+- authorized list<varchar>: List of users allowed to access this resource
+- parent UUID: Parent directory, this can only be a folder's id. Null if root file
+- child_folders list<UUID>: every folder contained in current folder
+- child_files list<UUID>: every file contained in current folder
+- archive blob: compressed binary representation of the folder -- Classic zip or tar archive
+
+__User__
+
+- username varchar [PRIMARY KEY]: user's name
+- password varchar: user's encrypted password
+- last_update timestamp: last user action timestamp
+- public UUID: every public file in database folder's link identifier
+- shared UUID: all files non-authored by user folder's link identifier
+- folders list <UUID>
+
+__Public_Resource__ (This table act as block to )
+
+- id UUID [PRIMARY KEY]: public archive identifier
+- display_name varchar: string to be displayed instead of id
+- extension varchar: Resource metadata to help define content's type, nullable
+- archive blob: compressed binary representation of the file/folder -- Classic zip or tar archive
+- public timestamp: Last time this resource was posted in public, value is set to null in case of unperishable
+
+__Public__
+
+- id UUID [PRIMARY KEY],
+- items list<UUID>,
 
 ## Store's tables
 
