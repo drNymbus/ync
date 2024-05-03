@@ -1,0 +1,108 @@
+Lire CreationUserLinux d'abord
+
+
+Création d'un script cql 'users.cql'
+
+(SUPERUSER = true : Accorde tous les privilèges administratifs sur le cluster.
+LOGIN = true : Autorise la connexion de l'utilisateur à la base de données.
+PASSWORD = '' : Définit le mot de passe pour l'utilisateur.)
+```
+CREATE ROLE admin WITH SUPERUSER = true AND LOGIN = true AND PASSWORD = 'admin';
+CREATE ROLE user WITH LOGIN = true AND PASSWORD = 'user';
+```
+
+Avoir ce qu'on veut faire !
+(GRANT : Accorde à l'utilisateur user le droit de modifier des données dans la table table_nom située dans le keyspace keyspace_nom.)
+```
+GRANT SELECT ON KEYSPACE keyspace_nom TO user;
+GRANT MODIFY ON TABLE keyspace_nom.table_nom TO user;
+
+GRANT SELECT (colonne1, colonne2) ON keyspace_nom.table_nom TO user;
+GRANT CREATE, ALTER, DROP ON KEYSPACE keyspace_nom TO user;
+```
+
+Une fois le script cql crée, on peut le lancer via la commande, pour qu'il crée les users et les permissions
+```
+cqlsh -u admin -p admin IP_vers_Cassandra -f users.cql 
+```
+
+
+
+Next étape crée un script linux qui executé recupere les user/userpass dans le fichier texte approprié et qu'il crée user et permissiuons dans cassandra en lancant le script.cql:
+
+
+```
+path_casssandra=
+path_pass=
+path_users_cql=
+
+
+if [ ! -f "$path_pass" ]; then
+    echo "Erreur : Le fichier des utilisateurs ($path_pass) n'existe pas."
+    exit 1
+fi
+if [ ! -f "$path_users_cql" ]; then
+    echo "Erreur : Le script CQL ($path_users_cql) n'existe pas."
+    exit 1
+fi
+
+# Parcours du fichier des utilisateurs
+while read -r username password || [[ -n "$username" ]]; do
+    # Vérification si le mot de passe est vide
+    if [ -z "$password" ]; then
+        password="defaultmdp"
+    fi
+
+    # Création de la commande CQL pour créer l'utilisateur
+    cql_command="CREATE ROLE $username WITH LOGIN = true AND PASSWORD = '$password';"
+
+    # Exécution de la commande CQL avec cqlsh
+    cqlsh -u admin -p admin IP_vers_Cassandra -e "$cql_command"
+    
+    # Attribution des droits selon les spécifications
+    if [ "$username" == "$(head -n 1 "$fichier_utilisateurs" | cut -d' ' -f1)" ]; then
+        # Premier utilisateur : tous les droits
+        cqlsh -u admin -p admin IP_vers_Cassandra -e "GRANT ALL PERMISSIONS ON ALL KEYSPACES TO $username;"
+    elif [ "$username" == "$(sed -n '2{p;q;}' "$fichier_utilisateurs" | cut -d' ' -f1)" ]; then
+        # Deuxième utilisateur : droits de lecture et de modification sur toutes les tables sauf la table utilisateur
+        cqlsh -u admin -p admin IP_vers_Cassandra -e "GRANT SELECT, MODIFY ON ALL KEYSPACES EXCEPT system_auth TO $username;"
+    else
+        # Tous les autres utilisateurs : droit de lecture sur toutes les tables
+        cqlsh -u admin -p admin IP_vers_Cassandra -e "GRANT SELECT ON ALL KEYSPACES TO $username;"
+    fi
+done < "$fichier_utilisateurs"
+
+echo "Script terminé."
+```
+
+
+
+Utilisation des permissions de fichier ainsi que des permissions du système de fichiers (ACL - Access Control Lists) lors de la création de deux nouveaux users
+
+Créer les utilisateurs
+```
+sudo adduser user1
+sudo adduser user2
+```
+
+Créer le fichier contenant mdp 
+(touch: crée fichier vide / echo : ecrit à l'intérieur / tee -a : permet d'ajouter le texte à la fin du fichier sans écraser son contenu existant / >/dev/null : toute sortie produite par la commande précédente (dans ce cas, tee) est supprimée et ne s'affiche pas à l'écran.)
+```
+sudo touch /dossier/passwords.txt
+echo "superuser mot_de_passe_superuser" | sudo tee -a "/dossier/passwords.txt" >/dev/null
+echo "limiteduser mot_de_passe_limite" | sudo tee -a "/dossier/passwords.txt" >/dev/null
+sudo chmod 600 /dossier/passwords.txt
+```
+
+Configurer les permissions du dossier et du fichier
+```
+# Donner à user1 tous les droits sur le dossier et le fichier
+sudo chown user1:user1 /dossier
+sudo chmod 700 /dossier
+sudo chown user1:user1 /dossier/passwords.txt
+# Limiter l'accès pour user2
+sudo chown user2:user2 /chemin/vers/votre/dossier/passwords.txt
+sudo setfacl -m u:user2:--- /chemin/vers/votre/dossier
+sudo setfacl -m u:user2:--- /chemin/vers/votre/dossier/passwords.txt
+
+```
