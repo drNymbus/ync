@@ -85,7 +85,7 @@ Le contexte en React offre un mécanisme permettant de partager des données ent
 
 Cette section fournit une description des pages principales de l'application, ainsi que des informations sur la navigation entre ces pages et des détails sur leur structure et leur logique.
 
-![Description application](\readme_images\DescriptionApplication.png) 
+![Description application](.\readme_images\DescriptionApplication.png) 
 
 Les pages de l'application sont généralement composées de plusieurs composants réutilisables qui sont assemblés pour former la structure de la page. La logique spécifique à chaque page peut être implémentée dans les composants correspondants, en utilisant des états locaux ou des contextes de données pour gérer l'état de l'application.
 
@@ -149,7 +149,7 @@ En plus de ces composants principaux, l'application peut également inclure des 
 - **IncrementationPanier.jsx**: En construction // Prochaine étape // NEXT UP // "It's us"
 
 
-
+&nbsp;
 
 # Getting Started with Create React App
 
@@ -222,3 +222,19 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+<!-- 
+# Activité du repo :
+
+react/node version
+npm version 
+cassandra version
+docker version
+k3s version
+
+![Contributors]()
+![Last Commit]()
+![Open Issues]()
+![Closes Issues]()
+![Open Pull Requests]()
+![Closed Pull Requests]() -->

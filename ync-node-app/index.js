@@ -32,6 +32,16 @@ app.use(
 );
 app.use(cors({ credentials: true, origin: true }));
 
+
+// // Ajoutez les en-têtes CORS pour permettre l'accès depuis http://localhost:3000
+// app.use((req, res, next) => {
+//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS');
+//     res.setHeader('Access-Control-Allow-Headers', 'X-PINGOTHER, Content-Type');
+//     res.setHeader('Access-Control-Allow-Credentials', 'true');
+//     next();
+//   });
+
 // Loading secrets for signature's cookies
 const secrets = JSON.parse(fs.readFileSync('./do_not_share.json', 'utf8')); // Retrieve secrets
 app.use(cookieParser(secrets.cookie)); // Hand over the secret string for signed cookies
@@ -48,7 +58,7 @@ app.route('/store')
     .get((req, res) => { routes.store_get(req, res, client); })
     .post((req, res) => { routes.store_post(req, res, client); })
     .delete((req, res) => { routes.store_delete(req, res, client); });
-
+    
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
