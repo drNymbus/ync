@@ -1,4 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
+import CstmBoutonMenu from "./sous_composantes/BoutonMenu";
 import { useNavigate } from "react-router-dom";
 import { Button, Modal, Backdrop, Fade } from '@mui/material';
 import ArticleContext from "../context/ArticleDataProvider";
@@ -81,13 +82,12 @@ function CstmContenu({ id_article, image, description, prix, buttons }) {
                     <p>{description}</p>
 
                     {/* Bouton Prix */}
-                    {/* <CstmBoutonMenu 
+                    <CstmBoutonMenu 
                         text={buttons.text} 
                         style={buttons.style}
                         navigation={buttons.navigation}
-                        functions={buttons.functions}
                         component_contents={buttons.component_contents}
-                    /> */}
+                    />
 
                 </div>
 

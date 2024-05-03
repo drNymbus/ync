@@ -120,7 +120,7 @@ function CstmPanier() {
 
         <div>
 
-            {pageData && <CstmBandeau buttons={pageData.buttonData} />}
+            {pageData && <CstmBandeau buttons={pageData.buttonDataBandeau} />}
 
             {pageData && <CstmSection image={pageData.sectionData.image} name={pageData.sectionData.name} />}
 

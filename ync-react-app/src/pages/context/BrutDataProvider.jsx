@@ -16,9 +16,12 @@ export const DataProvider = ({ children }) => {
             const data_ids = props_ids[page]
             const { lists_ids, section } = data_ids;
             
-            const buttonDataBandeau = lists_ids[0].map(buttonId => brutdata.button_id[buttonId]); 
+            const buttonDataBandeau = lists_ids[0].map(buttonId => brutdata.button_id[buttonId]);
 
-            const buttonData = lists_ids[1].map(buttonId => brutdata.button_id[buttonId]); 
+            let buttonData = null
+            if (lists_ids.length === 2){
+                buttonData = lists_ids[1].map(buttonId => brutdata.button_id[buttonId]);
+            } 
 
             const sectionData = brutdata.section_id[section];
 

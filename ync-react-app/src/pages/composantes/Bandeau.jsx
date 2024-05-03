@@ -18,7 +18,6 @@ function CstmBandeau({buttons}) {
                 text={buttons[0].text} 
                 style={buttons[0].style}
                 navigation={buttons[0].navigation}
-                functions={buttons[0].functions}
                 component_contents={buttons[0].component_contents}
             />)}
 
@@ -32,7 +31,6 @@ function CstmBandeau({buttons}) {
                 text={button.text} 
                 style={button.style} 
                 navigation={button.navigation}
-                functions={button.functions}
                 component_contents={button.component_contents} 
             />))}
 

@@ -7,7 +7,6 @@
                 "color": "#000000" 
             },
             "navigation":null,
-            "functions":null,
             "component_contents":["bouton_menu_defaut"]
         },
         "1":{ 
@@ -17,7 +16,6 @@
                 "color": "#B311FF" 
             },
             "navigation":"/panier",
-            "functions":["redirection"],
             "component_contents":["bouton_menu_defaut","bouton_modal"]
         },
         "2":{ 
@@ -29,7 +27,6 @@
                 "color": "#B311FF" 
             },
             "navigation":"/",
-            "functions":["redirection"],
             "component_contents":["bouton_menu_defaut"]
         },
         "3":{ 
@@ -39,7 +36,6 @@
                 "color": "#BC2EFE"
             },
             "navigation":"/panier",
-            "functions":null,
             "component_contents":["bouton_contenu"]
         },
         "4":{ 
@@ -49,7 +45,6 @@
                 "color": "#B311FF" 
             },
             "navigation":"/paiement",
-            "functions":null,
             "component_contents":null
         }
     },
