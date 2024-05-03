@@ -20,11 +20,13 @@ export default function App() {
 
         <div className="App">
 
-            <BoutonProvider>
+            
 
-                <DataProvider>
+            <DataProvider>
 
-                    <ArticleContextProvider>
+                <ArticleContextProvider>
+
+                    <BoutonProvider>
 
                         <Routes>
 
@@ -33,12 +35,14 @@ export default function App() {
                             <Route path="/Paiement" element={<CstmPaiement />} />
 
                         </Routes>
+                    
+                    </BoutonProvider>
+                    
+                </ArticleContextProvider>
 
-                    </ArticleContextProvider>
+            </DataProvider>
 
-                </DataProvider>
-
-            </BoutonProvider>
+            
 
 
         </div>

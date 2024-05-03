@@ -5,64 +5,64 @@ import { Button, Modal, Backdrop, Fade } from '@mui/material';
 import ArticleContext from "../context/ArticleDataProvider";
 import "../style/styles.css";
 
-function CstmContenu({ id_article, image, description, prix, buttons }) {
+function CstmContenu({ id_article, image, description, prix, button }) {
 
-// State
-    const [showPrice, setShowPrice] = useState(false); // false affiche le texte, au survol affiche le prix
+// // State
+//     const [showPrice, setShowPrice] = useState(false); // false affiche le texte, au survol affiche le prix
 
 // useContext Hook
-    const { fetchPanierData, postPanierData } = useContext(ArticleContext);
+    // const { fetchPanierData, postPanierData } = useContext(ArticleContext);
 
 
 // useNavigate Hook
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
 
 //Function
-    const togglePrice = () => {
-        setShowPrice(!showPrice);
-    };
+    // const togglePrice = () => {
+    //     setShowPrice(!showPrice);
+    // };
 
-    const clickOnPrice = () => {
+    // const clickOnPrice = () => {
 
-        fetchPanierData().then(panier => {  // Recupération du panier d'origine
-
-
-            console.log("panier.length", panier.length);
-            console.log("panier=", panier);
+    //     fetchPanierData().then(panier => {  // Recupération du panier d'origine
 
 
-            if (panier.length === 0){       // Si le panier est vide, ajout d'un article "id_article" au panier + renvoie du nouveau panier 
+    //         console.log("panier.length", panier.length);
+    //         console.log("panier=", panier);
 
 
-                postPanierData(id_article).then(newPanier => {
+    //         if (panier.length === 0){       // Si le panier est vide, ajout d'un article "id_article" au panier + renvoie du nouveau panier 
 
-                    if (newPanier.length === 1){
 
-                        console.log("newPanier.length", newPanier.length);
+    //             postPanierData(id_article).then(newPanier => {
 
-                        console.log(`${newPanier} "nouveau panier"`);
-                        console.log(`${id_article} ajoutée`);
+    //                 if (newPanier.length === 1){
 
-                    } else {
-                        navigate("erreur");//Redirection vers page erreur
-                    }
+    //                     console.log("newPanier.length", newPanier.length);
+
+    //                     console.log(`${newPanier} "nouveau panier"`);
+    //                     console.log(`${id_article} ajoutée`);
+
+    //                 } else {
+    //                     navigate("erreur");//Redirection vers page erreur
+    //                 }
                     
-                }).catch(error => {
-                    console.error("Une erreur s'est produite :", error.message);
-                });
+    //             }).catch(error => {
+    //                 console.error("Une erreur s'est produite :", error.message);
+    //             });
 
 
-            }else {                         
-                navigate("panier");// Redirection page panier
-            }
+    //         }else {                         
+    //             navigate("panier");// Redirection page panier
+    //         }
 
 
-        }).catch(error => {
-            console.error("Une erreur s'est produite :", error.message);
-        });
+    //     }).catch(error => {
+    //         console.error("Une erreur s'est produite :", error.message);
+    //     });
 
-    };
+    // };
 
 
 // Render
@@ -83,10 +83,10 @@ function CstmContenu({ id_article, image, description, prix, buttons }) {
 
                     {/* Bouton Prix */}
                     <CstmBoutonMenu 
-                        text={buttons.text} 
-                        style={buttons.style}
-                        navigation={buttons.navigation}
-                        component_contents={buttons.component_contents}
+                        text={button.text} 
+                        style={button.style}
+                        navigation={button.navigation}
+                        component_contents={button.component_contents}
                     />
 
                 </div>

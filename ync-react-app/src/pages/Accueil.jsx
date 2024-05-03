@@ -12,7 +12,7 @@ function CstmAccueil() {
 
 // State
     const [pageData, setPageData] = useState(null);
-    const [article, setArticle] = useState(null);
+    const [articleData, setArticleData] = useState(null);
 
 
 // useContexte Hook
@@ -24,11 +24,12 @@ function CstmAccueil() {
     useEffect(() => {
 
         const pageD = fetchDataForPage("accueil");
+        console.log(pageD)
         setPageData(pageD); 
 
         fetchArticleData(pageD.id_article_accueil)
         .then(articleD => {
-            setArticle(articleD);
+            setArticleData(articleD);
         })
         .catch(error => {
             console.error("Une erreur s'est produite :", error.message);
@@ -47,17 +48,17 @@ function CstmAccueil() {
 
             {pageData && <CstmSection image={pageData.sectionData.image} name={pageData.sectionData.name} />}
 
-            {article && <CstmContenu
+            {articleData && <CstmContenu
                 id_article={pageData.id_article_accueil}
                 image={"../../assets/tableau_quelconque.png"}
-                description={article.description}
-                prix={article.price}
-                buttons={pageData.buttonData}
+                description={articleData.description}
+                prix={articleData.price}
+                button={pageData.buttonData}
             />}
 
         </div>
 
-    ); // image={article.image}
+    ); // image={articleData.image}
 
 }
 
