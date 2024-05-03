@@ -24,7 +24,6 @@ function CstmAccueil() {
     useEffect(() => {
 
         const pageD = fetchDataForPage("accueil");
-        console.log(pageD)
         setPageData(pageD); 
 
         fetchArticleData(pageD.id_article_accueil)
@@ -34,7 +33,6 @@ function CstmAccueil() {
         .catch(error => {
             console.error("Une erreur s'est produite :", error.message);
         });
-
     }, []); // Exécutée une seule fois au chargement de la page car tableau de dépendances vide ([]). 
     //Aucun changement attendu dans les données de ce contexte, donc useEffect() ne sera pas relancé à moins que les dépendances ne changent, ici non.
 

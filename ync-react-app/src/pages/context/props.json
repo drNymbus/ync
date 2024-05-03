@@ -2,7 +2,7 @@
     "accueil":{
         "lists_ids":[[0,1],[3]],
         "section":0,
-        "id_article_accueil":"quelconque_1"
+        "id_article_accueil":"quelconque"
         },
     "panier":{
         "lists_ids":[[0,2]],
