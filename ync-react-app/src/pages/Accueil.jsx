@@ -24,8 +24,9 @@ function CstmAccueil() {
     useEffect(() => {
 
         const pageD = fetchDataForPage("accueil");
-        console.log(pageD)
-        setPageData(pageD); 
+        console.log(pageD);
+        setPageData(pageD);
+        console.log(".buttonData",pageD.buttonData);
 
         fetchArticleData(pageD.id_article_accueil)
         .then(articleD => {

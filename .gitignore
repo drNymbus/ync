@@ -12,3 +12,9 @@ ync-shop-app/.dockerignore
 ync-shop-app/package-lock.json
 ync-shop-app/node_modules/*
 ync-shop-app/do_not_share.json
+
+ync-react-app/node_modules/*
+
+ync-node-app/*
+
+ync-shop-api/js/routes_originalFileFromMain.js

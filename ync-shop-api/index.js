@@ -17,7 +17,7 @@ const routes = require('./js/routes.js');
 
 // Set up express app
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 // Parse body in case of POST method
 app.use(bodyParser.json());

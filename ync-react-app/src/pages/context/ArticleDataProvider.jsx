@@ -15,6 +15,7 @@ export const ArticleContextProvider = ({ children }) => {
             const config = {withCredentials: true, headers: {'Content-Type': 'application/json','Accept': 'application/json',}};
 
             const response_ck = await axios.get(`http://localhost:3001/store?connect=true`, config); // Init cookie
+           
             console.log(response_ck.data.items) //response_panier_data test 
 
             const response_item = await axios.get(`http://localhost:3001/store?item=true&id=${id_article}`, config);

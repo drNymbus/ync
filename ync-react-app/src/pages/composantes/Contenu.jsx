@@ -7,6 +7,14 @@ import "../style/styles.css";
 
 function CstmContenu({ id_article, image, description, prix, button }) {
 
+    // useEffect(() => {
+
+    //     console.log("button component passé au contenu ???", button[0])
+    //     if (button[0].component_contents && button[0].component_contents.length > 0) {
+    //         console.log("reussi la condition ???", button[0].component_contents)
+    //     }
+    // }, []);
+
 // // State
 //     const [showPrice, setShowPrice] = useState(false); // false affiche le texte, au survol affiche le prix
 
@@ -65,6 +73,19 @@ function CstmContenu({ id_article, image, description, prix, button }) {
     // };
 
 
+
+// id_article, image, description,        /// Props problematique /// -->   prix 
+
+// +
+
+// component_contents: ['bouton_contenu']
+// id: "3"
+// navigation: "/panier"
+// style: {color: '#BC2EFE'}
+// text: "Je le veux"
+
+
+
 // Render
     return (
 
@@ -83,10 +104,10 @@ function CstmContenu({ id_article, image, description, prix, button }) {
 
                     {/* Bouton Prix */}
                     <CstmBoutonMenu 
-                        text={button.text} 
-                        style={button.style}
-                        navigation={button.navigation}
-                        component_contents={button.component_contents}
+                        text={button[0].text} 
+                        style={button[0].style}
+                        navigation={button[0].navigation}
+                        component_contents={button[0].component_contents}
                     />
 
                 </div>
