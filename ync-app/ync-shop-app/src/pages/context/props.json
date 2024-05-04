@@ -1,0 +1,21 @@
+{
+    "accueil":{
+        "lists_ids":[[0,1],[3]],
+        "section":0,
+        "id_article_accueil":"quelconque"
+        },
+    "panier":{
+        "lists_ids":[[0,2]],
+        "section":1,
+        "nbrIncrementationMax":5,
+        "prix_livraison":3.00
+        },
+    "paiement":{
+        "lists_ids":[[0,2]],
+        "section":2
+        },
+    "erreur":{
+        "lists_ids":[[0,2]],
+        "section":3
+    }
+}

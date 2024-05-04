@@ -1,0 +1,195 @@
+# YNC (Young new code)
+
+Site infrastructure for the [YNC (Young New Corporation) project](http://88.174.59.203:15779/).
+
+The Young New Code project is a project to learn, to improve, to get started, to go further, to connect and obviously to have fun! This project is only a part of the Young New Corporation project. If you wish to learn more about Young New Corporation, you'll find every information needed in the "Contribute" section of the [YNC website](http://88.174.59.203:15779/). Young New Code being built after an application ready project from Young New Corporation then the thought process was done in a top-down manner. The backbone of this project being to learn as much as possible, we've decided to improve our Kubernetes and Docker knowledge through Young New Code. With this approach in mind, our Young New Code is composed of three main services:
+
+- Applications (ync-app): the final layer of the infrastructure. Semi-standalone programs handling data through API calls. An application could operate on the database directly, this is simply not recommended since the API service can help unload development complexities in the application.
+
+- APIs (ync-api): a set of interfaces with the sole purpose to manage the database keyspaces. This layer's role is to ensure data consistency across different tables, Cassandra being NoSQL no foreign keys are specified, and allows the next layer to be able to gather and post data to the database.
+
+- Database (ync-database): the YNC core, all useful data and information is stored in it. With an approach on learning, we thought of a NoSQL database that would also fit our criteria to be kubernetes compatible. In this aspect, we chose to go for [Cassandra](https://cassandra.apache.org/_/index.html).
+
+The ync-api & ync-app services are made of multiples components, each of which may be widely (or "wildly", as you prefer) different.
+
+# Database: ync-database
+
+This database service is intended to be used in a containerized environment. As expained in the introduction, the choice made is not completely thought out and a different database support may better suit our needs. For the moment every piece of documentation about 'ync-database' is about Cassandra in a Docker or Kubernetes setting. If you wish to search more thoroughly about this topic feel free to do so. (Do not hesistate to gain access to the Notion, as you'll get a space where you could better document your search or even pick up some ideas already present in it!)
+
+## Keyspaces & User roles
+
+In Cassandra, tables can be regrouped into a single `KEYSPACE`. Thanks to NoSQL, a `FOREIGN KEY` free database, references can be made between multiple keyspaces. While this seems practical in a lot of scenarios, we would not appreciate doing so in our case. Since multiples APIs will operate on different keyspaces, it would be better to be able to mount and unmount keyspaces only when needed, we wish to be as flexible as possible without duplicating too much tables between keyspaces. In any case, you're options would be: expand a keyspace or create a new one. If you wish to expand an already existing keyspace, you'll need to make sure that associated API's & application's integrity will stay intact.
+
+Our keyspaces are organized such as every application component can access all data needed from a single keyspace. This keyspace oriented strategy drove us to the conclusion that two discting roles would be need to handle a single keyspace: manager and worker. A manager role would have every permissions on a keyspace and would is used when modifying tables in the keyspace. Then, multiple worker users only able to read, maybe even write, on a subset of keyspace's tables.
+
+### storage
+
+This component aims to store any type of file uplaoded, a user could create an account then have access to is own file system. A secondary goal to this file system would be to be able to offer a link transfer service, enabling a public image folder for our other services. The file system could also become core to everything in the database. Those changes will be adressed once the file system comes to maturity.
+
+Let's describe our 'file_system' __keyspace__:
+
+- `storage.File`: contains metadata and content of a file, a unique identifier is attributed for each file to be referenced.
+- `storage.Folder`: contains a list to redirect to other folders alongside a list pointing to files. In the same manner as files, a unique identifier is attributed for each folder to be referenced.
+- `storage.User`: a table to identify each existing user file_system, this is also the entrypoint to the user file system.
+- `storage.Public`: This is yet to decide how it's organized, at the moment the Public table would keep file/folder identifiers to be directly available. It would also keep track of any maxAge policy on public files (-- some may be unperishable).
+
+### store
+
+This component aims to store anything needed to keep track of a user's basket and commands passed by users. 
+
+The 'store' __keyspace__ will track what a user has put in his basket and what command.s he made
+
+- `store.Session`: a table to identify each existing session in a store.
+- `store.Basket`: all information about the user's basket.
+- `store.Command`: all informations the user has sent us to deliver the package.
+- `store.Item`: every item that has been and is currently available in the store.
+
+# APIs
+
+## ync-file-system
+
+## ync-shop-api
+
+This API is intended to operate on the 'store' keyspace of the 'ync-database' component. Multiple operations can be performed:
+
+- **GET `/store?connect=true`**: Retrieves the user's shopping cart. If no cart exists, a new one is created.
+- **GET `/store?item=true&id=<item_id#1>[, <item_id#2>, ...]`**: Retrieves all attributes from item_id, all item ids should be separated by a comma. If no attribute exists, the list of all item ids available in the shop is sent.
+- **GET `/store?command=true`**: Retrieves the user's previous commands. If no commands are found an empty json object is returned.
+- **POST `/store?basket=true&id=<item_id#1>[, <item_id#2>, ...]`**: Adds a new item to the user's cart then retrieve the updated basket.
+- **POST `/store?item=true`**: Adds one or several new items to the item table. The response object contains two fields containing item ids: 'completed' for every succesful item insertionl and 'rejected' for every failed item insertion.
+- **POST `/store?command=true`**: Adds a new command to the commands table then returns the status of the query: 200 if successful, 500 otherwise. Only one command can be posted at a time.
+- **DELETE `/store?basket=true&id=<item_id#1>[, <item_id#2>, ...]`**: Removes one or several items from the user's cart, all item ids should be separated by a comma.
+- **DELETE `/store?item=true&id=<item_id>`**: Removes an item from the table then returns the status of the query: 200 if successful, 500 otherwise.
+- **DELETE `/store?command=true&id=<item_id>`**: Removes a command from the table then returns the status of the query: 200 if successful, 500 otherwise.
+
+To learn about how to deploy this component, go to the 'deployment' or 'ync-node-app' section.
+
+# Applications
+
+## ync-shop-app
+
+// TO FILL
+
+# Deployment
+
+The ync projects thought as three services (ync-database, ync-api & ync-app) will ease us the way we can plan to deploy either a limited number of components. Deploying the ync project is pretty straightforward and will consists of two moving blocks: storage (ync-database) and programs (ync-api, ync-app). We've automated a Docker compose and a Kubernetes (k8s) deployment. From any setting perspective, production or development, Docker and k8s are entirely reliable. The Docker approach is thought out to ease the deployment on lighter installations.
+
+To deploy the full chain of services (ync-database, ync-api & ync-app),  two options are entirely built out for you:
+
+- Docker Compose: this option is best suited for local development as you'll be able to run the different components of the service independently.
+- Kubernetes: this allows for an easier maintenance when running all services. this egally make things easier to support future APIs and applications development. 
+
+In other cases, you would deploy only the needed components. To run this locally, you'll first need to have a minikube working (some help can be found in the 'deployment' folder of this repository). You can deploy all components thanks to the 'deployment/start.sh' bash file in a single command line ! If you wish to get deeper explanations on how each component is deployed, go to the 'deployment' folder of this repository.
+
+## Docker
+
+### Install
+
+### Docker Compose
+
+### Uninstall
+
+## Kubernetes (k8s)
+
+Many installation tools can be used. In first place, Minikube was chosen for a minimal installation for development purposes, where a lot of network functionality aren’t built the same as in a full scale model. We are currently running on a i5, 7Go RAM, 2To PC. A limited ram setup and also a single unite made us look directly to k3s
+
+### Install
+
+Before installing anything you will need a Daemon running, if you are running something else than Docker, you may need to specify it during some commands throughout this guide.
+
+***Minikube***:
+
+- OSX: `brew install minikube`
+- Linux:
+
+```bash
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64\ && chmod +x minikube
+sudo mkdir -p /usr/local/bin/
+sudo install minikube /usr/local/bin/
+```
+
+Since Minikube handles only the node configuration, you’ll need to install `kubectl` independently: https://kubernetes.io/docs/tasks/tools/
+
+***k3s***:
+
+```bash
+curl -sfL [https://get.k3s.io](https://get.k3s.io/) | sh -
+```
+
+Check for Ready node, takes ~30 seconds:`sudo k3s kubectl get node`  
+
+### Minikube
+
+To run this locally, you'll first need to have a minikube working (some help can be found in the 'deployment' folder of this repository). You can deploy all components thanks to the 'deployment/start.sh' bash file in a single command line! If you wish to get deeper explanations of each component deployment, go to the 'deployment' folder of this repository.
+
+You can find all commands needed to start the entire YNC service in the bash files './start.sh' and './shutdown.sh'; All components are under the same namespace: ync. If you want to deploy locally the all service you'll need docker and minikube installed.
+
+```bash
+systemctl start dockerd # Ensure that docker daemon is running
+minikube start
+```
+
+To be able to deploy local docker images, you'll need to configure your minikube cluster to use the docker-env, for UNIX users this would be:
+
+```bash
+eval $(minikube -p minikube docker-env)
+```
+
+And for DOS users, you'll need to use Powershell:
+
+```powershell
+minikube -p minikube docker-env --shell powershell | Invoke-Expression
+```
+
+(In case this command fails, try removing 'minikube -p')
+
+For all services to be able to work properly on a local setting, you'll need to run on a separate terminal (https://minikube.sigs.k8s.io/docs/handbook/accessing/#using-minikube-tunnel):
+
+```bash
+minikube tunnel
+```
+
+Once your minikube is set up, you'll be able to run the bash file 'start.sh'. To delete all ync-app resources without effort, execute 'shutdown.sh' file.
+
+### k3s
+
+If you wish to go deeper: https://docs.k3s.io/
+
+- **START**: `sudo systemctl start k3s`
+- **STOP**:  `sudo systemctl stop k3s`
+- **RESET ENV**:  `sudo /usr/local/bin/k3s-killall.sh`
+
+### Service
+
+Dechaine tes morts sur comment on fait les yamls tout ca tout ca
+
+### Start & Stop
+
+### 
+
+### Scaling
+
+(What’s next also applies to Deployments, to a certain extent)
+
+### Use kubectl to scale StatefulSets
+
+1. First, find the StatefulSet you want to scale: `kubectl get statefulsets <stateful-set-name>`
+2. Change the number of replicas of your StatefulSet: `kubectl scale statefulsets <stateful-set-name> --replicas=<new-replicas>`
+
+### Make in-place updates on your StatefulSets
+
+Alternatively, you can do [in-place updates](https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/#in-place-updates-of-resources) on your StatefulSets.
+
+If your StatefulSet was initially created with `kubectl apply`, update `.spec.replicas` of the StatefulSet manifests, and then do a `kubectl apply`: 
+
+`kubectl apply -f <stateful-set-file-updated>`
+
+Otherwise, edit that field with `kubectl edit`:
+
+`kubectl edit statefulsets <stateful-set-name>`
+
+Or use `kubectl patch`:
+
+`kubectl patch statefulsets <stateful-set-name> -p '{"spec":{"replicas":<new-replicas>}}'`
+
+### Scaling Deployments

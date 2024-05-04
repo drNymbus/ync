@@ -1,0 +1,10 @@
+.gitignore
+
+ync-api/ync-shop-api/.dockerignore
+ync-api/ync-shop-api/package-lock.json
+ync-api/ync-shop-api/node_modules/*
+ync-api/ync-shop-api/do_not_share.json
+
+ync-app/ync-shop-app/.dockerignore
+ync-app/ync-shop-app/package-lock.json
+ync-app/ync-shop-app/node_modules/*
