@@ -1,2 +1,2 @@
-CREATE USER admin WITH PASSWORD 'admin' SUPERUSER;
--- ALTER USER cassandra WITH PASSWORD 'this-password-should-not-be-in-this-github';
+CREATE ROLE admin WITH PASSWORD = 'admin' AND SUPERUSER = true AND LOGIN = true;
+ALTER ROLE cassandra WITH SUPERUSER = false AND LOGIN = false;

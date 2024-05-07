@@ -8,9 +8,10 @@
 --     -1
 -- );
 
-INSERT INTO store.item (item_id, category, display_name, description, basket_description, price) VALUES (
+INSERT INTO store.item (item_id, category, image, display_name, description, basket_description, price) VALUES (
     'quelconque',
     'quelconque',
+    LOAD_FILE('/etc/init.d/cql/store/assets/Quelconque.png'),
     'Quelconque',
     '“Quelconque” est une photo prise au lac de Gradignan le 14 mars 2024.
  Alexandre et Victor jouent aux échecs, Alexis prend des photos.

@@ -40,7 +40,7 @@ const store_get = async (req, res, client) => {
                     let data = result.rows;
                     for (let i = 0; i < data.length; i++) {
                         const blob = data[i].image;
-                        const image = ((blob === undefined) ? blob : "something").toString('base64');
+                        const image = (blob !== undefined || blob !== null) ? "undefined" : blob.toString('base64');
                         data[i].image = `data:image/jpeg;base64,${image}`;
                     }
 
