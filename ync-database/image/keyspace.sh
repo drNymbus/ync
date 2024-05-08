@@ -1,5 +1,5 @@
 #!/bin/bash
 
-for cql-script in `ls /etc/init.d/cql/*/*.cql`; do
-    cqlsh -f ${cql-script}
+for script in `ls /etc/init.d/keyspace/*/*.cql`; do
+    cqlsh -f ${script}
 done

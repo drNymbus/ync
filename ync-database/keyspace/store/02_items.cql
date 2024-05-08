@@ -19,4 +19,3 @@ INSERT INTO store.item (item_id, category, image, display_name, description, bas
     'Livré avec son cadre photo aléatoire.',
     10.99
 );
-

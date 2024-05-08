@@ -3,15 +3,15 @@
 # @ desc:
 function init_cassandra() {
     cd ../../ync-database
-    kubectl cp ./cql/ cassandra-0:/etc/init.d/
+    kubectl cp ./keyspace/ cassandra-0:/etc/init.d/
 
     # Wait for pod initialization to complete
     while ! kubectl exec cassandra-0 -- cqlsh -u cassandra -p cassandra; do sleep 20; done
 
     # Init super user
     kubectl exec -it cassandra-0 -- cqlsh -u cassandra -p cassandra -f '/etc/init.d/superuser.cql'
-    kubectl exec -it cassandra-0 -- cqlsh -f '/etc/init.d/superuser.cql' < /etc/cassandra/credentials.conf
-    kubectl exec -it cassandra-0 -- sh -c '/etc/init.d/keyspace.sh' # Init keyspaces already present
+    kubectl exec -it cassandra-0 -- cqlsh -f '/etc/init.d/superuser.cql'
+    kubectl exec -it cassandra-0 -- sh -c '/keyspace.sh' # Init keyspaces already present
 
     cd ../deployment/k8s
 }

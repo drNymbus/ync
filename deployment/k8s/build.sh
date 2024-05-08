@@ -3,6 +3,9 @@
 cd ../..
 
 docker build -t ync-cassandra ync-database/image/.
+if [ "$1" == "k3s" ]; then
+    docker save ync-database:latest | sudo k3s ctr images import -;
+fi
 
 # Build API images
 cd ync-api
