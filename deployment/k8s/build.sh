@@ -2,6 +2,8 @@
 
 cd ../..
 
+docker build -t ync-cassandra ync-database/image/.
+
 # Build API images
 cd ync-api
 for api in `ls -d */`; do

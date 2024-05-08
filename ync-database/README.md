@@ -9,9 +9,16 @@ For each keyspace in the database, different roles and users are needed to opera
 - Manager: acts as a superuser dedicated to the keyspace. This role is able to perform any action on all tables in the keyspace. (It is not recommended to have multiple manager roles in the same keyspace)
 - Worker: has a limited range of action on the keyspace. Each worker would restricted depending on the utility of the API linked to it.
 
-'superuser.cql'
+In addition to those roles a superuser, named 'admin', is created. This superuser is created once the Cassandra's StatefulSet is deployed and fully initialized.
 
 [file credential login](https://cassandra.apache.org/doc/stable/cassandra/operating/security.html#operation-roles)
+
+## Authentication
+
+authenticator: PasswordAuthenticator
+authorizer: CassandraAuthorizer
+roles_validity: 0ms | Why ? Is it optimal ?
+permissions_validity: 0ms | Why ? Is it optimal ?
 
 # Deployment
 
@@ -25,6 +32,8 @@ If you wish to deploy this component on kubernetes, you'll eventually find some 
 ## Kubernetes (k8s)
 
 PersistentVolume --> PersistentVolumeClaim (act as a template) --> StatefulSet
+
+StatefulSet initialized with credentials files to executes CQL scripts as custom superuser. this file is modified using secrets.
 
 ync-database/storage.yml
 ync-database/database.yml

@@ -27,22 +27,3 @@ spec:
   resources:
     requests:
       storage: 500Gi
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: cassandra-config
-  labels:
-    app: cassandra
-data:
-  cassandra.yaml: |
-    #   See https://cassandra.apache.org/doc/latest/configuration/ for
-    #   full explanations of configuration directives
-    authenticator: PasswordAuthenticator
-
-  keyspace.sh: |
-    #!/bin/bash
-
-    for cql-script in `ls /etc/init.d/cql/*/*.cql`; do
-        cqlsh -u admin -p admin -f ${cql-script}
-    done

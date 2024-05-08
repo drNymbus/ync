@@ -17,23 +17,15 @@ spec:
     spec:
       containers:
       - name: cassandra
-        image: cassandra:latest
+        image: ync-cassandra:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 9042
           name: cql
         volumeMounts:
         - name: cassandra-storage
           mountPath: /var/lib/cassandra
-        - name: cassandra-config
-          mountPath: /etc/cassandra/cassandra.yaml
-          subPath: cassandra.yaml
-        - name: cassandra-config
-          mountPath: /etc/init.d/keyspace.sh
-          subPath: keyspace.sh
       volumes:
-      - name: cassandra-config
-        configMap:
-          name: cassandra-config
       - name: cassandra-storage
         persistentVolumeClaim:
           claimName: cassandra-pv-claim
@@ -48,6 +40,6 @@ spec:
     - protocol: TCP
       port: 9042
       targetPort: 9042
-  clusterIP: 10.43.6.0
+  clusterIP: 10.96.6.0
   selector:
     app: cassandra

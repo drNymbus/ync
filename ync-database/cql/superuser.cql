@@ -1,2 +1,0 @@
-CREATE ROLE admin WITH PASSWORD = 'admin' AND SUPERUSER = true AND LOGIN = true;
-ALTER ROLE cassandra WITH SUPERUSER = false AND LOGIN = false;

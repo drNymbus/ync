@@ -1,25 +1,18 @@
 #!/bin/bash
 
-# @desc: Once the PersistentVolume and StatefulSet have been created and initialized, setup admin user role and folder to deploy keyspaces.
-function init_database() {
+# @ desc:
+function init_cassandra() {
     cd ../../ync-database
+    kubectl cp ./cql/ cassandra-0:/etc/init.d/
 
     # Wait for pod initialization to complete
-    while ! kubectl exec cassandra-0 -- cqlsh -u cassandra -p cassandra; do sleep 5; done
-    # Setup default cassandra configuration
-    kubectl exec -it cassandra-0 -- mkdir '/etc/init.d/cql/'
-    kubectl cp ./cql/superuser.cql cassandra-0:/etc/init.d/cql/superuser.cql
-    kubectl exec -it cassandra-0 -- cqlsh -u cassandra -p cassandra -f '/etc/init.d/cql/superuser.cql'
+    while ! kubectl exec cassandra-0 -- cqlsh -u cassandra -p cassandra; do sleep 20; done
 
-    cd ../deployment/k8s
-}
+    # Init super user
+    kubectl exec -it cassandra-0 -- cqlsh -u cassandra -p cassandra -f '/etc/init.d/superuser.cql'
+    kubectl exec -it cassandra-0 -- cqlsh -f '/etc/init.d/superuser.cql' < /etc/cassandra/credentials.conf
+    kubectl exec -it cassandra-0 -- sh -c '/etc/init.d/keyspace.sh' # Init keyspaces already present
 
-# @ desc: Use the "deploy_keyspace.sh" script to fill database keyspaces, user roles and tables.
-function create_keyspaces() {
-    cd ../../ync-database
-    for keyspace in `ls -d cql/*/`; do
-        sh ./deploy_keyspace.sh ${keyspace:4:-1};
-    done
     cd ../deployment/k8s
 }
 
@@ -31,9 +24,8 @@ if [ "$1" == "start" ]; then
         # Init service
         kubectl apply -f ync-database/storage.yaml
         kubectl apply -f ync-database/database.yaml
-        sleep 20
-        init_database
-        create_keyspaces
+        sleep 60
+        init_cassandra
 
     # @desc: Create all apis
     elif [ "$2" == "api" ]; then
@@ -46,8 +38,7 @@ if [ "$1" == "start" ]; then
     # @desc: If no argument is provided, create all resources: database, apis and apps (in this particular order)
     else
         for component in `ls ync-database/*.yaml`; do kubectl apply -f ${component}; done
-        init_database
-        create_keyspaces
+        init_cassandra
 
         for component in `ls ync-api/*.yaml`; do kubectl apply -f ${component}; done
         for component in `ls ync-app/*.yaml`; do kubectl apply -f ${component}; done
@@ -56,9 +47,8 @@ if [ "$1" == "start" ]; then
 # @desc: Launch Cassandra's StatefulSet then all apis and apps
 elif [ "$1" == "resume" ]; then
     kubectl apply -f ync-database/database.yaml
-    sleep 20
-    init_database
-    create_keyspaces
+    sleep 60
+    init_cassandra
 
     for component in `ls ync-api/*.yaml`; do kubectl apply -f ${component}; done
     for component in `ls ync-app/*.yaml`; do kubectl apply -f ${component}; done
