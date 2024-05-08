@@ -22,6 +22,12 @@ permissions_validity: 0ms | Why ? Is it optimal ?
 
 # Deployment
 
+The way:
+
+1. custom image for custom cassandra.yaml configuration + credentials file for superuser.
+2. Initializer jobs: Superuser (superuser.cql & user_admin.cql) + CQL scripts (cql/*/*.cql)
+3. Cronjob: modify credentials every so often
+
 ## Docker
 
 You can execute the start and shutdown bash scripts ('./start.sh' & './shutdown.sh') for a quick and efficient deployment on docker of the ync-database.
@@ -32,8 +38,6 @@ If you wish to deploy this component on kubernetes, you'll eventually find some 
 ## Kubernetes (k8s)
 
 PersistentVolume --> PersistentVolumeClaim (act as a template) --> StatefulSet
-
-StatefulSet initialized with credentials files to executes CQL scripts as custom superuser. this file is modified using secrets.
 
 ync-database/storage.yml
 ync-database/database.yml
@@ -49,7 +53,7 @@ storage.yml + database.yml
 Init master node: pod -> Execute cql scripts.
 zk exec master-pod -- cqlsh -f 'file.cql'
 
-# Keyspace
+# Keyspaces
 
 ## File system's tables
 
