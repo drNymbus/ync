@@ -11,8 +11,15 @@ import (
     "github.com/gocql/gocql"
 )
 
+var (
+    CQLPath = "./cql/"
+    // cql_path = os.Getenv("CQL_DIR") string
+    Address = "127.0.0.1"
+    // address = os.Getenv("CASSANDRA_CONTACT_POINTS") string
+)
+
 // Connect to a Cassandra cluster
-func connect(address string, auth gocql.PasswordAuthenticator) *gocql.ClusterConfig {
+func Connect(address string, auth gocql.PasswordAuthenticator) *gocql.ClusterConfig {
     cluster := gocql.NewCluster(address) // Cluster accepts multiple addresses separated by commas
     cluster.Authenticator = auth
     return cluster
@@ -39,27 +46,31 @@ func prepare_query(query string) string {
         // get path in "LOAD_FILE"
         // open filepath in filepath.Join(cql_path, path)
         // put bytes in query
-    return ""
+    return query
 }
 
 // Execute a CQL script against a Cassandra cluster
-func exec_cql_script(session *gocql.Session, filename string) {
+func CQLScript(session *gocql.Session, filename string) {
     text := file_to_string(filename)
 
     for _, query := range strings.Split(text, ";") {
         query := prepare_query(query)
-
-        if err := session.Query(query).Exec(); err != nil {
-            log.Printf("Failed to execute CQL command [%s]: %v", query, err)
+        if query == "" {
+            log.Printf("Empty string is no valid query.")
         } else {
-            log.Printf("Successfully executed CQL command: %s", query)
+            err := session.Query(query).Exec()
+            if  err != nil {
+                log.Printf("Failed to execute CQL command [%s]: %v", query, err)
+            } else {
+                log.Printf("Successfully executed CQL command: %s", query)
+            }
         }
 
     }
 }
 
 // Execute all CQL scripts in a directory
-func init_keyspace(cluster *gocql.ClusterConfig, dir string) {
+func InitKeyspace(cluster *gocql.ClusterConfig, dir string) {
     files, err := ioutil.ReadDir(dir)
     if err != nil {
         log.Fatalf("Could not read directory: %v", err)
@@ -73,7 +84,7 @@ func init_keyspace(cluster *gocql.ClusterConfig, dir string) {
             }
 
             fullPath := filepath.Join(dir, file.Name())
-            exec_cql_script(session, fullPath)
+            CQLScript(session, fullPath)
 
             session.Close()
         }
