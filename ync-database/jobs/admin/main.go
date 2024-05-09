@@ -8,6 +8,11 @@ import (
     "github.com/gocql/gocql"
 )
 
+var (
+    address = "127.0.0.1" string
+    // address := os.Getenv("CASSANDRA_CONTACT_POINTS") string
+)
+
 // Connect to a Cassandra cluster
 func connect(address string, auth gocql.PasswordAuthenticator) *gocql.Session {
     cluster := gocql.NewCluster(address) // Cluster accepts multiple addresses separated by commas
@@ -17,6 +22,21 @@ func connect(address string, auth gocql.PasswordAuthenticator) *gocql.Session {
         log.Fatalf("Could not create session: %v", err)
     }
     return session
+}
+
+func file_to_string(filename string) string {
+    file, err := os.Open(filename)
+    if err != nil {
+        log.Fatalf("Could not open CQL file: %v", err)
+    }
+    defer file.Close()
+
+    text, err := io.ReadAll(r)
+    if err != nil {
+        log.Fatal("Could not read CQL file: %v", err)
+    }
+
+    return text
 }
 
 // Execute a CQL script against a Cassandra cluster
@@ -43,8 +63,6 @@ func exec_cql_script(session *gocql.Session, filename string) {
 }
 
 func main() {
-    // Replace with your actual Cassandra connection details
-    address := os.Getenv("CASSANDRA_CONTACT_POINTS")
     auth := gocql.PasswordAuthenticator{
         Username: "cassandra",
         Password: "cassandra",

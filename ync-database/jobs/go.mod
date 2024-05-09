@@ -1,4 +1,4 @@
-module job/admin
+module ync-database/jobs
 
 go 1.22.3
 

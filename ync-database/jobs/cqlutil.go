@@ -11,20 +11,6 @@ import (
     "github.com/gocql/gocql"
 )
 
-var (
-    cql_path = "./../cql/"
-    // cql_path = os.Getenv("CQL_DIR") string
-
-    address = "127.0.0.1"
-    // address = os.Getenv("CASSANDRA_CONTACT_POINTS") string
-
-    auth = gocql.PasswordAuthenticator{
-        Username: "admin",
-        Password: "admin",
-        // Password: os.Getenv("ADMIN_PASSWORD"),
-    }
-)
-
 // Connect to a Cassandra cluster
 func connect(address string, auth gocql.PasswordAuthenticator) *gocql.ClusterConfig {
     cluster := gocql.NewCluster(address) // Cluster accepts multiple addresses separated by commas
@@ -52,7 +38,8 @@ func prepare_query(query string) string {
     // for each "LOAD_FILE"
         // get path in "LOAD_FILE"
         // open filepath in filepath.Join(cql_path, path)
-
+        // put bytes in query
+    return ""
 }
 
 // Execute a CQL script against a Cassandra cluster
@@ -89,36 +76,6 @@ func init_keyspace(cluster *gocql.ClusterConfig, dir string) {
             exec_cql_script(session, fullPath)
 
             session.Close()
-        }
-    }
-}
-
-func main() {
-    // Connect to Cassandra
-    cluster := connect(address, auth)
-
-    args := os.Args[1:]
-    if len(args) == 0 {
-        log.Fatal("No keyspace specified")
-    }
-
-    if args[0] == "all" {
-        // Initialize all keyspaces from each folder in "./cql"
-        dirs, err := ioutil.ReadDir(cql_path)
-        if err != nil {
-            log.Fatalf("Could not read directory: %v", err)
-        }
-
-        for _, dir := range dirs {
-            if dir.IsDir() {
-                init_keyspace(cluster, filepath.Join(cql_path, dir.Name()))
-            }
-        }
-    } else {
-        // Initialize specific keyspaces
-        for _, ks := range args {
-            dirPath := filepath.Join(cql_path, ks)
-            init_keyspace(cluster, dirPath)
         }
     }
 }
