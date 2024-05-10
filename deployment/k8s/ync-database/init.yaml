@@ -9,7 +9,7 @@ spec:
       - name: ync-init-admin
         image: ync-job:latest
         imagePullPolicy: Never
-        command: []
+        args: ["superuser"]
         env:
         - name: CASSANDRA_CONTACT_POINTS
           value: "10.43.6.0"
@@ -27,7 +27,7 @@ spec:
       - name: ync-init-keyspace
         image: ync-job:latest
         imagePullPolicy: Never
-        command: []
+        args: ["keyspace", "all"]
         env:
         - name: CASSANDRA_CONTACT_POINTS
           value: "10.43.6.0"
