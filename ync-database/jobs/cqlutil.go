@@ -17,16 +17,17 @@ import (
 )
 
 var (
-    CQLPath string = "./cql/"
-    // cql_path string = os.Getenv("CQL_DIR")
-    Address string = "127.0.0.1"
-    // address string = os.Getenv("CASSANDRA_CONTACT_POINTS")
+    Address string = os.Getenv("CASSANDRA_CONTACT_POINTS")
+    CQLPath string = os.Getenv("CQL_PATH")
 )
 
 // Connect to a Cassandra cluster
-func Connect(address string, auth gocql.PasswordAuthenticator) *gocql.ClusterConfig {
+func Connect(address string, usr string, pwd string) *gocql.ClusterConfig {
     cluster := gocql.NewCluster(address) // Cluster accepts multiple addresses separated by commas
-    cluster.Authenticator = auth
+    cluster.Authenticator = gocql.PasswordAuthenticator{
+        Username: usr,
+        Password: pwd,
+    }
     return cluster
 }
 

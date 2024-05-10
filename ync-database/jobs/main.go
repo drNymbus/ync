@@ -5,8 +5,6 @@ import (
     "log"
     "os"
     "path/filepath"
-
-    "github.com/gocql/gocql"
 )
 
 func usage() {
@@ -22,11 +20,7 @@ func main() {
 
     if job == "superuser" {
 
-        auth := gocql.PasswordAuthenticator{
-            Username: "cassandra",
-            Password: "cassandra",
-        }
-        cluster := Connect(Address, auth)
+        cluster := Connect(Address, "cassandra", "cassandra")
 
         session, err := cluster.CreateSession()
         if err != nil {
@@ -35,11 +29,7 @@ func main() {
         CQLScript(session, filepath.Join(CQLPath, "user_admin.cql"))
         session.Close()
 
-        auth = gocql.PasswordAuthenticator{
-            Username: "admin",
-            Password: "admin",
-        }
-        cluster = Connect(Address, auth)
+        cluster = Connect(Address, "admin", "admin")
 
         session, err = cluster.CreateSession()
         if err != nil {
@@ -51,13 +41,9 @@ func main() {
 
     } else if job == "keyspace" {
 
-        auth := gocql.PasswordAuthenticator{
-            Username: "admin",
-            Password: "admin",
-        }
-        cluster := Connect(Address, auth)
-
         if len(args) == 0 { log.Fatal("No keyspace specified") }
+
+        cluster := Connect(Address, "admin", "admin")
 
         if args[0] == "all" {
             // Initialize all keyspaces from each folder in "./cql"
