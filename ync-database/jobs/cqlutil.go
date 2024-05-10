@@ -1,21 +1,26 @@
 package main
 
 import (
+    "os"
+
     "io"
     "io/ioutil"
-    "log"
-    "os"
     "path/filepath"
+
+    "log"
+
     "strings"
+    "regexp"
+    "encoding/hex"
 
     "github.com/gocql/gocql"
 )
 
 var (
-    CQLPath = "./cql/"
-    // cql_path = os.Getenv("CQL_DIR") string
-    Address = "127.0.0.1"
-    // address = os.Getenv("CASSANDRA_CONTACT_POINTS") string
+    CQLPath string = "./cql/"
+    // cql_path string = os.Getenv("CQL_DIR")
+    Address string = "127.0.0.1"
+    // address string = os.Getenv("CASSANDRA_CONTACT_POINTS")
 )
 
 // Connect to a Cassandra cluster
@@ -26,46 +31,60 @@ func Connect(address string, auth gocql.PasswordAuthenticator) *gocql.ClusterCon
 }
 
 // Open file and return content as a string
-func file_to_string(filename string) string {
+func file_bytes(filename string) []byte {
     file, err := os.Open(filename)
     if err != nil {
-        log.Fatalf("Could not open CQL file: %v", err)
+        log.Fatalf("Could not open file (%s): %v", filename, err)
     }
     defer file.Close()
 
-    text, err := io.ReadAll(file)
+    content, err := io.ReadAll(file)
     if err != nil {
-        log.Fatal("Could not read CQL file: %v", err)
+        log.Fatal("Could not read file: %v", err)
     }
 
-    return string(text)
+    return content
 }
 
 func prepare_query(query string) string {
+    // BLOB function
+    pattern, err := regexp.Compile("BLOB\\(.*\\)")
+    if err != nil {
+        log.Fatalf("Could not compile regex pattern: %v", err)
+    }
+
+    blob_fns := pattern.FindStringSubmatch(query)
     // for each "LOAD_FILE"
+    for _, instruction := range blob_fns {
         // get path in "LOAD_FILE"
+        filename := instruction[6:len(instruction)-2]
         // open filepath in filepath.Join(cql_path, path)
-        // put bytes in query
+        content := file_bytes(filepath.Join(CQLPath, filename))
+
+        replacement := strings.Join([]string{"0x", hex.EncodeToString(content)}, "")
+        query = strings.ReplaceAll(query, instruction, replacement)
+    }
+
     return query
 }
 
 // Execute a CQL script against a Cassandra cluster
 func CQLScript(session *gocql.Session, filename string) {
-    text := file_to_string(filename)
+    text := string(file_bytes(filename))
 
-    for _, query := range strings.Split(text, ";") {
-        query := prepare_query(query)
+    queries := strings.Split(text, ";")
+    queries = queries[:len(queries)-1]
+
+    for _, query := range queries {
         if query == "" {
             log.Printf("Empty string is no valid query.")
         } else {
+            query = prepare_query(query)
             err := session.Query(query).Exec()
             if  err != nil {
                 log.Printf("Failed to execute CQL command [%s]: %v", query, err)
-            } else {
-                log.Printf("Successfully executed CQL command: %s", query)
             }
         }
-
     }
 }
 
