@@ -1,5 +1,15 @@
 #!/bin/bash
 
+function component_status_check() {
+    while true; do
+        STATUS = $(kubectl get job "$1" -o=jsonpath='{.status.conditions[?(@.type=="Complete")].status}')
+        if [ $STATUS == "$2" ]; then
+            echo "$1 completed"
+            break
+        fi
+    done
+}
+
 # @desc: Create resources to run the service, database, apis and apps can be ran separately
 if [ "$1" == "start" ]; then
 
@@ -8,8 +18,12 @@ if [ "$1" == "start" ]; then
         # Init service
         kubectl apply -f ync-database/storage.yaml
         kubectl apply -f ync-database/database.yaml
-        sleep 60
+        component_status_check "cassandra-0" "Running"
+
         kubectl apply -f ync-database/init.yaml
+        component_status_check "ync-init-admin" "Complete"
+        kubectl apply -f ync-database/init.yaml
+        component_status_check "ync-init-keyspace" "Complete"
 
     # @desc: Create all apis
     elif [ "$2" == "api" ]; then

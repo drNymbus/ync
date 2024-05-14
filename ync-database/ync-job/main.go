@@ -18,7 +18,7 @@ func main() {
     job := os.Args[1]
     args := os.Args[2:]
 
-    if job == "superuser" {
+    if job == "admin" {
 
         cluster := Connect(Address, "cassandra", "cassandra")
 
@@ -41,7 +41,10 @@ func main() {
 
     } else if job == "keyspace" {
 
-        if len(args) == 0 { log.Fatal("No keyspace specified") }
+        if len(args) == 0 {
+            log.Fatal("No keyspace specified")
+            usage()
+        }
 
         cluster := Connect(Address, "admin", "admin")
 
