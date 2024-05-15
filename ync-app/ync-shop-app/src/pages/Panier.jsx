@@ -71,7 +71,9 @@ function CstmPanier() {
 
             setPanier(panierD);
             console.log(`${panierD} "//panierD stock into panier//"`);
-            // console.log(typeof panierD); // Object
+
+
+            console.log(typeof panierD); // Object
 
             const dict_panier=compterArticlesDansPanier(panierD);
             setCompteur(dict_panier);

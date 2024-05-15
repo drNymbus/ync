@@ -1,18 +1,22 @@
 import React, {useContext, useEffect} from "react";
+
 import DataContext from "./context/BrutDataProvider";
+
 import "./style/errorstyles.css";
 
 
 // Composant Erreur : reçoit le numéro de l'erreur et la description de l'erreur puis les affiche pour le client.
 function CstmErreur({ erreur, descriptionErreur }) {
 
-// useContext Hook
+// Context
     const { fetchDataForPage, pageData } = useContext(DataContext);
 
 
-// useEffect Hook    
+// Effect   
     useEffect(() => {
+
         fetchDataForPage("erreur");
+        
     }, []);
 
 

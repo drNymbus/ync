@@ -27,10 +27,6 @@ function CstmIncrementationPanier({ icone, nombre, nbrIncrementationMax }) {
         setNbrIcones(nombre);
     }, []);
 
-    // useEffect(() => {  
-    //     setNbrIcones(nombre);
-    // }, []);
-
 
 // Render    
     return (

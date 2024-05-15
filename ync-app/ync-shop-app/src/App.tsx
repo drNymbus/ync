@@ -1,12 +1,15 @@
 import React from "react";
+import { Routes, Route } from "react-router-dom";
+
 import { DataProvider } from "./pages/context/BrutDataProvider";
 import { ArticleContextProvider } from "./pages/context/ArticleDataProvider";
-import {BoutonProvider} from "./pages/context/BoutonProvider";
-import { Routes, Route } from "react-router-dom";
+import {PageProvider} from "./pages/context/PageProvider";
+
 import LogoComponent from "./pages/Splashpage";
 import CstmAccueil from "./pages/Accueil";
 import CstmPanier from "./pages/Panier";
 import CstmPaiement from "./pages/Paiement";
+
 import "./pages/style/styles.css";
 
 
@@ -21,12 +24,11 @@ export default function App() {
         <div className="App">
 
             
+            <PageProvider>
 
-            <DataProvider>
+                <DataProvider>
 
-                <ArticleContextProvider>
-
-                    <BoutonProvider>
+                    <ArticleContextProvider>
 
                         <Routes>
 
@@ -35,13 +37,12 @@ export default function App() {
                             <Route path="/Paiement" element={<CstmPaiement />} />
 
                         </Routes>
-                    
-                    </BoutonProvider>
-                    
-                </ArticleContextProvider>
+                        
+                    </ArticleContextProvider>
 
-            </DataProvider>
+                </DataProvider>
 
+            </PageProvider>
             
 
 

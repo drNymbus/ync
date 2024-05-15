@@ -1,62 +1,42 @@
-import React, {useContext, useEffect, useState } from "react";
+import React, {useContext, useEffect} from "react";
+
+import PageContext from "./context/PageProvider";
+
 import CstmBandeau from "./composantes/Bandeau";
 import CstmSection from "./composantes/Section";
 import CstmContenu from "./composantes/Contenu";
-import ArticleContext from "./context/ArticleDataProvider";
-import DataContext from "./context/BrutDataProvider";
+
 import "./style/styles.css";
 
 
-// Acceuil --> Bandeau, Section, Contenu
 function CstmAccueil() {
 
-// State
-    const [pageData, setPageData] = useState(null);
-    const [articleData, setArticleData] = useState(null);
+// Context
+    const { page, setPage } = useContext(PageContext);
 
-
-// useContexte Hook
-    const { fetchDataForPage } = useContext(DataContext); 
-    const { fetchArticleData } = useContext(ArticleContext);
-
-
-// useEffect Hook
+    
+// Effect
     useEffect(() => {
 
-        const pageD = fetchDataForPage("accueil");
-        setPageData(pageD); 
+        setPage("accueil");
 
-        fetchArticleData(pageD.id_article_accueil)
-        .then(articleD => {
-            setArticleData(articleD);
-        })
-        .catch(error => {
-            console.error("Une erreur s'est produite :", error.message);
-        });
-    }, []); // Exécutée une seule fois au chargement de la page car tableau de dépendances vide ([]). 
-    //Aucun changement attendu dans les données de ce contexte, donc useEffect() ne sera pas relancé à moins que les dépendances ne changent, ici non.
+    }, []);
 
-
+  
 // Render
     return (
 
         <div className="custom-full-page-content">
 
-            {pageData && <CstmBandeau buttons={pageData.buttonDataBandeau} />}
+            {page && <CstmBandeau page={page} />}
 
-            {pageData && <CstmSection image={pageData.sectionData.image} name={pageData.sectionData.name} />}
+            {page && <CstmSection page={page} />}
 
-            {articleData && <CstmContenu
-                id_article={pageData.id_article_accueil}
-                image={"../../assets/tableau_quelconque.png"}
-                description={articleData.description}
-                prix={articleData.price}
-                button={pageData.buttonData}
-            />}
+            {page && <CstmContenu page={page} />}
 
         </div>
 
-    ); // image={articleData.image}
+    );
 
 }
 

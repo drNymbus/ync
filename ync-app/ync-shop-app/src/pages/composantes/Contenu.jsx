@@ -1,68 +1,57 @@
 import React, { useEffect, useContext, useState } from "react";
-import CstmBoutonMenu from "./sous_composantes/BoutonMenu";
-import { useNavigate } from "react-router-dom";
-import { Button, Modal, Backdrop, Fade } from '@mui/material';
+
+import CstmBouton from "./sous_composantes/Bouton";
+
 import ArticleContext from "../context/ArticleDataProvider";
+import DataContext from "../context/BrutDataProvider";
+
 import "../style/styles.css";
 
-function CstmContenu({ id_article, image, description, prix, button }) {
 
-// // State
-//     const [showPrice, setShowPrice] = useState(false); // false affiche le texte, au survol affiche le prix
+function CstmContenu({ page }) {
 
-// useContext Hook
-    // const { fetchPanierData, postPanierData } = useContext(ArticleContext);
+// State
 
-
-// useNavigate Hook
-    // const navigate = useNavigate();
+    const [buttons, setButtons] = useState(null);
+    const [article, setArticle] = useState(null);
 
 
-//Function
-    // const togglePrice = () => {
-    //     setShowPrice(!showPrice);
-    // };
+// A supprimer plus tard, image devra etre donné par article.image !!
+    const [image, setImage] = useState("../../assets/tableau_quelconque.png");
+    
 
-    // const clickOnPrice = () => {
-
-    //     fetchPanierData().then(panier => {  // Recupération du panier d'origine
-
-
-    //         console.log("panier.length", panier.length);
-    //         console.log("panier=", panier);
+// Context
+    const { fetchContentData } = useContext(DataContext);
+    const { fetchArticleData } = useContext(ArticleContext);
 
 
-    //         if (panier.length === 0){       // Si le panier est vide, ajout d'un article "id_article" au panier + renvoie du nouveau panier 
+// Effect
+    useEffect(() => {
+        
+        const content_data = fetchContentData(page);
+        console.log(content_data)
+        
+        setButtons(content_data.button_data);
 
 
-    //             postPanierData(id_article).then(newPanier => {
+        fetchArticleData(content_data.id_article_vitrine).then(articleData => {
 
-    //                 if (newPanier.length === 1){
+            setArticle(articleData);
 
-    //                     console.log("newPanier.length", newPanier.length);
+            setButtons(prevButtons => {
+    
+                const updatedFirstButton = { ...prevButtons[0], prix: articleData.price };
+                return [updatedFirstButton, ...prevButtons.slice(1)];
+                
+            });
 
-    //                     console.log(`${newPanier} "nouveau panier"`);
-    //                     console.log(`${id_article} ajoutée`);
+        })
+        .catch(error => {
+            console.error("Une erreur s'est produite :", error.message);
+        });
+        
 
-    //                 } else {
-    //                     navigate("erreur");//Redirection vers page erreur
-    //                 }
-                    
-    //             }).catch(error => {
-    //                 console.error("Une erreur s'est produite :", error.message);
-    //             });
-
-
-    //         }else {                         
-    //             navigate("panier");// Redirection page panier
-    //         }
-
-
-    //     }).catch(error => {
-    //         console.error("Une erreur s'est produite :", error.message);
-    //     });
-
-    // };
+    }, []);
 
 
 // Render
@@ -70,35 +59,33 @@ function CstmContenu({ id_article, image, description, prix, button }) {
 
         <div className="custom-content-container">
 
-            <div className="custom-content-image">
+            { article && buttons && <div className="custom-content-image">
 
                 {/* Image du tableau Quelconque */}
                 <img src={image} alt="tableau actuel" />
 
-                {/* Div Description et prix de Quelconque */}
                 <div className="custom-content-description">
 
                     {/* Description */}
-                    <p>{description}</p>
+                    <p>{article.description}</p>
 
-                    {/* Bouton Prix */}
-                    <CstmBoutonMenu 
-                        text={button.text} 
-                        style={button.style}
-                        navigation={button.navigation}
-                        component_contents={button.component_contents}
-                    />
+                    {/* Bouton */}
+                    <CstmBouton button_props={buttons[0]} />
+
 
                 </div>
 
                     
 
-            </div>
+            </div> }
             
         </div>
 
     );
 
-    }
+}
 
-    export default CstmContenu;
+export default CstmContenu;
+
+// Dans le JSX, l'expression entre accolades {} est interprétée comme du code JavaScript. Dans JavaScript, les instructions conditionnelles if 
+// ne peuvent pas être utilisées à l'intérieur des expressions JSX.

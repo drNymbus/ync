@@ -1,7 +1,10 @@
 import React, {useContext, useEffect} from "react";
+
+import DataContext from "./context/BrutDataProvider";
+
 import CstmBandeau from "./composantes/Bandeau";
 import CstmSection from "./composantes/Section";
-import DataContext from "./context/BrutDataProvider";
+
 import "./style/styles.css";
 
 
@@ -9,14 +12,14 @@ import "./style/styles.css";
 function CstmPaiement() {
 
 
-// useContexte Hook
+// Context
     const { fetchDataForPage, pageData } = useContext(DataContext);
 
 
-// useEffect Hook
+// Effect
     useEffect(() => {
-        fetchDataForPage("paiement"); // Utilisation de la fonction fetchDataForPage du context DataContext pour charger les données de la page "paiement"
-    }, []); // Cette fonction est exécutée une seule fois au chargement de la page car le tableau de dépendances est vide ([]). Cela signifie qu'il n'y a aucun changement attendu dans les données de ce contexte, donc useEffect() ne sera pas relancé à moins que les dépendances ne changent.
+        fetchDataForPage("paiement");
+    }, []);
 
    
 // Render
