@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ync-init-admin
+spec:
+  template:
+    spec:
+      containers:
+      - name: ync-init-admin
+        image: ync-job:latest
+        imagePullPolicy: Never
+        args: ["admin"]
+        env:
+        - name: CASSANDRA_CONTACT_POINTS
+          value: "10.96.6.0"
+      restartPolicy: Never
+  backoffLimit: 4

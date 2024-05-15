@@ -9,11 +9,24 @@ For each keyspace in the database, different roles and users are needed to opera
 - Manager: acts as a superuser dedicated to the keyspace. This role is able to perform any action on all tables in the keyspace. (It is not recommended to have multiple manager roles in the same keyspace)
 - Worker: has a limited range of action on the keyspace. Each worker would restricted depending on the utility of the API linked to it.
 
-'superuser.cql'
+In addition to those roles a superuser, named 'admin', is created. This superuser is created once the Cassandra's StatefulSet is deployed and fully initialized.
 
 [file credential login](https://cassandra.apache.org/doc/stable/cassandra/operating/security.html#operation-roles)
 
+## Authentication
+
+authenticator: PasswordAuthenticator
+authorizer: CassandraAuthorizer
+roles_validity: 0ms | Why ? Is it optimal ?
+permissions_validity: 0ms | Why ? Is it optimal ?
+
 # Deployment
+
+The way:
+
+1. custom image for custom cassandra.yaml configuration + credentials file for superuser.
+2. Initializer jobs: Superuser (superuser.cql & user_admin.cql) + CQL scripts (cql/*/*.cql)
+3. Cronjob: modify credentials every so often
 
 ## Docker
 
@@ -40,7 +53,7 @@ storage.yml + database.yml
 Init master node: pod -> Execute cql scripts.
 zk exec master-pod -- cqlsh -f 'file.cql'
 
-# Keyspace
+# Keyspaces
 
 ## File system's tables
 

@@ -1,5 +1,8 @@
 .gitignore
 
+ync-database/jobs/credentials/go.sum
+ync-database/jobs/initializer/go.sum
+
 ync-api/ync-shop-api/.dockerignore
 ync-api/ync-shop-api/package-lock.json
 ync-api/ync-shop-api/node_modules/*

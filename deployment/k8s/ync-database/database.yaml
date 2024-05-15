@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cassandra
+  labels:
+    app: cassandra
+spec:
+  serviceName: "cassandra"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cassandra
+  template:
+    metadata:
+      labels:
+        app: cassandra
+    spec:
+      containers:
+      - name: cassandra
+        image: ync-cassandra:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 9042
+          name: cql
+        volumeMounts:
+        - name: cassandra-storage
+          mountPath: /var/lib/cassandra
+      volumes:
+      - name: cassandra-storage
+        persistentVolumeClaim:
+          claimName: cassandra-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cassandra
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 9042
+      targetPort: 9042
+  clusterIP: 10.96.6.0
+  selector:
+    app: cassandra

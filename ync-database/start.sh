@@ -20,8 +20,8 @@ if [ "$1" == "docker" ]; then
 
 elif [ "$1" == "k8s" ]; then
     # Init service
-    # kubectl apply -f storage.yml
-    # kubectl apply -f database.yml
+    # kubectl apply -f storage.yaml
+    # kubectl apply -f database.yaml
 
     # Init keyspaces
     kubectl cp ./cql/superuser.cql cassandra-0:/etc/init.d/superuser.cql
