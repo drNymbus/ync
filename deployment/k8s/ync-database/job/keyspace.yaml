@@ -12,6 +12,6 @@ spec:
         args: ["keyspace", "all"]
         env:
         - name: CASSANDRA_CONTACT_POINTS
-          value: "10.43.6.0"
+          value: "10.96.6.0"
       restartPolicy: Never
   backoffLimit: 4

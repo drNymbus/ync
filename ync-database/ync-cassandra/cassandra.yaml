@@ -362,7 +362,7 @@ commit_failure_policy: stop
 #
 # Default value ("auto") is 1/256th of the heap or 10MiB, whichever is greater
 # Min unit: MiB
-prepared_statements_cache_size:
+prepared_statements_cache_size: 50MiB
 
 # Maximum size of the key cache in memory.
 #
@@ -612,10 +612,10 @@ concurrent_materialized_view_writes: 32
 # accepting writes when the limit is exceeded until a flush completes,
 # and will trigger a flush based on memtable_cleanup_threshold
 # If omitted, Cassandra will set both to 1/4 the size of the heap.
-# Min unit: MiB
-# memtable_heap_space: 2048MiB
-# Min unit: MiB
-# memtable_offheap_space: 2048MiB
+# Min unit: MiB (default is 2048MiB)
+memtable_heap_space: 2048MiB
+# Min unit: MiB (default is 2048MiB)
+memtable_offheap_space: 2048MiB
 
 # memtable_cleanup_threshold is deprecated. The default calculation
 # is the only reasonable choice. See the comments on  memtable_flush_writers
@@ -1528,8 +1528,8 @@ compaction_tombstone_warning_threshold: 100000
 # Maximum size of any value in SSTables. Safety measure to detect SSTable corruption
 # early. Any value size larger than this threshold will result into marking an SSTable
 # as corrupted. This should be positive and less than 2GiB.
-# Min unit: MiB
-# max_value_size: 256MiB
+# Min unit: MiB (default is 246MiB)
+max_value_size: 1024MiB
 
 # ** Impact on keyspace creation **
 # If replication factor is not mentioned as part of keyspace creation, default_keyspace_rf would apply.
