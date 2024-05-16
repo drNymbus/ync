@@ -79,8 +79,7 @@ function App() {
         }
     }
 
-    // Website html
-    return (
+    return ( // HTML website rendering
         <div className="App">
             <Bandeau name={button_display} basketSize={basket.length} homeFn={gotoHome} clickFn={updateState}/>
             <Section name={section.name} image={section.image}/>

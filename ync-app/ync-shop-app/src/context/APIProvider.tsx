@@ -5,9 +5,9 @@ import axios from 'axios';
 const APIContext = createContext();
 
 export const APIProvider = ({ children }) => {
-
     // const api_address = process.env.API_CONTACT_POINT;
-    const api_address = "http://88.174.59.203:15779";
+    // const api_address = "http://88.174.59.203:15779";
+    const api_address = "http://localhost:3001";
     const config = {withCredentials: true, headers: {'Content-Type':'application/json', 'Accept':'application/json'}};
 
     const fetchItem = async (item) => { // Récupérer les données de l'article en fonction de id_article
@@ -32,9 +32,9 @@ export const APIProvider = ({ children }) => {
         } catch (e) { console.error(e); }
     };
 
-    const delBasket = async (item) => { // Fonction pour supprimer un élément au panier en fonction de id_article et récupérer le nouveau panier
+    const delBasket = async (basket) => { // Fonction pour supprimer un élément au panier en fonction de id_article et récupérer le nouveau panier
         try {
-            const res = await axios.delete(api_address + `/store?basket=true&id=${item}`, config);
+            const res = await axios.delete(api_address + `/store?basket=true`, {...config, data: basket});
             return res.data.items;
         } catch (e) { console.error(e); }
     };

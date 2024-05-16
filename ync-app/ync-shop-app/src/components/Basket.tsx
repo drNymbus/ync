@@ -6,25 +6,15 @@ import APIContext from "../context/APIProvider";
  * @param count: how many time the item is currently in the basket
  * @return: Row item component for the basket page
  */
-function BasketItem({ id, count, update }) {
+function BasketItem({ id, count, add, remove }) {
     const [item, setItem] = useState(null);
-    const { fetchItem, postBasket, delBasket } = useContext(APIContext);
+    const { fetchItem } = useContext(APIContext);
 
     useEffect(() => { // Retrieve item's data
         fetchItem(id)
         .then((data) => { setItem(data); })
         .catch((err) => { console.error(err); });
     }, []);
-
-    const addItem = async () => {
-        await postBasket(id);
-        update();
-    };
-
-    const removeItem = async () => {
-        await delBasket(id);
-        update();
-    };
 
     if (item !== null) { // If data has been retrieved then we display the item
         let basketIcons = undefined;
@@ -62,12 +52,25 @@ function BasketItem({ id, count, update }) {
  * @return: Basket component of the website page
  */
 function Basket({ basket, update, next }) {
+    const { postBasket, delBasket } = useContext(APIContext);
+
+    const addItem = async (id) => {
+        await postBasket(id);
+        update();
+    };
+
+    const removeItem = async (id) => {
+        basket
+        await delBasket(basket);
+        update();
+    };
+
     // Count items in basket
     basket = basket.reduce((b, v) => ({...b, [v]: (b[v] || 0) + 1}), {});
 
     let rows = []; // Display each different item in basket
     for (let id in basket) {
-        rows.push(<BasketItem key={id} id={id} count={basket[id]} update={update}/>);
+        rows.push(<BasketItem key={id} id={id} count={basket[id]} add={addItem} remove={removeItem}/>);
     }
 
     let price = 0, fee = 0;

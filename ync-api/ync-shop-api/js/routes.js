@@ -116,7 +116,7 @@ const store_delete = async (req, res, client) => {
         if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
         if (req.query.basket === true) {
-            await client.execute(utils.basket.remove_item, [req.query.id.split(','), cookie]); // update basket with new item.s
+            await client.execute(utils.basket.set, [req.body, cookie]); // update basket with new item.s
             client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
                 res.status(200).json(result.rows[0]); // send basket
             });
