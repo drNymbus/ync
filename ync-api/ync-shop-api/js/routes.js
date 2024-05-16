@@ -74,7 +74,7 @@ const store_post = async (req, res, client) => {
         if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
         if (req.query.basket === true) { // Add item to basket
-            await client.execute(utils.basket.add_item, [req.query.id.split(','), cookie]); // update basket with new item.s
+            await client.execute(utils.basket.set, [req.body, cookie]); // update basket with new item.s
             client.execute(utils.basket.select, [cookie]).then((result) => {
                 res.status(200).json(result.rows[0]); // retrieve & send basket
             });
@@ -115,19 +115,13 @@ const store_delete = async (req, res, client) => {
         const cookie = req.signedCookies.ync_shop;
         if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
-        if (req.query.basket === true) {
-            await client.execute(utils.basket.set, [req.body, cookie]); // update basket with new item.s
-            client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
-                res.status(200).json(result.rows[0]); // send basket
-            });
-
-        } else if (req.query.item === true) {
+        if (req.query.item === true) {
             await client.execute(utils.item.delete, [req.query.id.split(',')]); // delete item from database
             client.execute(utils.basket.select, [cookie]).then(() => { // retrieve basket
                 res.status(200).json({'message': 'Item deleted'}); // send basket
             });
 
-        } else if (req.query.item === true) {
+        } else if (req.query.command === true) {
             await client.execute(utils.command.delete, [req.query.id.split(',')]); // delete item from database
             client.execute(utils.basket.select, [cookie]).then(() => { // retrieve basket
                 res.status(200).json({'message': 'Item deleted'}); // send basket
