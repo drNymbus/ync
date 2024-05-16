@@ -14,7 +14,7 @@ const store_get = async (req, res, client) => {
                 cookie = utils.generate_cookie();
 
                 await client.execute(utils.session.insert, [cookie, false, Date.now()]); // create session
-                await client.execute(utils.basket.insert, [cookie]); // create basket
+                // await client.execute(utils.basket.insert, [cookie]); // create basket
                 client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
                     res.cookie('ync_shop', cookie, {
                         path: '/store', signed: true, SameSite: true, Partitionned: undefined
@@ -74,7 +74,13 @@ const store_post = async (req, res, client) => {
         if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
         if (req.query.basket === true) { // Add item to basket
-            await client.execute(utils.basket.set, [req.body.basket, cookie]); // update basket with new item.s
+            await client.execute(utils.basket.select, [cookie]).then(async (result) => {
+                if (result.rows.length > 0) {
+                    await client.execute(utils.basket.set, [req.body.basket, cookie]); // update basket
+                } else {
+                    await client.execute(utils.basket.insert, [cookie, req.body.basket]); // init basket
+                }
+            });
             client.execute(utils.basket.select, [cookie]).then((result) => {
                 res.status(200).json(result.rows[0]); // retrieve & send basket
             });
