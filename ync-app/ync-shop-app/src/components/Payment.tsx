@@ -8,7 +8,7 @@ function Payment() {
     }
 
     return (
-        <form action={time2Pay} >
+        <form onSubmit={time2Pay} >
             <div className="contact">
                 <h1>Contact</h1>
                 <input type="email" placeholder="Email"></input>
