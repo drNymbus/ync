@@ -75,7 +75,7 @@ const store_post = async (req, res, client) => {
 
         if (req.query.basket === true) { // Add item to basket
             await client.execute(utils.basket.select, [cookie]).then(async (result) => {
-                if (result.rows.length > 0) {
+                if (result.rows.length > 0 || result.rows[0].items === null) {
                     await client.execute(utils.basket.set, [req.body.basket, cookie]); // update basket
                 } else {
                     await client.execute(utils.basket.insert, [cookie, req.body.basket]); // init basket

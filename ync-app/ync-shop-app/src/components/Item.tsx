@@ -9,18 +9,13 @@ import APIContext from "../context/APIProvider";
 function Item({ id, clickFn }) {
 
     const [item, setItem] = useState(null); // Item data
-    const { fetchItem, postBasket } = useContext(APIContext);
+    const { fetchItem } = useContext(APIContext);
 
     useEffect(() => { // Fetch all item's data
         fetchItem(id)
             .then((data) => { setItem(data); })
             .catch((err) => { console.error(err); });
     }, []);
-
-    // async function add() { // Add item to the basket then execute clickFn
-    //     await postBasket(id);
-    //     clickFn();
-    // };
 
     let img = ( // HTML image rendering 
         <div className="item-image">

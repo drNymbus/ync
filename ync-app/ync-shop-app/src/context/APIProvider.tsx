@@ -28,7 +28,6 @@ export const APIProvider = ({ children }) => {
     const postBasket = async (basket) => { // Fonction pour ajouter un élément au panier en fonction de id_article et récupérer le nouveau panier
         try {
             const res = await axios.post(api_address + `/store?basket=true`, {basket}, config);
-            console.log("RESPONSE", res);
             return res.data.items;
         } catch (e) { console.error(e); }
     };

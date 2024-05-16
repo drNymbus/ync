@@ -28,7 +28,7 @@ function App() {
     const [basket, setBasket] = useState([]);
     useEffect(() => {
         fetchBasket()
-            .then((data) => { data === undefined ? [] : setBasket(data); })
+            .then((data) => { (data === undefined) ? [] : setBasket(data); })
             .catch((err) => { console.error(err); });
     }, []);
 
@@ -36,23 +36,35 @@ function App() {
     const [button_display, setButtonDisplay] = useState("PANIER");
     const [section, setSection] = useState({name: "Quelconque", image: "assets/home_icon.svg"});
 
-    // Define default content state
-    const updateBasket = async (e, id) => {
-        basket.push(id);
-        let new_basket = await postBasket(basket);
+    const addBasket = async (e, id) => {
+        console.log("addBasket", id);
+        let new_basket = await postBasket([...basket, id]);
         setBasket(new_basket);
     }
+
+    const removeBasket = async (e, id) => {
+        console.log("removeBasket", id);
+        let new_basket = [...basket];
+        let index = new_basket.indexOf(id);
+        new_basket.splice(index, 1);
+
+        new_basket = await postBasket(new_basket);
+        setBasket(new_basket);
+    }
+
+    // Define default content state
     // const [content, setContent] = useState(<Logo content={<Item id="quelconque" clickFn={updateBasket}/>}/>);
-    const [content, setContent] = useState(<Item id="quelconque" clickFn={updateBasket}/>);
+    const [content, setContent] = useState(<Item id="quelconque" clickFn={addBasket}/>);
 
     // onClick home button
     const gotoHome = () => {
         setButtonDisplay("PANIER");
         setSection({name: "Quelconque", image: "assets/home_icon.svg"})
-        setContent(<Item id="quelconque" clickFn={updateBasket}/>);
+        setContent(<Item id="quelconque" clickFn={addBasket}/>);
         setState({current: "HOME", goto: "BASKET"});
     };
 
+    // onClick payment button
     const gotoPayment = () => {
         setButtonDisplay("RETOUR");
         setSection({name: "Payment", image: "assets/home_icon.svg"})
@@ -62,27 +74,29 @@ function App() {
 
     // onClick top right button
     const updateState = () => {
-        if (state.current === "HOME") {
+        if (state.current === "HOME") { // From home go to basket
             setButtonDisplay("RETOUR");
             setSection({name: "Panier", image: "assets/home_icon.svg"})
-            setContent(<Basket basket={basket} update={updateBasket} next={gotoPayment}/>);
+            setContent(<Basket basket={basket} add={addBasket} remove={removeBasket} next={gotoPayment}/>);
             setState({current: "BASKET", goto: "HOME"});
-        } else if (state.current === "BASKET") {
+
+        } else if (state.current === "BASKET") { // From basket go to home
             setButtonDisplay("PANIER");
             setSection({name: "Quelconque", image: "assets/home_icon.svg"})
-            setContent(<Item id="quelconque" clickFn={updateBasket}/>);
+            setContent(<Item id="quelconque" clickFn={addBasket}/>);
             setState({current: "HOME", goto: "BASKET"});
-        } else if (state.current === "PAYMENT") {
+
+        } else if (state.current === "PAYMENT") { // From payment go to basket
             setButtonDisplay("RETOUR");
             setSection({name: "Panier", image: "assets/home_icon.svg"});
-            setContent(<Basket basket={basket} update={updateBasket} next={gotoPayment}/>);
+            setContent(<Basket basket={basket} add={addBasket} remove={removeBasket} next={gotoPayment}/>);
             setState({current: "BASKET", goto: "HOME"});
         }
     }
 
     return ( // HTML website rendering
         <div className="App">
-            <Bandeau name={button_display} basketSize={(basket === undefined) ? "?" : basket.length} homeFn={gotoHome} clickFn={updateState}/>
+            <Bandeau name={button_display} basketSize={basket.length} homeFn={gotoHome} clickFn={updateState}/>
             <Section name={section.name} image={section.image}/>
             {content}
         </div>

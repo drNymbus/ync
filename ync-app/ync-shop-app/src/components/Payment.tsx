@@ -30,9 +30,9 @@ function Payment() {
             <div className="shipping-method">
                 <h1>MÉTHODE DE LIVRAISON</h1>
                 <input name="shipping-relay" type="radio"/>
-                <label for="newsletter">Point relai</label>
+                <label for="shipping-relay">Point relai</label>
                 <input name="shipping-address" type="radio"/>
-                <label for="newsletter">À mon adresse</label>
+                <label for="shipping-address">À mon adresse</label>
             </div>
 
             <div className="payment-method"> {/* We'll for now stick to a paypal payment */}
