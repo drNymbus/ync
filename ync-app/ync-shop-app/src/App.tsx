@@ -19,7 +19,7 @@ import "./style/styles.css";
  * @return: the whole website content
  */
 function App() {
-    const { fetchBasket } = useContext(ArticleContext);
+    const { fetchBasket, postBasket } = useContext(ArticleContext);
 
     // Define default app state
     const [state, setState] = useState({current: "HOME", goto: "BASKET"});
@@ -38,11 +38,11 @@ function App() {
 
     // Define default content state
     const updateBasket = async () => {
-        let basket = await fetchBasket();
+        let basket = await postBasket();
         setBasket(basket);
     }
-    // const [content, setContent] = useState(<Logo content={<Item id="quelconque" clickFn={updateBasket}/>}/>);
-    const [content, setContent] = useState(<Item id="quelconque" clickFn={updateBasket}/>);
+    const [content, setContent] = useState(<Logo content={<Item id="quelconque" clickFn={updateBasket}/>}/>);
+    // const [content, setContent] = useState(<Item id="quelconque" clickFn={updateBasket}/>);
 
     // onClick home button
     const gotoHome = () => {

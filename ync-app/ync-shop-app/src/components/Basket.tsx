@@ -12,8 +12,8 @@ function BasketItem({ id, count, add, remove }) {
 
     useEffect(() => { // Retrieve item's data
         fetchItem(id)
-        .then((data) => { setItem(data); })
-        .catch((err) => { console.error(err); });
+            .then((data) => { setItem(data); })
+            .catch((err) => { console.error(err); });
     }, []);
 
     if (item !== null) { // If data has been retrieved then we display the item
@@ -52,7 +52,7 @@ function BasketItem({ id, count, add, remove }) {
  * @return: Basket component of the website page
  */
 function Basket({ basket, update, next }) {
-    const { postBasket, delBasket } = useContext(APIContext);
+    const { postBasket } = useContext(APIContext);
 
     const addItem = async (id) => {
         await postBasket(id);

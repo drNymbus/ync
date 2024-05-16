@@ -25,22 +25,15 @@ export const APIProvider = ({ children }) => {
         } catch (e) { console.error(e); }
     };
 
-    const postBasket = async (item) => { // Fonction pour ajouter un élément au panier en fonction de id_article et récupérer le nouveau panier
+    const postBasket = async (basket) => { // Fonction pour ajouter un élément au panier en fonction de id_article et récupérer le nouveau panier
         try {
-            const res = await axios.post(api_address + `/store?basket=true&id=${item}`, {item}, config);
-            return res.data.items;
-        } catch (e) { console.error(e); }
-    };
-
-    const delBasket = async (basket) => { // Fonction pour supprimer un élément au panier en fonction de id_article et récupérer le nouveau panier
-        try {
-            const res = await axios.delete(api_address + `/store?basket=true`, {...config, data: basket});
+            const res = await axios.post(api_address + `/store?basket=true`, {basket}, config);
             return res.data.items;
         } catch (e) { console.error(e); }
     };
 
     return (
-        <APIContext.Provider value={{ fetchItem, fetchBasket, postBasket, delBasket }}>
+        <APIContext.Provider value={{ fetchItem, fetchBasket, postBasket }}>
             {children}
         </APIContext.Provider>
     );
