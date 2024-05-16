@@ -17,10 +17,10 @@ function Item({ id, clickFn }) {
             .catch((err) => { console.error(err); });
     }, []);
 
-    async function add() { // Add item to the basket then execute clickFn
-        await postBasket(id);
-        clickFn();
-    };
+    // async function add() { // Add item to the basket then execute clickFn
+    //     await postBasket(id);
+    //     clickFn();
+    // };
 
     let img = ( // HTML image rendering 
         <div className="item-image">
@@ -35,7 +35,7 @@ function Item({ id, clickFn }) {
     );
 
     let price = ( // HTML button rendering
-        <button className="item-button" onClick={add}>
+        <button className="item-button" onClick={(e) => {clickFn(e, id)}}>
             {(item === null) ? "" : item.price}$
         </button>
     );

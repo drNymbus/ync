@@ -74,7 +74,7 @@ const store_post = async (req, res, client) => {
         if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
         if (req.query.basket === true) { // Add item to basket
-            await client.execute(utils.basket.set, [req.body, cookie]); // update basket with new item.s
+            await client.execute(utils.basket.set, [req.body.basket, cookie]); // update basket with new item.s
             client.execute(utils.basket.select, [cookie]).then((result) => {
                 res.status(200).json(result.rows[0]); // retrieve & send basket
             });

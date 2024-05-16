@@ -2,7 +2,7 @@
 import { useState, useContext, useEffect } from "react";
 
 /* Custom context imports */
-import ArticleContext from "./context/APIProvider";
+import APIContext from "./context/APIProvider";
 
 /* Custom component imports */
 import Bandeau from "./components/Bandeau";
@@ -19,7 +19,7 @@ import "./style/styles.css";
  * @return: the whole website content
  */
 function App() {
-    const { fetchBasket, postBasket } = useContext(ArticleContext);
+    const { fetchBasket, postBasket } = useContext(APIContext);
 
     // Define default app state
     const [state, setState] = useState({current: "HOME", goto: "BASKET"});
@@ -37,12 +37,13 @@ function App() {
     const [section, setSection] = useState({name: "Quelconque", image: "assets/home_icon.svg"});
 
     // Define default content state
-    const updateBasket = async () => {
-        let basket = await postBasket();
-        setBasket(basket);
+    const updateBasket = async (e, id) => {
+        basket.push(id);
+        let new_basket = await postBasket(basket);
+        setBasket(new_basket);
     }
-    const [content, setContent] = useState(<Logo content={<Item id="quelconque" clickFn={updateBasket}/>}/>);
-    // const [content, setContent] = useState(<Item id="quelconque" clickFn={updateBasket}/>);
+    // const [content, setContent] = useState(<Logo content={<Item id="quelconque" clickFn={updateBasket}/>}/>);
+    const [content, setContent] = useState(<Item id="quelconque" clickFn={updateBasket}/>);
 
     // onClick home button
     const gotoHome = () => {

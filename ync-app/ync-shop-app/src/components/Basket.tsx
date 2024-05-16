@@ -60,7 +60,6 @@ function Basket({ basket, update, next }) {
     };
 
     const removeItem = async (id) => {
-        basket
         await delBasket(basket);
         update();
     };
