@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from "react";
 import CstmBoutonMenu from "./sous_composantes/BoutonMenu";
 import { useNavigate } from "react-router-dom";
 import { Button, Modal, Backdrop, Fade } from '@mui/material';
-import ArticleContext from "../context/ArticleDataProvider";
+import ArticleContext from "../../context/APIProvider";
 import "../style/styles.css";
 
 function CstmContenu({ id_article, image, description, prix, button }) {

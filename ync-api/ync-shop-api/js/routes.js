@@ -16,7 +16,9 @@ const store_get = async (req, res, client) => {
                 await client.execute(utils.session.insert, [cookie, false, Date.now()]); // create session
                 await client.execute(utils.basket.insert, [cookie]); // create basket
                 client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
-                    res.cookie('ync_shop', cookie, {path: '/store', signed: true});
+                    res.cookie('ync_shop', cookie, {
+                        path: '/store', signed: true, SameSite: true, Partitionned: undefined
+                    });
                     res.status(200).json(result.rows[0]); // send basket
                 });
             } else {
@@ -40,7 +42,7 @@ const store_get = async (req, res, client) => {
                     let data = result.rows;
                     for (let i = 0; i < data.length; i++) {
                         const blob = data[i].image;
-                        const image = (blob !== undefined || blob !== null) ? "undefined" : blob.toString('base64');
+                        const image = (blob === undefined || blob === null) ? "undefined" : blob.toString('base64');
                         data[i].image = `data:image/jpeg;base64,${image}`;
                     }
 

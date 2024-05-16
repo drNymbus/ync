@@ -1,52 +1,53 @@
-import React from "react";
-import { DataProvider } from "./pages/context/BrutDataProvider";
-import { ArticleContextProvider } from "./pages/context/ArticleDataProvider";
-import {BoutonProvider} from "./pages/context/BoutonProvider";
-import { Routes, Route } from "react-router-dom";
-import LogoComponent from "./pages/Splashpage";
-import CstmAccueil from "./pages/Accueil";
-import CstmPanier from "./pages/Panier";
-import CstmPaiement from "./pages/Paiement";
-import "./pages/style/styles.css";
+/* npm & React module imports */
+import { useState } from "react";
+
+/* Custom component imports */
+import Bandeau from "./element/Bandeau";
+import Section from "./element/Section";
+import Logo from "./element/Splashpage";
+import Article from "./element/Article";
+import Basket from "./element/Basket";
+
+/* Style imports */
+import "./style/styles.css";
 
 
-export default function App() {
+function App() {
+    const [state, setState] = useState({current: "HOME", goto: "BASKET"});
 
-// Contexte fourni aux composants enfants : <ArticleContextProvider>, <PropsProvider> (On englobe les composantes de notre application pour que certaines données soit disponible)
-// + Déclaration des redirections de l'application avec <Routes> de la composante <BrowserRouter> ("/" --> CstAccueil; "/Panier" --> CstmPanier; "/Paiement" --> CstmPaiement)
+    const [button_display, setButtonDisplay] = useState("PANIER");
+    const [section, setSection] = useState({name: "Quelconque", image: "assets/home_icon.svg"});
+    // const [content, setContent] = useState(<Logo content={<Article id="quelconque"/>}/>);
+    const [content, setContent] = useState(<Article id="quelconque"/>);
 
-// Render
+    function updateState() {
+        if (state.current === "HOME") {
+            setButtonDisplay("RETOUR");
+            setSection({name: "Panier", image: "assets/home_icon.svg"})
+            setContent(<Basket />);
+
+            setState({current: "BASKET", goto: "HOME"});
+        } else if (state.current === "BASKET") {
+            setButtonDisplay("PANIER");
+            setSection({name: "Quelconque", image: "assets/home_icon.svg"})
+            setContent(<Article id="quelconque" />);
+
+            setState({current: "HOME", goto: "BASKET"});
+        } else if (state.current === "PAYMENT") {
+            setButtonDisplay("RETOUR");
+            setSection({name: "Panier", image: "assets/home_icon.svg"});
+            setContent(<Basket />);
+
+            setState({current: "BASKET", goto: "HOME"});
+        }
+    }
+
     return (
-
         <div className="App">
-
-            
-
-            <DataProvider>
-
-                <ArticleContextProvider>
-
-                    <BoutonProvider>
-
-                        <Routes>
-
-                            <Route path="/" element={<LogoComponent content={<CstmAccueil />} />} />
-                            <Route path="/Panier" element={<CstmPanier />} />
-                            <Route path="/Paiement" element={<CstmPaiement />} />
-
-                        </Routes>
-                    
-                    </BoutonProvider>
-                    
-                </ArticleContextProvider>
-
-            </DataProvider>
-
-            
-
-
+            <Bandeau name={button_display} click={updateState}/>
+            <Section name={section.name} image={section.image}/>
+            {content}
         </div>
-        
     );
-    
-}
+
+} export default App;

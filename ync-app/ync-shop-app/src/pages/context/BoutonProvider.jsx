@@ -1,5 +1,5 @@
 import React, {useEffect, useContext, useState, createContext} from 'react';
-import ArticleContext from "../context/ArticleDataProvider";
+import ArticleContext from "../../context/APIProvider";
 import { Button, Modal, Backdrop, Fade } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 
