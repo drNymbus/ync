@@ -47,15 +47,15 @@ body {
     margin-left: 20px;
 }
 
-/* .left::after {
-    content: "";
+.left::after {
+    content: ""; /* Contenu vide car on veut juste une ligne */
     display: inline-block;
-    width: 20px;
-    height: 1px;
-    background-color: #000;
+    width: 20px; /* Largeur de la ligne */
+    height: 1px; /* Épaisseur de la ligne */
+    background-color: #000; /* Couleur de la ligne */
     margin-bottom: 4px;
     margin-left: 10px;
-} */
+}
 
 .right {
     margin-right: 20px;
@@ -73,7 +73,7 @@ body {
     font-size: 30px;
 }
 
-.item {
+.article {
     height: 80%;
     border: 1px solid black; /* Border around the container */
     display: flex;
@@ -81,7 +81,7 @@ body {
     align-items: center; /* Center children horizontally */
 }
 
-.item-image {
+.article-image {
     width: 60%; /* Width of the image container */
     height: 50%; /* Height of the image container */
     display: flex;
@@ -90,16 +90,7 @@ body {
     margin: 20px 0; /* Margin around the image for spacing */
 }
 
-.basket-image {
-    width: 10%; /* Width of the image container */
-    height: 6%; /* Height of the image container */
-    display: flex;
-    justify-content: center; /* Center content horizontally */
-    align-items: center; /* Center content vertically */
-    margin: 20px 0; /* Margin around the image for spacing */
-}
-
-/* .item-image::after {
+/* .article-image::after {
     position: absolute;
     content: "";
     display: inline-block;
@@ -108,18 +99,18 @@ body {
     background-color: #000;
 } */
 
-.item-description {
+.article-description {
     flex-grow: 1;
     text-align: justify;
 }
 
-/* .item-description p {
+/* .article-description p {
     margin-top: 10px;
     margin-bottom: 50px;
     position: relative;
 } */
 
-.item-button {
+.article-button {
     width: 150px; /* Width of the price box */
     height: 50px; /* Height of the price box */
     border: 1px solid black; /* Border around the price */
@@ -132,7 +123,7 @@ body {
     border: 1px solid #bc2efe;
 }
 
-.item-button:hover{
+.article-button:hover{
     background-color: #bc2efe;
     cursor: grab;
 }

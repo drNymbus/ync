@@ -3,8 +3,8 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
-import { APIProvider } from "./context/APIProvider";
 import App from "./App";
+import { APIProvider } from "./context/APIProvider";
 
 // Sélection de l'élément DOM où l'application sera rendue et créartion d'une variable capable de rendre dynamiquement l'application
 const rootElement = document.getElementById("root")!;
