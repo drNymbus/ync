@@ -1,33 +1,35 @@
-import {useContext, useEffect, useState } from "react";
+import {useContext, useEffect, useState, useCallback } from "react";
 import APIContext from "../context/APIProvider";
+import { useBasket } from "../hooks/Basket";
 
 /* @desc: This component is used to display all informations about an item in store specifically for the basket page.
  * @param id: the item identifier, used to retrieve item's data
  * @param count: how many time the item is currently in the basket
  * @return: Row item component for the basket page
  */
-function BasketItem({ id, count, add, remove }) {
+function BasketItem({ id, count }) {
     const [item, setItem] = useState(null);
     const [nbItem, setNbItem] = useState(count);
-    const { fetchItem } = useContext(APIContext);
+    const { fetchItem, fetchBasket, postBasket } = useContext(APIContext);
+    const { addBasket, removeBasket } = useBasket(fetchBasket);
+
+    const addBI = (e) => {
+        setNbItem(nbItem + 1);
+        addBasket(e.target.id, postBasket);
+    };
+
+    const removeBI = (e) => {
+        if (nbItem > 0) {
+            setNbItem(nbItem - 1);
+            removeBasket(e.target.id, postBasket);
+        }
+    };
 
     useEffect(() => { // Retrieve item's data
         fetchItem(id)
             .then((data) => { setItem(data); })
             .catch((err) => { console.error(err); });
     }, []);
-
-    const addBI = async (e, id) => {
-        await add(e, id);
-        setNbItem(nbItem + 1);
-    }
-
-    const removeBI = async (e, id) => {
-        if (nbItem > 1) {
-            await remove(e, id);
-            setNbItem(nbItem - 1);
-        }
-    }
 
     if (item !== null) { // If data has been retrieved then we display the item
         let basketIcons = undefined;
@@ -46,8 +48,8 @@ function BasketItem({ id, count, add, remove }) {
                 <img className="basket-image" src={item.image}/>
                 <p>{item.basket_description}</p>
                 <div className="basket-icon">{basketIcons}</div>
-                <button className="basket-remove" onClick={(e) => {removeBI(e, id);}}>-</button>
-                <button className="basket-add" onClick={(e) => {addBI(e, id);}}>+</button>
+                <button id={id} className="basket-remove" onClick={removeBI}>-</button>
+                <button id={id} className="basket-add" onClick={addBI}>+</button>
                 <p className="basket-item-price">{item.price * nbItem}$</p>
             </div>
         );
@@ -64,35 +66,22 @@ function BasketPrice() {}
  * @param basket: a list of all items in the basket
  * @return: Basket component of the website page
  */
-function Basket({ basket, add, remove, next }) {
+function Basket({ basket, next }) {
+    // const { fetchBasket } = useContext(APIContext);
 
-    const [items, setItems] = useState(basket);
-
-    const addItem = async (e, id) => {
-        // console.log("addBasket", id);
-        // basket.push(id);
-        setItems([...items, id]);
-        await add(e, id);
-    };
-
-    const removeItem = async (e, id) => {
-        // console.log("removeBasket", id);
-        // let index = basket.indexOf(id);
-        // basket.splice(index, 1);
-        let new_items = [...items];
-        let index = new_items.indexOf(id);
-        new_items.splice(index, 1);
-        setBasket(new_items);
-
-        await remove(e, id);
-    };
+    // const [items, setItems] = useState(basket);
+    // useEffect(() => {
+    //     fetchBasket()
+    //         .then((data) => { (data === undefined || data === null) ? [] : setItems(data); })
+    //         .catch((err) => { console.error(err); });
+    // }, []);
 
     // Count items in basket
-    let item_count = items.reduce((b, v) => ({...b, [v]: (b[v] || 0) + 1}), {});
+    let item_count = basket.reduce((b, v) => ({...b, [v]: (b[v] || 0) + 1}), {});
 
     let rows = []; // Display each different item in basket
     for (let id in item_count) {
-        rows.push(<BasketItem key={id} id={id} count={item_count[id]} add={add} remove={remove}/>);
+        rows.push(<BasketItem key={id} id={id} count={item_count[id]} />);
     }
 
     let price = 0, fee = 0;
