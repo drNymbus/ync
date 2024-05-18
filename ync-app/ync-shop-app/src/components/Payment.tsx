@@ -13,7 +13,7 @@ function Payment() {
                 <h1>Contact</h1>
                 <input type="email" placeholder="Email"></input>
                 <input name="newsletter"type="checkbox"/>
-                <label for="newsletter">M'envoyer un mail lorsque YNC sort une nouvelle création.</label>
+                <label htmlFor="newsletter">M'envoyer un mail lorsque YNC sort une nouvelle création.</label>
             </div>
 
             <div className="shipping">
@@ -30,9 +30,9 @@ function Payment() {
             <div className="shipping-method">
                 <h1>MÉTHODE DE LIVRAISON</h1>
                 <input name="shipping-relay" type="radio"/>
-                <label for="shipping-relay">Point relai</label>
+                <label htmlFor="shipping-relay">Point relai</label>
                 <input name="shipping-address" type="radio"/>
-                <label for="shipping-address">À mon adresse</label>
+                <label htmlFor="shipping-address">À mon adresse</label>
             </div>
 
             <div className="payment-method"> {/* We'll for now stick to a paypal payment */}

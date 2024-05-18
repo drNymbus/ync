@@ -52,7 +52,7 @@ exports.session = session;
 
 const basket = {
     select: "SELECT items FROM store.basket WHERE cookie_id = ?",
-    insert: "INSERT INTO store.basket (cookie_id, items) VALUES (?, ?)",
+    insert: "INSERT INTO store.basket (items, cookie_id) VALUES (?, ?)",
     set: "UPDATE store.basket SET items = ? WHERE cookie_id = ?"
     // add_item: "UPDATE store.basket SET items = items + ? WHERE cookie_id = ?",
     // remove_item: "UPDATE store.basket SET items = items - ? WHERE cookie_id = ?"

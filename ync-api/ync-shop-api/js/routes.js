@@ -74,14 +74,21 @@ const store_post = async (req, res, client) => {
         if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
         if (req.query.basket === true) { // Add item to basket
-            await client.execute(utils.basket.select, [cookie]).then(async (result) => {
-                if (result.rows.length > 0 || result.rows[0].items === null) {
-                    await client.execute(utils.basket.set, [req.body.basket, cookie]); // update basket
+            let method = utils.basket.set;
+            await client.execute(utils.basket.select, [cookie]).then((result) => {
+                if (result.rows.length > 0) {
+                    if (result.rows[0].items === null) { 
+                        method = utils.basket.set;
+                    } else {
+                        method = utils.basket.insert;
+                    }
                 } else {
-                    await client.execute(utils.basket.insert, [cookie, req.body.basket]); // init basket
+                    method = utils.basket.insert;
                 }
             });
+            await client.execute(method, [req.body.basket, cookie]);
             client.execute(utils.basket.select, [cookie]).then((result) => {
+                console.log("SELECT", result.rows);
                 res.status(200).json(result.rows[0]); // retrieve & send basket
             });
 

@@ -25,10 +25,11 @@ export const APIProvider = ({ children }) => {
         } catch (e) { console.error(e); }
     };
 
-    const postBasket = async (basket) => { // Fonction pour ajouter un élément au panier en fonction de id_article et récupérer le nouveau panier
+    const postBasket = async (basket) => { // Fonction pour mettre à jour le panier
         try {
+            console.log("post req", basket);
             const res = await axios.post(api_address + `/store?basket=true`, {basket}, config);
-            console.log("post", res.data.items);
+            console.log("post res", res.data.items);
             return res.data.items;
         } catch (e) { console.error(e); }
     };
