@@ -18,9 +18,9 @@ function Item({ id, clickFn }) {
     }, []);
 
     let img = ( // HTML image rendering 
-        <div className="item-image">
-            <img src={(item === null) ? "" : item.image} loading="eager" width="400"/>
-        </div>
+    
+        <img className="item-image" src={(item === null) ? "" : item.image} width="400"/>
+
     );
 
     let desc = ( // HTML description rendering
@@ -38,8 +38,13 @@ function Item({ id, clickFn }) {
     return (
         <div className="item-container">
             {img}
-            {desc}
-            {price}
+
+            <div className="item-information">
+                <div className="ligne"></div>
+                {desc}
+                {price}
+            </div>   
+
         </div>
     );
 

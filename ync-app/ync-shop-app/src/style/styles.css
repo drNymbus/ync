@@ -19,9 +19,22 @@
     object-fit: cover;
 }
 
+@keyframes fade-in {
+
+    0% {
+    opacity: 0%;
+    }
+
+    100% {
+    opacity: 100%;
+    }
+}
+
 body {
+    animation-name: fade-in; /*Fait apparaître la page en fade-in en 4 secondes*/
+    animation-duration: 4s;
     font-size: 16px; /* Taille de la police de base */
-    margin-left: 15px;
+    margin-left: 15px; /*Marges de base de tout les éléments du site*/
     margin-right: 15px;
     margin-top: 15px;
 }
@@ -47,7 +60,7 @@ body {
     margin-left: 20px;
 }
 
-/* .left::after {
+.left::after {
     content: "";
     display: inline-block;
     width: 20px;
@@ -55,7 +68,7 @@ body {
     background-color: #000;
     margin-bottom: 4px;
     margin-left: 10px;
-} */
+}
 
 .right {
     margin-right: 20px;
@@ -63,32 +76,91 @@ body {
 
 .section {
     display: flex;
-    padding-block: 20px;
-    padding-inline: 20px;
 }
 
-.title {
-    align-self: center;
-    color: rgb(10, 10, 10);
-    font-size: 30px;
-}
+    .section-image {
+        padding-block: 50px;
+        padding-inline: 50px;
+    }
 
-.item {
-    height: 80%;
-    border: 1px solid black; /* Border around the container */
+    .section-title {
+        align-self: center;
+        color: rgb(10, 10, 10);
+        font-size: 30px;
+    }
+
+.item-container {
     display: flex;
-    flex-direction: column; /* Stack children vertically */
-    align-items: center; /* Center children horizontally */
+    height: 50vh; /*Prends 50% de la hauteur du viewport*/
+    margin-top: 50px; /*Centre l'image au centre de la page*/
+    margin-left: 35%; /*Centre l'image au centre de la page*/
 }
 
-.item-image {
-    width: 60%; /* Width of the image container */
-    height: 50%; /* Height of the image container */
-    display: flex;
-    justify-content: center; /* Center content horizontally */
-    align-items: center; /* Center content vertically */
-    margin: 20px 0; /* Margin around the image for spacing */
-}
+    .item-image {
+        height: 100%; /*Prends toute la hauteur du container item*/
+        width: auto; /*Permet de garder les bonnes proportions de l'image*/
+    }
+
+    .item-information {
+        position: relative; /*Chaque élément enfant sera positionné relativement au dernier élément de item-container (donc l'img)*/
+    }
+
+        @keyframes ligne-reveal {
+
+            0% {
+            width: 0px;
+            content: ""; /* Contenu vide car on veut juste une ligne */
+            height: 1px; /* Épaisseur de la ligne */
+            background-color: #000; /* Couleur de la ligne */
+            }
+        
+            100% {
+            width: 400px;
+            content: ""; /* Contenu vide car on veut juste une ligne */
+            height: 1px; /* Épaisseur de la ligne */
+            background-color: #000; /* Couleur de la ligne */
+            }
+        
+        }
+
+        .ligne {
+            animation-name: ligne-reveal;
+            animation-duration: 3s;
+            animation-delay: 2s;            
+        }
+
+        .item-description {
+            color: black;
+            width: 400px;
+        }
+
+        .item-description p {
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+
+        .item-button {
+            position: absolute;
+            font-family: "Necto Mono", monospace;
+            color: #bc2efe;
+            margin-top: 10px;
+            margin-left: 10px;
+            width: 150px; /* Width of the price box */
+            height: 50px; /* Height of the price box */
+            bottom: 0;
+            border: 1px solid black; /* Border around the price */
+            justify-content: center; /* Center text horizontally */
+            align-items: center; /* Center text vertically */
+            font-size: 20px; /* Font size for the price */
+            border: 1px solid #bc2efe;
+            background-color: #ffffff;
+        }
+
+        .item-button:hover{
+            color: #ffffff;
+            background-color: #bc2efe;
+            cursor: grab;
+        }
 
 .basket-image {
     width: 10%; /* Width of the image container */
@@ -97,42 +169,4 @@ body {
     justify-content: center; /* Center content horizontally */
     align-items: center; /* Center content vertically */
     margin: 20px 0; /* Margin around the image for spacing */
-}
-
-/* .item-image::after {
-    position: absolute;
-    content: "";
-    display: inline-block;
-    width: 50%;
-    height: 1px;
-    background-color: #000;
-} */
-
-.item-description {
-    flex-grow: 1;
-    text-align: justify;
-}
-
-/* .item-description p {
-    margin-top: 10px;
-    margin-bottom: 50px;
-    position: relative;
-} */
-
-.item-button {
-    width: 150px; /* Width of the price box */
-    height: 50px; /* Height of the price box */
-    border: 1px solid black; /* Border around the price */
-    display: flex;
-    justify-content: center; /* Center text horizontally */
-    align-items: center; /* Center text vertically */
-    font-size: 20px; /* Font size for the price */
-    margin-bottom: 20px; /* Margin at the bottom */
-
-    border: 1px solid #bc2efe;
-}
-
-.item-button:hover{
-    background-color: #bc2efe;
-    cursor: grab;
 }
