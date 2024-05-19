@@ -21,31 +21,28 @@ import "./style/styles.css";
 
 function useBasket() {
     const { fetchBasket, postBasket } = useContext(APIContext);
-    const [basket, setBasket] = useState([]);
+    const [basket, setBasket] = useState({});
 
     useEffect(() => {
         fetchBasket()
-            .then((data) => setBasket(data))
+            .then((data) => { if (data) setBasket(data); })
             .catch((error) => console.error(error));
     }, []);
 
     function addBasket(item) {
-        let newBasket = [item];
-        if (basket) { newBasket = [...basket, item] }
+        let count = 1;
+        if (basket[item]) count = basket[item] + 1;
 
-        postBasket(newBasket);
-        setBasket(newBasket);
+        postBasket({...basket, [item]: count});
+        setBasket({...basket, [item]: count});
     };
 
     function removeBasket(item) {
-        if (!basket) {
-            postBasket([]);
-            setBasket([]);
-        } else {
-            let i = basket.indexOf(item);
-            let newBasket = [...basket.slice(0, i), ...basket.slice(i + 1)];
-            postBasket(newBasket);
-            setBasket(newBasket);
+        if (basket[item]) {
+            let count = basket[item] - 1;
+
+            postBasket({...basket, [item]: count});
+            setBasket({...basket, [item]: count});
         }
     };
 
@@ -94,7 +91,7 @@ function App() {
 
     return ( // HTML website rendering
         <div className="App">
-            <Bandeau name={buttonDisplay} basketSize={(!basket) ? 0 : basket.length} homeFn={homeState} clickFn={updateState}/>
+            <Bandeau name={buttonDisplay} basket={basket} homeFn={homeState} clickFn={updateState}/>
             <Section name={section.name} image={section.image}/>
 
             <Item id="quelconque" add={addBasket} goto={basketState}/>

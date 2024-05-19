@@ -72,7 +72,7 @@ body {
     color: rgb(10, 10, 10);
     font-size: 30px;
 }
-
+/* .item-container {display:none;} */
 .item {
     height: 80%;
     border: 1px solid black; /* Border around the container */

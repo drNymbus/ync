@@ -11,14 +11,14 @@ function BasketItem({ basket, id, add, rm }) {
     const { fetchItem } = useContext(APIContext);
 
     const [item, setItem] = useState(null);
-    const [icons, setIcons] = useState([]);
+    // const [icons, setIcons] = useState([]);
 
     useEffect(() => { // Retrieve item's data
         fetchItem(id)
-        .then((data) => { setItem(data); })
-        .catch((err) => { console.error(err); });
-        
-        setIcons(basket.filter(el => el === id));
+            .then((data) => { setItem(data); })
+            .catch((err) => { console.error(err); });
+
+        // setIcons(basket.filter(el => el === id));
     }, [basket]);
 
     return ( // HTML item's basket rendering 
@@ -27,18 +27,16 @@ function BasketItem({ basket, id, add, rm }) {
             <p>{(!item) ? "?" : item.basket_description}</p>
 
             <div className="basket-icon">
-                {
-                    (icons.length < 5) ?
-                        icons.map((el, i) => <img key={i} className="basket-icon" src="assets/home_icon.svg"/>)
-                        : (<><img className="basket-icon" src="assets/home_icon.svg"/><p>x{icons.length}</p></>)
+                {(basket[id] < 5) ?
+                    ([...Array(basket[id])].map((_,i) => <img className="basket-icon" src="assets/home_icon.svg"/>))
+                    : (<><img className="basket-icon" src="assets/home_icon.svg"/><p>x{basket[id]}</p></>)
                 }
-                <img className="basket-icon" src="assets/home_icon.svg"/>
             </div>
 
             <button id={id} className="basket-remove" onClick={() => rm(id)}>-</button>
             <button id={id} className="basket-add" onClick={() => add(id)}>+</button>
 
-            <p className="basket-item-price">{(!item || !icons) ? "?" : item.price * icons.length}$</p>
+            <p className="basket-item-price">{(!item || !basket[id]) ? "?" : item.price * basket[id]}$</p>
         </div>
     );
 }
@@ -54,7 +52,7 @@ function BasketPrice({ basket, next }) {
         <div className="basket-price">
             <p className="amount">Amount: {price.amount}</p>
             <p className="fee">Shipping fee: {price.fee}</p>  
-            <p className="total">Total: {price.amout + price.fee}</p>
+            <p className="total">Total: {price.amount + price.fee}</p>
             <button className="price-button" onClick={next}>JE PASSE A LA SUITE !</button>
         </div>
     );
@@ -65,30 +63,15 @@ function BasketPrice({ basket, next }) {
  * @return: Basket component of the website page
  */
 function Basket({ basket, add, rm, next }) {
-    const [rows, setRows] = useState([]);
-
-    useEffect(() => {
-        if (basket) {
-            // For each distinct value in list
-            var unique = basket.filter((val, i, arr) => arr.indexOf(val) === i);
-            // let item_count = basket.reduce((b, v) => ({...b, [v]: (b[v] || 0) + 1}), {});
-
-            let newRows = [];
-            for (let id in unique) {
-                newRows.push(<BasketItem key={unique[id]} basket={basket} id={unique[id]} add={add} rm={rm}/>);
-            }
-            setRows(newRows);
-        }
-    }, [basket]);
 
     return ( // HTML basket rendering
         (!basket) ?
             (<div>No item in your cute lil basket</div>)
             : (<div className="basket">
                 <div className="basket-rows">
-                    {/* {item_count.map(([id, count]) => {
-                        <BasketItem id={id} count={count} add={add} rm={rm}/>
-                    })} */rows}
+                    {Object.keys(basket)
+                        .map((item, i) => <BasketItem key={i} basket={basket} id={item} add={add} rm={rm}/>)
+                    }
                 </div>
                 <BasketPrice basket={basket} next={next}/>
             </div>)

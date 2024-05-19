@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS store.session (
 DROP TABLE IF EXISTS store.basket;
 CREATE TABLE IF NOT EXISTS store.basket (
     cookie_id UUID PRIMARY KEY,
-    items list<varchar>
+    items map<varchar, bigint>
 );
 
 -- @desc: Command associated to session

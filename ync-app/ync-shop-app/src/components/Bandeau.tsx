@@ -5,10 +5,10 @@
  * @param clickFn: the onClick handler for the top right button
  * @return: the top menu component of the website page
  */
-function Bandeau({name, basketSize, homeFn, clickFn}) {
+function Bandeau({name, basket, homeFn, clickFn}) {
 
     // If top right button is "PANIER" then display the number of items in basket next to it
-    let display_name = (name === "PANIER") ? `${name}[${basketSize}]` : name;
+    let display_name = (name === "PANIER") ? `${name}[${Object.values(basket).reduce((a, b) => a + b, 0)}]` : name;
 
     return (
         <div className="bandeau">
