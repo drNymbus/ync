@@ -10,7 +10,7 @@ function Payment() {
     }
 
     return (
-        <form onSubmit={time2Pay} >
+        <form action={time2Pay} >
             <div className="contact">
                 <h1>Contact</h1>
                 <input type="email" placeholder="Email"></input>
@@ -38,10 +38,6 @@ function Payment() {
             </div>
 
             <div className="payment-method"> {/* We'll for now stick to a paypal payment */}
-                <h1>INFORMATIONS DE MA CARTE</h1>
-                <input type="text" placeholder="Numéro de Carte"/>
-                <input type="text" placeholder="Date de validité"/>
-                <input type="text" placeholder="CVC"/>
             </div>
 
             <button type="submit">JE FINALISE MON ACHAT</button>
