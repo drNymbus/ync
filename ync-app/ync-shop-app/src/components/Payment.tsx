@@ -1,10 +1,12 @@
-// import APIContext from "../context/APIProvider";
+import { useContext } from 'react';
+import APIContext from "../context/APIProvider";
 
 function Payment() {
-    // const { postCommand } = useContext(APIContext);
+    const { postCommand } = useContext(APIContext);
 
     const time2Pay = () => {
         console.log("Yeah !");
+        postCommand({});
     }
 
     return (

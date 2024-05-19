@@ -1,12 +1,8 @@
 /* npm & React module imports */
 import { useState, useContext, useEffect } from "react";
-// import { Routes, Route } from "react-router-dom";
 
 /* Custom context imports */
 import APIContext from "./context/APIProvider";
-
-/* Custom hook imports */
-// import { useBasket } from "./hooks/Basket";
 
 /* Custom component imports */
 import Bandeau from "./components/Bandeau";
@@ -89,15 +85,25 @@ function App() {
         }
     }
 
-    return ( // HTML website rendering
+    const content = (
         <div className="App">
             <Bandeau name={buttonDisplay} basket={basket} homeFn={homeState} clickFn={updateState}/>
             <Section name={section.name} image={section.image}/>
 
-            <Item id="quelconque" add={addBasket} goto={basketState}/>
-            <Basket basket={basket} add={addBasket} rm={removeBasket} next={paymentState}/>
-            <Payment/>
+            <div style={{display: (state == "HOME") ? "block" : "none" }}>
+                <Item id="quelconque" add={addBasket} goto={basketState}/>
+            </div>
+            <div style={{display: (state == "BASKET") ? "block" : "none" }}>
+                <Basket basket={basket} add={addBasket} rm={removeBasket} next={paymentState}/>
+            </div>
+            <div style={{display: (state == "PAYMENT") ? "block" : "none" }}>
+                <Payment/>
+            </div>
         </div>
+    );
+
+    return ( // HTML website rendering
+        <Logo content={content} />
     );
 
 } export default App;

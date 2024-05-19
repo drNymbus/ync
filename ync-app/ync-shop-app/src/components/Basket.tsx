@@ -1,6 +1,5 @@
 import {useContext, useEffect, useState, useCallback } from "react";
 import APIContext from "../context/APIProvider";
-import { useBasket } from "../hooks/Basket";
 
 /* @desc: This component is used to display all informations about an item in store specifically for the basket page.
  * @param id: the item identifier, used to retrieve item's data
@@ -28,7 +27,7 @@ function BasketItem({ basket, id, add, rm }) {
 
             <div className="basket-icon">
                 {(basket[id] < 5) ?
-                    ([...Array(basket[id])].map((_,i) => <img className="basket-icon" src="assets/home_icon.svg"/>))
+                    ([...Array(basket[id])].map((_,i) => <img key={i} className="basket-icon" src="assets/home_icon.svg"/>))
                     : (<><img className="basket-icon" src="assets/home_icon.svg"/><p>x{basket[id]}</p></>)
                 }
             </div>
