@@ -27,7 +27,6 @@ export const APIProvider = ({ children }) => {
 
     const postBasket = async (basket) => { // Fonction pour mettre à jour le panier
         try {
-            console.log("post req", basket);
             const res = await axios.post(api_address + `/store?basket=true`, {basket}, config);
             console.log("post res", res.data.items);
             return res.data.items;

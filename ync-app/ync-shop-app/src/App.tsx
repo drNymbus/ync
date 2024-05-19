@@ -2,7 +2,7 @@
 import { useState, useContext, useEffect } from "react";
 // import { Routes, Route } from "react-router-dom";
 
-    /* Custom context imports */
+/* Custom context imports */
 import APIContext from "./context/APIProvider";
 
 /* Custom hook imports */
@@ -33,8 +33,8 @@ function useBasket() {
         let count = 1;
         if (basket[item]) count = basket[item] + 1;
 
-        postBasket({...basket, [item]: count});
-        setBasket({...basket, [item]: count});
+        postBasket({...basket, [String(item)]: count});
+        setBasket({...basket, [String(item)]: count});
     };
 
     function removeBasket(item) {
@@ -97,7 +97,6 @@ function App() {
             <Item id="quelconque" add={addBasket} goto={basketState}/>
             <Basket basket={basket} add={addBasket} rm={removeBasket} next={paymentState}/>
             <Payment/>
-
         </div>
     );
 
