@@ -13,23 +13,23 @@ CREATE TABLE IF NOT EXISTS store.session (
 DROP TABLE IF EXISTS store.basket;
 CREATE TABLE IF NOT EXISTS store.basket (
     cookie_id UUID PRIMARY KEY,
-    items set<varchar>
+    items map<text, bigint>
 );
 
 -- @desc: Command associated to session
 DROP TABLE IF EXISTS store.command;
 CREATE TABLE IF NOT EXISTS store.command (
     cookie_id UUID,
-    command_id varchar,
+    command_id text,
     item_count bigint,
-    items list<varchar>,
-    address varchar,
-    postal_code varchar,
-    country varchar,
-    name varchar,
-    first_name varchar,
-    mail varchar,
-    phone varchar,
+    items list<text>,
+    address text,
+    postal_code text,
+    country text,
+    name text,
+    first_name text,
+    mail text,
+    phone text,
     processed boolean,
     PRIMARY KEY (cookie_id, command_id)
 );
@@ -37,11 +37,11 @@ CREATE TABLE IF NOT EXISTS store.command (
 -- @desc: Item
 DROP TABLE IF EXISTS store.item;
 CREATE TABLE IF NOT EXISTS store.item(
-    item_id varchar PRIMARY KEY,
-    category varchar,
+    item_id text PRIMARY KEY,
+    category text,
     image blob,
-    display_name varchar,
-    description varchar,
-    basket_description varchar,
+    display_name text,
+    description text,
+    basket_description text,
     price decimal
 );

@@ -40,7 +40,8 @@ app.use(cookieParser(secrets.cookie)); // Hand over the secret string for signed
 const client = new cassandra.Client({
     contactPoints: [process.env.CASSANDRA_CONTACT_POINTS || '127.0.0.1'],
     localDataCenter: 'datacenter1',
-    keyspace: 'store'
+    keyspace: 'store',
+    credentials: { username: 'shop_api', password: 'shopapi' }
 });
 
 // Routes

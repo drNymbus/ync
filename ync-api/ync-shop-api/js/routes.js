@@ -14,9 +14,11 @@ const store_get = async (req, res, client) => {
                 cookie = utils.generate_cookie();
 
                 await client.execute(utils.session.insert, [cookie, false, Date.now()]); // create session
-                await client.execute(utils.basket.insert, [cookie]); // create basket
+                // await client.execute(utils.basket.insert, [cookie]); // create basket
                 client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
-                    res.cookie('ync_shop', cookie, {path: '/store', signed: true});
+                    res.cookie('ync_shop', cookie, {
+                        path: '/store', signed: true, SameSite: true, Partitionned: undefined
+                    });
                     res.status(200).json(result.rows[0]); // send basket
                 });
             } else {
@@ -40,7 +42,7 @@ const store_get = async (req, res, client) => {
                     let data = result.rows;
                     for (let i = 0; i < data.length; i++) {
                         const blob = data[i].image;
-                        const image = (blob !== undefined || blob !== null) ? "undefined" : blob.toString('base64');
+                        const image = (blob === undefined || blob === null) ? "undefined" : blob.toString('base64');
                         data[i].image = `data:image/jpeg;base64,${image}`;
                     }
 
@@ -72,7 +74,13 @@ const store_post = async (req, res, client) => {
         if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
         if (req.query.basket === true) { // Add item to basket
-            await client.execute(utils.basket.add_item, [req.query.id.split(','), cookie]); // update basket with new item.s
+            let method = utils.basket.insert;
+            await client.execute(utils.basket.select, [cookie]).then((result) => {
+                if (result.rows.length > 0) {
+                    if (result.rows[0].items === null) method = utils.basket.set;
+                }
+            });
+            await client.execute(method, [req.body.basket, cookie], {prepare: true});
             client.execute(utils.basket.select, [cookie]).then((result) => {
                 res.status(200).json(result.rows[0]); // retrieve & send basket
             });
@@ -113,19 +121,13 @@ const store_delete = async (req, res, client) => {
         const cookie = req.signedCookies.ync_shop;
         if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
-        if (req.query.basket === true) {
-            await client.execute(utils.basket.remove_item, [req.query.id.split(','), cookie]); // update basket with new item.s
-            client.execute(utils.basket.select, [cookie]).then((result) => { // retrieve basket
-                res.status(200).json(result.rows[0]); // send basket
-            });
-
-        } else if (req.query.item === true) {
+        if (req.query.item === true) {
             await client.execute(utils.item.delete, [req.query.id.split(',')]); // delete item from database
             client.execute(utils.basket.select, [cookie]).then(() => { // retrieve basket
                 res.status(200).json({'message': 'Item deleted'}); // send basket
             });
 
-        } else if (req.query.item === true) {
+        } else if (req.query.command === true) {
             await client.execute(utils.command.delete, [req.query.id.split(',')]); // delete item from database
             client.execute(utils.basket.select, [cookie]).then(() => { // retrieve basket
                 res.status(200).json({'message': 'Item deleted'}); // send basket

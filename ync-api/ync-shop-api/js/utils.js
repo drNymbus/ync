@@ -1,6 +1,6 @@
 const uuid = require('cassandra-driver').types.Uuid;
-const crypto = require('crypto');
-const fs = require('fs');
+// const crypto = require('crypto');
+// const fs = require('fs');
 
 /* @desc: Return the token to be stored in the cookie
  * @return {bytes}: The encrypted random string
@@ -52,9 +52,10 @@ exports.session = session;
 
 const basket = {
     select: "SELECT items FROM store.basket WHERE cookie_id = ?",
-    insert: "INSERT INTO store.basket (cookie_id, items) VALUES (?, {})",
-    add_item: "UPDATE store.basket SET items = items + ? WHERE cookie_id = ?",
-    remove_item: "UPDATE store.basket SET items = items - ? WHERE cookie_id = ?"
+    insert: "INSERT INTO store.basket (items, cookie_id) VALUES (?, ?)",
+    set: "UPDATE store.basket SET items = ? WHERE cookie_id = ?"
+    // add_item: "UPDATE store.basket SET items = items + ? WHERE cookie_id = ?",
+    // remove_item: "UPDATE store.basket SET items = items - ? WHERE cookie_id = ?"
 };
 exports.basket = basket;
 

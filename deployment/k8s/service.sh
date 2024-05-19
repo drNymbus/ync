@@ -67,7 +67,12 @@ elif [ "$1" == "delete" ]; then
     kubectl delete -f ync-database/job/keyspace.yaml
     kubectl delete -f ync-database/job/admin.yaml
     kubectl delete -f ync-database/database.yaml
+
+    kubectl apply -f ync-database/inspector.yaml
+    sleep 5
+    kubectl exec -it pvc-inspector -- rm -r pvc/
     kubectl delete -f ync-database/inspector.yaml
+
     kubectl delete -f ync-database/storage.yaml
 
 elif [ "$1" == "status" ]; then
