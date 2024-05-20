@@ -26,9 +26,9 @@ export const APIProvider = ({ children }) => {
         } catch (e) { console.error(e); }
     };
 
-    const postBasket = async (basket) => { // Fonction pour mettre à jour le panier
+    const postBasket = async (items) => { // Fonction pour mettre à jour le panier
         try {
-            const res = await axios.post(`${api_address}/store?basket=true`, {basket}, config);
+            const res = await axios.post(`${api_address}/store?basket=true`, {items}, config);
             return res.data.items;
         } catch (e) { console.error(e); }
     };

@@ -11,42 +11,36 @@ For each keyspace in the database, different roles and users are needed to opera
 
 In addition to those roles a superuser, named 'admin', is created. This superuser is created once the Cassandra's StatefulSet is deployed and fully initialized.
 
-[file credential login](https://cassandra.apache.org/doc/stable/cassandra/operating/security.html#operation-roles)
-
-## Authentication
-
-authenticator: PasswordAuthenticator
-authorizer: CassandraAuthorizer
-roles_validity: 0ms | Why ? Is it optimal ?
-permissions_validity: 0ms | Why ? Is it optimal ?
-
 # Deployment
 
-The way:
+Deploying the *ync-database* is done thanks to two main components: the actual database (ync-cassandra) and all jobs to initialize user role management and keyspaces (ync-job).
+
+## ync-cassandra
+
+
+## ync-job
+
+
+<!-- The way:
 
 1. custom image for custom cassandra.yaml configuration + credentials file for superuser.
 2. Initializer jobs: Superuser (superuser.cql & user_admin.cql) + CQL scripts (cql/*/*.cql)
-3. Cronjob: modify credentials every so often
+3. Cronjob: modify credentials every so often -->
 
-## Docker
+# Docker
 
-You can execute the start and shutdown bash scripts ('./start.sh' & './shutdown.sh') for a quick and efficient deployment on docker of the ync-database.
-Every steps are commented.
-
-If you wish to deploy this component on kubernetes, you'll eventually find some resources in the 'deployment' folder of this repository.
-
-## Kubernetes (k8s)
+# Kubernetes (k8s)
 
 PersistentVolume --> PersistentVolumeClaim (act as a template) --> StatefulSet
 
 ync-database/storage.yml
 ync-database/database.yml
 
-### Minikube
+## Minikube
 
 Only statefulset is needed (database.yml). If you wish to keep data of StatefulSet you'll need PersistentVolume (+ PersistentVolumeClaim)
 
-### k3s
+## k3s
 
 storage.yml + database.yml
 

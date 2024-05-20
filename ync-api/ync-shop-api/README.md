@@ -16,7 +16,7 @@ This application uses Express and CassandraDB to manage a simple shopping cart s
 
         {
             "item_id": string,
-            "image": img?,
+            "image": string,
             "display_name": string,
             "description": string,
             "price": decimal
@@ -48,13 +48,25 @@ This application uses Express and CassandraDB to manage a simple shopping cart s
             "processed": bool
         }
 
-- **POST `/store?basket=true&id=<item_id#1>[,<item_id#2>, ...]`**: Adds a new item to the user's cart then retrieve the updated basket.
+- **POST `/store?basket=true`**: Updates the user's cart then retrieve the updated basket. Request's body:
 
         {
-            "items": [string, ],
+            "items": {item_id: int, }
         }
 
-- **POST `/store?item=true`**: Adds one or several new items to the item table. The response object contains two fields containing item ids: 'completed' for every succesful item insertionl and 'rejected' for every failed item insertion.
+    Response's body:
+
+        {
+            "items": {item_id: int, }
+        }
+
+- **POST `/store?item=true`**: Adds one or several new items to the item table. The response object contains two fields containing item ids: 'completed' for every succesful item insertionl and 'rejected' for every failed item insertion. Request's body:
+
+        {
+            "items": {item_id: int, }
+        }
+
+    Response's body:
 
         {
             "completed": [string, ],
@@ -62,12 +74,6 @@ This application uses Express and CassandraDB to manage a simple shopping cart s
         }
 
 - **POST `/store?command=true`**: Adds a new command to the commands table then returns the status of the query: 200 if successful, 500 otherwise. Only one command can be posted at a time.
-
-- **DELETE `/store?basket=true&id=<item_id#1>[, <item_id#2>, ...]`**: Removes one or several items from the user's cart, all item ids should be separated by a comma.
-
-        {
-            "items_list": [string, ]
-        }
 
 - **DELETE `/store?item=true&id=<item_id>`**: Removes an item from the table then returns the status of the query: 200 if successful, 500 otherwise.
 
