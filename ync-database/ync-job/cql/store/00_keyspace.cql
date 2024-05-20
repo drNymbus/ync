@@ -21,8 +21,7 @@ DROP TABLE IF EXISTS store.command;
 CREATE TABLE IF NOT EXISTS store.command (
     cookie_id UUID,
     command_id text,
-    item_count bigint,
-    items list<text>,
+    items map<text, bigint>,
     address text,
     postal_code text,
     country text,

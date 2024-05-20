@@ -22,7 +22,7 @@ function useBasket() {
     useEffect(() => {
         fetchBasket()
             .then((data) => { if (data) setBasket(data); })
-            .catch((error) => console.error(error));
+            .catch(e => console.error(`[useBasket;useEffect] ${e.message}`));
     }, []);
 
     function addBasket(item) {
@@ -97,7 +97,7 @@ function App() {
                 <Basket basket={basket} add={addBasket} rm={removeBasket} next={paymentState}/>
             </div>
             <div style={{display: (state == "PAYMENT") ? "block" : "none" }}>
-                <Payment/>
+                <Payment basket={basket}/>
             </div>
         </div>
     );

@@ -98,8 +98,8 @@ const store_post = async (req, res, client) => {
             res.status(200).json({completed: valid_ids, rejected: unvalid_ids}); // send all ids (completed & rejected)
 
         } else if (req.query.command === true) { // Add command to database
-            let command = {cookie: cookie, ...req.body};
-            await client.execute(utils.command.insert, command, {prepare:true}).then(() => { // add command to table
+            let command = {...req.body.command, cookie: cookie, id: utils.generate_cookie()};
+            client.execute(utils.command.insert, command, {prepare:true}).then(() => { // add command to table
                 res.status(200).json({'message': 'Command has been correctly processed'});
             });
 

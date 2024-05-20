@@ -10,14 +10,11 @@ function BasketItem({ basket, id, add, rm }) {
     const { fetchItem } = useContext(APIContext);
 
     const [item, setItem] = useState(null);
-    // const [icons, setIcons] = useState([]);
-
     useEffect(() => { // Retrieve item's data
         fetchItem(id)
-            .then((data) => { setItem(data); })
-            .catch((err) => { console.error(err); });
+            .then(data => setItem(data))
+            .catch(e => console.error(`[BasketItem;useEffect] ${e.message}`));
 
-        // setIcons(basket.filter(el => el === id));
     }, [basket]);
 
     return ( // HTML item's basket rendering 
@@ -63,7 +60,7 @@ function BasketPrice({ basket, next }) {
  */
 function Basket({ basket, add, rm, next }) {
 
-    return ( // HTML basket rendering
+    return (
         (!basket) ?
             (<div>No item in your cute lil basket</div>)
             : (<div className="basket">
