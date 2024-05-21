@@ -17,8 +17,8 @@ CREATE TABLE IF NOT EXISTS store.basket (
 );
 
 -- @desc: Command associated to session
-DROP TABLE IF EXISTS store.command;
-CREATE TABLE IF NOT EXISTS store.command (
+DROP TABLE IF EXISTS store.order;
+CREATE TABLE IF NOT EXISTS store.order (
     cookie_id UUID,
     command_id text,
     items map<text, bigint>,
@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS store.command (
     first_name text,
     mail text,
     phone text,
+    paid boolean,
     processed boolean,
     PRIMARY KEY (cookie_id, command_id)
 );

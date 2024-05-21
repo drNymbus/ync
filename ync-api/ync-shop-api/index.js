@@ -50,6 +50,9 @@ app.route('/store')
     .post((req, res) => { routes.store_post(req, res, client); })
     .delete((req, res) => { routes.store_delete(req, res, client); });
 
+app.route('/store/:order/capture')
+    .post((req, res) => { routes.store_capture(req, res, client); })
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

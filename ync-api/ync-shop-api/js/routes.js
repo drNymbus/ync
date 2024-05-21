@@ -50,9 +50,9 @@ const store_get = async (req, res, client) => {
                 });
             }
 
-        } else if (req.query.command === true) { // Retrieve one or several commands
-            client.execute(utils.command.select, [req.query.id.split(',')]).then((result) => { // retrieve command
-                res.status(200).json(result.rows); // send command
+        } else if (req.query.order === true) { // Retrieve one or several commands
+            client.execute(utils.order.select, [req.query.id.split(',')]).then((result) => { // retrieve order
+                res.status(200).json(result.rows); // send order
             });
 
         } else { utils.failed_request(res, 400, {'error': 'Bad Request'}); }
@@ -97,11 +97,25 @@ const store_post = async (req, res, client) => {
 
             res.status(200).json({completed: valid_ids, rejected: unvalid_ids}); // send all ids (completed & rejected)
 
-        } else if (req.query.command === true) { // Add command to database
-            let command = {...req.body.command, cookie: cookie, id: utils.generate_cookie()};
-            client.execute(utils.command.insert, command, {prepare:true}).then(() => { // add command to table
-                res.status(200).json({'message': 'Command has been correctly processed'});
+        } else if (req.query.order === true) { // Add order to database
+            const accessToken = await getPaypalToken();
+            const payload = { intent: "CAPTURE", purchase_units: [{ amount: { currency_code: "EUR", value: req.body.order.price, } }]};
+            const paypalRes = await fetch(`${utils.paypalEndpoint}/v2/checkout/orders`, {
+                method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}`,
+                    // Uncomment one of these to force an error for negative testing (in sandbox mode only).
+                    // Documentation: https://developer.paypal.com/tools/sandbox/negative-testing/request-headers/
+                    // "PayPal-Mock-Response": '{"mock_application_codes": "MISSING_REQUIRED_PARAMETER"}'
+                    // "PayPal-Mock-Response": '{"mock_application_codes": "PERMISSION_DENIED"}'
+                    // "PayPal-Mock-Response": '{"mock_application_codes": "INTERNAL_SERVER_ERROR"}'
+                }, body: JSON.stringify(payload)
             });
+            // const paypalResponse = { json: res.json(), status: response.status};
+
+            // let order = {...req.body.order, cookie: cookie, id: utils.generate_cookie()};
+            // client.execute(utils.order.insert, order, {prepare:true}).then(() => { // add order to table
+            //     res.status(200).json(paypalResponse);
+            // });
+            res.status(paypalRes.status).json(paypalRes.json());
 
         } else { utils.failed_request(res, 400, {'error': 'Bad Request'}); }
 
@@ -111,6 +125,31 @@ const store_post = async (req, res, client) => {
     } // Any error that occurred will essentially be a bad query done against cassandra
 };
 exports.store_post = store_post;
+
+const store_capture = async (req, res, client) => {
+    try {
+        const cookie = req.signedCookies.ync_shop;
+        if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
+
+        const accessToken = await getPaypalToken();
+        const paypalRes = await fetch(`${utils.paypalEndpoint}/v2/checkout/orders/${req.params.order}/capture`, {
+            method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}`,
+                // Uncomment one of these to force an error for negative testing (in sandbox mode only).
+                // Documentation:
+                // https://developer.paypal.com/tools/sandbox/negative-testing/request-headers/
+                // "PayPal-Mock-Response": '{"mock_application_codes": "INSTRUMENT_DECLINED"}'
+                // "PayPal-Mock-Response": '{"mock_application_codes": "TRANSACTION_REFUSED"}'
+                // "PayPal-Mock-Response": '{"mock_application_codes": "INTERNAL_SERVER_ERROR"}'
+            }
+        });
+        res.status(paypalRes.status).json(paypalRes.json());
+
+    } catch (err) {
+        console.log({'error': err});
+        utils.failed_request(res, 500, {'error': 'Something went wrong...'});
+    }
+};
+exports.store_capture = store_capture;
 
 // Method: DELETE, Route: /store
 const store_delete = async (req, res, client) => {
@@ -127,8 +166,8 @@ const store_delete = async (req, res, client) => {
                 res.status(200).json({'message': 'Item deleted'}); // send basket
             });
 
-        } else if (req.query.command === true) {
-            await client.execute(utils.command.delete, [req.query.id.split(',')]); // delete item from database
+        } else if (req.query.order === true) {
+            await client.execute(utils.order.delete, [req.query.id.split(',')]); // delete item from database
             client.execute(utils.basket.select, [cookie]).then(() => { // retrieve basket
                 res.status(200).json({'message': 'Item deleted'}); // send basket
             });

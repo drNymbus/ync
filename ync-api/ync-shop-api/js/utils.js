@@ -68,9 +68,24 @@ const item = {
 };
 exports.item = item;
 
-const command = {
-    select: "SELECT (command_id, item_count, items, address, postal_code, country, name, first_name, mail, phone, processed) FROM store.command WHERE cookie_id = ?;",
-    insert: "INSERT INTO store.command (cookie_id, command_id, item_count, items, address, postal_code, country, name, first_name, mail, phone, processed) VALUES (:cookie, :id, :item_count, :items, :address, :postal_code, :country, :name, :first_name, :mail, :phone, false)",
-    delete: "DELETE FROM store.command WHERE command_id = ?"
+const order = {
+    select: "SELECT (command_id, item_count, items, address, postal_code, country, name, first_name, mail, phone, processed) FROM store.order WHERE cookie_id = ?;",
+    insert: "INSERT INTO store.order (cookie_id, command_id, item_count, items, address, postal_code, country, name, first_name, mail, phone, paid, processed) VALUES (:cookie, :id, :item_count, :items, :address, :postal_code, :country, :name, :first_name, :mail, :phone, false, false)",
+    delete: "DELETE FROM store.order WHERE command_id = ?"
 };
-exports.command = command;
+exports.order = order;
+
+const paypalEndpoint = process.env.PAYPAL_ENDPOINT || "https://api-m.sandbox.paypal.com";
+exports.paypalEndpoint = paypalEndpoint;
+
+const getPaypalToken = async () => {
+    const auth = Buffer.from(PAYPAL_CLIENT_ID + ":" + PAYPAL_CLIENT_SECRET).toString("base64");
+    const response = await fetch(`${paypalEndpoint}/v1/oauth2/token`, {
+        method: "POST", body: "grant_type=client_credentials",
+        headers: { Authorization: `Basic ${auth}` }
+    });
+
+    const data = await response.json();
+    return data.access_token;
+};
+exports.getPaypalToken = getPaypalToken;

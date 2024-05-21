@@ -33,7 +33,7 @@ export const APIProvider = ({ children }) => {
         } catch (e) { console.error(`[postBasket] ${e.message}`); }
     };
 
-    const postCommand = async (command) => {
+    const postOrder = async (command) => {
         try {
             const res = await axios.post(`${api_address}/store?command=true`, {command}, config);
             return res.data.items;
@@ -41,7 +41,7 @@ export const APIProvider = ({ children }) => {
     }
 
     return (
-        <APIContext.Provider value={{ fetchItem, fetchBasket, postBasket, postCommand }}>
+        <APIContext.Provider value={{ fetchItem, fetchBasket, postBasket, postOrder }}>
             {children}
         </APIContext.Provider>
     );
