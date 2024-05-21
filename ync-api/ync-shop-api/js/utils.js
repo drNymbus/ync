@@ -78,7 +78,7 @@ const paypalEndpoint = process.env.PAYPAL_ENDPOINT || "https://api-m.sandbox.pay
 exports.paypalEndpoint = paypalEndpoint;
 
 const getPaypalToken = async () => {
-    const auth = Buffer.from(PAYPAL_CLIENT_ID + ":" + PAYPAL_CLIENT_SECRET).toString("base64");
+    const auth = Buffer.from(process.env.PAYPAL_CLIENT_ID + ":" + process.env.PAYPAL_CLIENT_SECRET).toString("base64");
     const response = await fetch(`${paypalEndpoint}/v1/oauth2/token`, {
         method: "POST", body: "grant_type=client_credentials",
         headers: { Authorization: `Basic ${auth}` }

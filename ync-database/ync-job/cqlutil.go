@@ -17,10 +17,10 @@ import (
 )
 
 var (
-    // Address string = os.Getenv("CASSANDRA_CONTACT_POINTS")
-    Address string = "127.0.0.1"
-    // CQLPath string = os.Getenv("CQL_PATH")
-    CQLPath string = "./cql/"
+    Address string = os.Getenv("CASSANDRA_CONTACT_POINTS")
+    // Address string = "127.0.0.1"
+    CQLPath string = os.Getenv("CQL_PATH")
+    // CQLPath string = "./cql/"
 )
 
 // Connect to a Cassandra cluster
