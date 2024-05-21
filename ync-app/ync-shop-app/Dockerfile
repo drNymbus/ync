@@ -12,7 +12,8 @@ ENV PORT=3000
 # If you are building your code for production
 # RUN npm ci --omit=dev
 
-COPY . .
+COPY src .
+COPY public .
 
 EXPOSE ${PORT}/tcp
 

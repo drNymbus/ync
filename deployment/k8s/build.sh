@@ -13,7 +13,7 @@ for cmp in `ls -d */`; do
         docker save ${cmp::-1}:latest | sudo k3s ctr images import -;
     fi
 
-    echo "Successfully built: ${cmp::-1}."
+    echo "Successfully built: ${cmp::-1}.\n"
 done
 cd ..
 
@@ -28,7 +28,7 @@ for api in `ls -d */`; do
         docker save ${api::-1}:latest | sudo k3s ctr images import -;
     fi
 
-    echo "Successfully built: ${api::-1}."
+    echo "Successfully built: ${api::-1}.\n"
 done
 cd ..
 
@@ -42,6 +42,6 @@ for app in `ls -d */`; do
         docker save ${api::-1}:latest | sudo k3s ctr images import -;
     fi
 
-    echo "Successfully built: ${app::-1}."
+    echo "Successfully built: ${app::-1}.\n"
 done
 cd ..

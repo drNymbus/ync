@@ -1,56 +1,65 @@
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import APIContext from "../context/APIProvider";
 
 function Payment({ basket }) {
-    const { postCommand } = useContext(APIContext);
+    const { postOrder } = useContext(APIContext);
+    const [command, setForm] = useState({
+        first_name: '', name: '', phone: '', mail: '',
+        address: '', postal_code: '', city: '', country: ''
+    });
+    const [message, setMessage] = useState('');
 
-    function time2Pay(form) {
-        let command = {
-            id: 0,
-            items: basket,
-            address: form.get("address"), postal_code: form.get("postal_code"), country: form.get("country"),
-            name: form.get("name"), first_name: form.get("first_name"),
-            mail: form.get("mail"), phone: form.get("phone")
-        };
-        postCommand(command);
-    }
+    // const paypalOptions = {
+    //     "client-id": "test",
+    //     // "enable-funding": "venmo",
+    //     // "disable-funding": "",
+    //     country: "FR",
+    //     currency: "EUR",
+    //     "data-page-type": "product-details",
+    //     components: "buttons",
+    //     "data-sdk-integration-source": "developer-studio",
+    // };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setForm((command) => ({...command, [name]: value}));
+    };
+
+    const time2Pay = () => {
+        console.log({...command, items: basket});
+        postOrder({...command, items: basket})
+            .then((res) => console.log(res))
+            .catch((e) => console.error(`[Payment;time2Pay] ${e.message}`));
+    };
 
     return (
-        <form action={time2Pay} >
-            <div className="contact">
+        <div className="payment-form">
+            <div className="payment-contact">
                 <h1>Contact</h1>
-                <input type="email" placeholder="Email"></input>
-                <input name="newsletter"type="checkbox"/>
+                <input type="text" name="first_name" placeholder="Prénom" onChange={handleChange}/>
+                <input type="text" name="name" placeholder="Nom" onChange={handleChange}/>
+                <input type="text" name="phone" placeholder="Téléphone" onChange={handleChange}/>
+                <input type="email" name="mail" placeholder="E-mail" onChange={handleChange}/>
+                <input type="checkbox" name="newsletter" onChange={handleChange}/>
                 <label htmlFor="newsletter">M'envoyer un mail lorsque YNC sort une nouvelle création.</label>
             </div>
 
-            <div className="shipping">
+            <div className="payment-shipping">
                 <h1>Livraison</h1>
-                <input/>
-                <input type="text" name="address" placeholder="Adresse"/>
-                <input type="text" name="postal_code" placeholder="Code Postal"/>
-                <input type="text" name="city" placeholder="Ville"/>
-                <input type="text" name="country" placeholder="Pays"/>
-
-                <input type="text" name="first_name" placeholder="Prénom"/>
-                <input type="text" name="name" placeholder="Nom"/>
-                <input type="text" name="phone" placeholder="Téléphone"/>
-                <input type="text" name="mail" placeholder="E-mail"/>
+                <input type="text" name="address" placeholder="Adresse" onChange={handleChange}/>
+                <input type="text" name="city" placeholder="Ville" onChange={handleChange}/>
+                <input type="text" name="postal_code" placeholder="Code Postal" onChange={handleChange}/>
+                <input type="text" name="country" placeholder="Pays" onChange={handleChange}/>
             </div>
 
-            {/* <div className="shipping-method">
-                <h1>MÉTHODE DE LIVRAISON</h1>
-                <input name="shipping-relay" type="radio"/>
-                <label htmlFor="shipping-relay">Point relai</label>
-                <input name="shipping-address" type="radio"/>
-                <label htmlFor="shipping-address">À mon adresse</label>
-            </div> */}
+            <div className="basket-recap"></div>
 
-            <div className="payment-method">
-                {/* We'll for now stick to a paypal payment */}
-            </div>
+            <button className="payment-button" onClick={time2Pay}>JE FINALISE MON ACHAT</button>
+            <p className="payment-return">{message}</p>
 
-            <button type="submit">JE FINALISE MON ACHAT</button>
-        </form>
+            {/* <PayPalScriptProvider options={paypalOptions}>
+                <PayPalButtons />
+            </PayPalScriptProvider> */}
+        </div>
     );
 } export default Payment;
