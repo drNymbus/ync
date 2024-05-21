@@ -54,8 +54,6 @@ const basket = {
     select: "SELECT items FROM store.basket WHERE cookie_id = ?",
     insert: "INSERT INTO store.basket (items, cookie_id) VALUES (?, ?)",
     set: "UPDATE store.basket SET items = ? WHERE cookie_id = ?"
-    // add_item: "UPDATE store.basket SET items = items + ? WHERE cookie_id = ?",
-    // remove_item: "UPDATE store.basket SET items = items - ? WHERE cookie_id = ?"
 };
 exports.basket = basket;
 
@@ -70,8 +68,9 @@ exports.item = item;
 
 const order = {
     select: "SELECT (command_id, item_count, items, address, postal_code, country, name, first_name, mail, phone, processed) FROM store.order WHERE cookie_id = ?;",
-    insert: "INSERT INTO store.order (cookie_id, command_id, item_count, items, address, postal_code, country, name, first_name, mail, phone, paid, processed) VALUES (:cookie, :id, :item_count, :items, :address, :postal_code, :country, :name, :first_name, :mail, :phone, false, false)",
-    delete: "DELETE FROM store.order WHERE command_id = ?"
+    insert: "INSERT INTO store.order (cookie_id, order_id, items, price, address, postal_code, country, name, first_name, mail, phone, paid, processed) VALUES (:cookie, :id, :items, :price, :address, :postal_code, :country, :name, :first_name, :mail, :phone, false, false)",
+    delete: "DELETE FROM store.order WHERE command_id = ?",
+    paid: "UPDATE store.order SET paid = true WHERE cookie_id = ? AND order_id = ?"
 };
 exports.order = order;
 

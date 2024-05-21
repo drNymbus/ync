@@ -14,7 +14,6 @@ function BasketItem({ basket, id, add, rm }) {
         fetchItem(id)
             .then(data => setItem(data))
             .catch(e => console.error(`[BasketItem;useEffect] ${e.message}`));
-
     }, [basket]);
 
     return ( // HTML item's basket rendering 

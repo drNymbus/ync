@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS store.order (
     cookie_id UUID,
     command_id text,
     items map<text, bigint>,
+    price bigint,
     address text,
     postal_code text,
     country text,

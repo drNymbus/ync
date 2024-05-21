@@ -9,16 +9,16 @@ function Payment({ basket }) {
     });
     const [message, setMessage] = useState('');
 
-    const paypalOptions = {
-        "client-id": "test",
-        // "enable-funding": "venmo",
-        // "disable-funding": "",
-        country: "FR",
-        currency: "EUR",
-        "data-page-type": "product-details",
-        components: "buttons",
-        "data-sdk-integration-source": "developer-studio",
-    };
+    // const paypalOptions = {
+    //     "client-id": "test",
+    //     // "enable-funding": "venmo",
+    //     // "disable-funding": "",
+    //     country: "FR",
+    //     currency: "EUR",
+    //     "data-page-type": "product-details",
+    //     components: "buttons",
+    //     "data-sdk-integration-source": "developer-studio",
+    // };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -26,10 +26,10 @@ function Payment({ basket }) {
     };
 
     const time2Pay = () => {
-        console.log({...command, items: basket, item_count: -1});
-        postOrder({...command, items: basket, item_count: -1})
-            .then(res => console.log(res))
-            .catch(e => console.error(`[Payment;time2Pay] ${e.message}`));
+        console.log({...command, items: basket});
+        postOrder({...command, items: basket})
+            .then((res) => console.log(res))
+            .catch((e) => console.error(`[Payment;time2Pay] ${e.message}`));
     };
 
     return (

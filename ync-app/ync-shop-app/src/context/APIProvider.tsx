@@ -37,7 +37,7 @@ export const APIProvider = ({ children }) => {
         try {
             const res = await axios.post(`${api_address}/store?command=true`, {command}, config);
             return res.data.items;
-        } catch (e) { console.error(`[postCommand] ${e.message}`); }
+        } catch (e) { console.error(`[postOrder] ${e.message}`); }
     }
 
     return (
