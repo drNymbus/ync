@@ -1,7 +1,8 @@
 const uuid = require('cassandra-driver').types.Uuid;
 
+// const fetch = require('node-fetch');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-exports.fetch = fetch;
+// exports.fetch = fetch;
 
 /* @desc: Return the token to be stored in the cookie
  * @return {bytes}: The encrypted random string
@@ -73,13 +74,16 @@ const paypalEndpoint = process.env.PAYPAL_ENDPOINT || "https://api-m.sandbox.pay
 exports.paypalEndpoint = paypalEndpoint;
 
 const paypalToken = async () => {
-    const auth = Buffer.from(process.env.PAYPAL_CLIENT_ID + ":" + process.env.PAYPAL_CLIENT_SECRET).toString("base64");
+    const id = process.env.PAYPAL_CLIENT_ID || "AbJEuHlreYGdf5pC3ZoSRC6JfKS1KvOB4wir-Nb38srSNJrPlex1IOPe4YOLukiHplsIW0vlwXdLih8_";
+    const secret = process.env.PAYPAL_CLIENT_SECRET || "EENOKNWI9ypsTYljgc7di_ifAhBHjyHobGo_rNtWm-U0fy9FJf0T4yFQUkK4dNRJDW1GS1KkeT9k_Fvh";
+    const auth = Buffer.from(`${id}:${secret}`).toString("base64");
     const response = await fetch(`${paypalEndpoint}/v1/oauth2/token`, {
         method: "POST", body: "grant_type=client_credentials",
         headers: { Authorization: `Basic ${auth}` }
     });
 
     const data = await response.json();
+    // console.log("paypalToken", data);
     return data.access_token;
 }; exports.paypalToken = paypalToken;
 
@@ -95,7 +99,10 @@ const paypalOrder = async (order) => {
             // "PayPal-Mock-Response": '{"mock_application_codes": "INTERNAL_SERVER_ERROR"}'
         }, body: JSON.stringify(payload)
     });
-    return res;
+
+    const data = await res.json();
+    data.status = res.status;
+    return data;
 }; exports.paypalOrder = paypalOrder;
 
 const paypalCapture = async () => {
@@ -110,5 +117,9 @@ const paypalCapture = async () => {
             // "PayPal-Mock-Response": '{"mock_application_codes": "INTERNAL_SERVER_ERROR"}'
         }
     });
-    return res;
+
+    const data = await res.json();
+    console.log("paypalCapture", data);
+
+    return data;
 }; exports.paypalCapture = paypalCapture;

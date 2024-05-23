@@ -16,56 +16,40 @@ import Payment from "./components/Payment";
 import "./style/styles.css";
 
 function useBasket() {
-    const { fetchItem, fetchBasket, postBasket } = useContext(APIContext);
+    const { fetchBasket, postBasket } = useContext(APIContext);
     const [basket, setBasket] = useState({});
-    const [total, setTotal] = useState(0);
 
     useEffect(() => {
         fetchBasket()
             .then((data) => { if (data) setBasket(data); })
             .catch(e => console.error(`[useBasket;useEffect | fetchBasket] ${e.message} (${e.status}))`));
-
-        for (let item in basket) {
-            fetchItem(item)
-                .then((data) => {
-                    if (data) {
-                        const amount = parseFloat(data.price);
-                        setTotal(total + (amount * basket[item]))
-                    }
-                })
-                .catch(e => console.error(`[useBasket;useEffect | fetchItem] ${e.message} (${e.status})`))
-        }
     }, []);
 
     function addBasket(item, price) {
-        if (typeof price === "string") price = parseFloat(price);
-
         let count = 1;
         if (basket[item]) count = basket[item] + 1;
 
         postBasket({...basket, [String(item)]: count});
         setBasket({...basket, [String(item)]: count});
-        setTotal(total + price);
     };
 
     function removeBasket(item, price) {
         if (basket[item]) {
             let count = basket[item] - 1;
-            
+
             postBasket({...basket, [item]: count});
             setBasket({...basket, [item]: count});
-            setTotal(total - price);
         }
     };
 
-    return { basket, total, addBasket, removeBasket };
+    return { basket, addBasket, removeBasket };
 }
 
 /* @desc: the main component orchestating all different components of the website
  * @return: the whole website content
  */
 function App() {
-    const { basket, total, addBasket, removeBasket } = useBasket();
+    const { basket, addBasket, removeBasket } = useBasket();
 
     // Define default app state
     const [state, setState] = useState("HOME");
@@ -106,15 +90,18 @@ function App() {
             <Bandeau name={buttonDisplay} basket={basket} homeFn={homeState} clickFn={updateState}/>
             <Section name={section.name} image={section.image}/>
 
-            <div style={{display: (state == "HOME") ? "block" : "none" }}>
+            {(state === "HOME") && <Item id="quelconque" add={addBasket} goto={basketState}/>}
+            {(state === "BASKET") && <Basket basket={basket} add={addBasket} rm={removeBasket} next={paymentState}/>}
+            {(state === "PAYMENT") && <Payment basket={basket}/>}
+            {/* <div style={{display: (state == "HOME") ? "block" : "none" }}>
                 <Item id="quelconque" add={addBasket} goto={basketState}/>
-            </div>
-            <div style={{display: (state == "BASKET") ? "block" : "none" }}>
+            </div> */}
+            {/* <div style={{display: (state == "BASKET") ? "block" : "none" }}>
                 <Basket basket={basket} add={addBasket} rm={removeBasket} next={paymentState}/>
-            </div>
-            <div style={{display: (state == "PAYMENT") ? "block" : "none" }}>
-                <Payment basket={basket} price={total}/>
-            </div>
+            </div> */}
+            {/* <div style={{display: (state == "PAYMENT") ? "block" : "none" }}>
+                <Payment basket={basket}/>
+            </div> */}
         </div>
     );
 

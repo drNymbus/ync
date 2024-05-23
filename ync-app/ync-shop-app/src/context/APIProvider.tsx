@@ -37,7 +37,7 @@ export const APIProvider = ({ children }) => {
     const postOrder = async (order) => {
         try {
             const res = await axios.post(`${api_address}/store?order=true`, {order}, config);
-            return res.data.items;
+            return res.data;
         } catch (e) { console.error(`[postOrder] ${e.message}`); }
     }
 

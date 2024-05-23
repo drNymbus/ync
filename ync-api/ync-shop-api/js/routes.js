@@ -98,16 +98,14 @@ const store_post = async (req, res, client) => {
             res.status(200).json({completed: valid_ids, rejected: unvalid_ids}); // send all ids (completed & rejected)
 
         } else if (req.query.order === true) { // Add order to database
-            const paypalRes = await utils.paypalOrder(req.body.order);
+            const content = await utils.paypalOrder(req.body.order);
             // const paypalResponse = { json: res.json(), status: response.status};
 
             let order = {...req.body.order, cookie: cookie, id: utils.generate_cookie()};
-            console.log(order);
-
             client.execute(utils.order.insert, order, {prepare:true}).then(() => { // add order to table
                 // res.status(200).json(paypalResponse);
             });
-            res.status(paypalRes.status).json(paypalRes.json());
+            res.status(content.status).json(content);
 
         } else { utils.failed_request(res, 400, {'error': 'Bad Request'}); }
 
