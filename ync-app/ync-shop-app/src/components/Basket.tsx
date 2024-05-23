@@ -28,8 +28,8 @@ function BasketItem({ basket, id, add, rm }) {
                 }
             </div>
 
-            <button id={id} className="basket-remove" onClick={() => rm(id)}>-</button>
-            <button id={id} className="basket-add" onClick={() => add(id)}>+</button>
+            <button id={id} className="basket-remove" onClick={() => rm(id, item.price)}>-</button>
+            <button id={id} className="basket-add" onClick={() => add(id, item.price)}>+</button>
 
             <p className="basket-item-price">{(!item || !basket[id]) ? "?" : item.price * basket[id]}$</p>
         </div>

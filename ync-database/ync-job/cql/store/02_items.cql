@@ -1,5 +1,5 @@
 -- No use of batch settings, Cassandra distribute the write operations optimally
-INSERT INTO store.item (item_id, category, image, display_name, description, basket_description, price) VALUES (
+INSERT INTO store.item (id, category, image, display_name, description, basket_description, price) VALUES (
     'dummy',
     'None',
     0x00000000,
@@ -9,7 +9,7 @@ INSERT INTO store.item (item_id, category, image, display_name, description, bas
     -1
 );
 
-INSERT INTO store.item (item_id, category, image, display_name, description, basket_description, price) VALUES (
+INSERT INTO store.item (id, category, image, display_name, description, basket_description, price) VALUES (
     'quelconque',
     'quelconque',
     BLOB('store/assets/Quelconque.png'),

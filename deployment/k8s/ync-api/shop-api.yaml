@@ -25,6 +25,10 @@ spec:
           value: "10.43.6.0"
         - name: PORT
           value: "3001"
+        - name: PAYPAL_CLIENT_ID
+          value: ""
+        - name: PAYPAL_CLIENT_SECRET
+          value: ""
 ---
 apiVersion: v1
 kind: Service

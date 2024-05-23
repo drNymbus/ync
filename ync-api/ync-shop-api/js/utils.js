@@ -1,6 +1,7 @@
 const uuid = require('cassandra-driver').types.Uuid;
-// const crypto = require('crypto');
-// const fs = require('fs');
+
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+exports.fetch = fetch;
 
 /* @desc: Return the token to be stored in the cookie
  * @return {bytes}: The encrypted random string
@@ -8,8 +9,7 @@ const uuid = require('cassandra-driver').types.Uuid;
 const generate_cookie = () => {
     // return crypto.randomBytes(16).toString('hex');
     return uuid.random();
-};
-exports.generate_cookie = generate_cookie;
+}; exports.generate_cookie = generate_cookie;
 
 /* @desc: Verify if a cookie is valid, and return the response status code.
  * @param {Object} cookie: The cookie object to be asserted.
@@ -27,8 +27,7 @@ const assert_cookie = (client, cookie) => {
     }
 
     return asserted;
-}
-exports.assert_cookie = assert_cookie;
+}; exports.assert_cookie = assert_cookie;
 
 /* @desc: Send a bad request error message to the client with the appropriate status code.
  * @param {Object} response: The response object handled by express.
@@ -36,48 +35,44 @@ exports.assert_cookie = assert_cookie;
  * @param {Object} error: The error object to be sent to the client.
  * @return {undefined}: Nothing is returned.
  */
-const failed_request = (response, status, error) => { return response.status(status).json(error); }
+const failed_request = (response, status, error) => { return response.status(status).json(error); };
 exports.failed_request = failed_request;
 
-const log_query = (m, req) => { console.log({method: m, cookie: req.signedCookies, url: req.url, query: req.query, body: req.body}); }
+const log_query = (m, req) => { console.log({method: m, cookie: req.signedCookies, url: req.url, query: req.query, body: req.body}); };
 exports.log_query = log_query;
 
 const session = {
-    select: "SELECT * FROM store.session WHERE cookie_id = ?",
-    insert: "INSERT INTO store.session (cookie_id,unperishable,last_update) VALUES (?, ?, ?)",
-    update: "UPDATE store.session SET last_update = ? WHERE cookie_id = ?",
-    unperishable: "UPDATE store.session SET unperishable = true WHERE cookie_id = ?"
-};
-exports.session = session;
+    select: "SELECT * FROM store.session WHERE cookie = ?",
+    insert: "INSERT INTO store.session (cookie,unperishable,last_update) VALUES (?, ?, ?)",
+    update: "UPDATE store.session SET last_update = ? WHERE cookie = ?",
+    unperishable: "UPDATE store.session SET unperishable = true WHERE cookie = ?"
+}; exports.session = session;
 
 const basket = {
-    select: "SELECT items FROM store.basket WHERE cookie_id = ?",
-    insert: "INSERT INTO store.basket (items, cookie_id) VALUES (?, ?)",
-    set: "UPDATE store.basket SET items = ? WHERE cookie_id = ?"
-};
-exports.basket = basket;
+    select: "SELECT items FROM store.basket WHERE cookie = ?",
+    insert: "INSERT INTO store.basket (items, cookie) VALUES (?, ?)",
+    set: "UPDATE store.basket SET items = ? WHERE cookie = ?"
+}; exports.basket = basket;
 
 const item = {
-    select_all: "SELECT item_id FROM store.item;",
-    select: "SELECT * FROM store.item WHERE item_id IN ?",
-    insert: "INSERT INTO store.item (item_id, image, display_name, description, price) VALUES (:id, textAsBlob(:image), :display_name, :description, :price)",
-    delete: "DELETE FROM store.item WHERE item_id IN ?",
-    image: "SELECT image FROM store.item WHERE item_id IN ?"
-};
-exports.item = item;
+    select_all: "SELECT id FROM store.item;",
+    select: "SELECT * FROM store.item WHERE id IN ?",
+    insert: "INSERT INTO store.item (id, image, display_name, description, price) VALUES (:id, textAsBlob(:image), :display_name, :description, :price)",
+    delete: "DELETE FROM store.item WHERE id IN ?",
+    image: "SELECT image FROM store.item WHERE id IN ?"
+}; exports.item = item;
 
 const order = {
-    select: "SELECT (command_id, item_count, items, address, postal_code, country, name, first_name, mail, phone, processed) FROM store.order WHERE cookie_id = ?;",
-    insert: "INSERT INTO store.order (cookie_id, order_id, items, price, address, postal_code, country, name, first_name, mail, phone, paid, processed) VALUES (:cookie, :id, :items, :price, :address, :postal_code, :country, :name, :first_name, :mail, :phone, false, false)",
-    delete: "DELETE FROM store.order WHERE command_id = ?",
-    paid: "UPDATE store.order SET paid = true WHERE cookie_id = ? AND order_id = ?"
-};
-exports.order = order;
+    select: "SELECT (id, item_count, items, address, postal_code, country, name, first_name, mail, phone, processed) FROM store.user_order WHERE cookie_id = ?;",
+    insert: "INSERT INTO store.user_order (cookie, id, items, price, address, postal_code, country, name, first_name, mail, phone, paid, processed) VALUES (:cookie, :id, :items, :price, :address, :postal_code, :country, :name, :first_name, :mail, :phone, false, false)",
+    delete: "DELETE FROM store.user_order WHERE id = ?",
+    paid: "UPDATE store.user_order SET paid = true WHERE cookie = ? AND id = ?"
+}; exports.order = order;
 
 const paypalEndpoint = process.env.PAYPAL_ENDPOINT || "https://api-m.sandbox.paypal.com";
 exports.paypalEndpoint = paypalEndpoint;
 
-const getPaypalToken = async () => {
+const paypalToken = async () => {
     const auth = Buffer.from(process.env.PAYPAL_CLIENT_ID + ":" + process.env.PAYPAL_CLIENT_SECRET).toString("base64");
     const response = await fetch(`${paypalEndpoint}/v1/oauth2/token`, {
         method: "POST", body: "grant_type=client_credentials",
@@ -86,5 +81,34 @@ const getPaypalToken = async () => {
 
     const data = await response.json();
     return data.access_token;
-};
-exports.getPaypalToken = getPaypalToken;
+}; exports.paypalToken = paypalToken;
+
+const paypalOrder = async (order) => {
+    const accessToken = await paypalToken();
+    const payload = { intent: "CAPTURE", purchase_units: [{ amount: { currency_code: "EUR", value: order.price, } }]};
+    const res = await fetch(`${paypalEndpoint}/v2/checkout/orders`, {
+        method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}`,
+            // Uncomment one of these to force an error for negative testing (in sandbox mode only).
+            // Documentation: https://developer.paypal.com/tools/sandbox/negative-testing/request-headers/
+            // "PayPal-Mock-Response": '{"mock_application_codes": "MISSING_REQUIRED_PARAMETER"}'
+            // "PayPal-Mock-Response": '{"mock_application_codes": "PERMISSION_DENIED"}'
+            // "PayPal-Mock-Response": '{"mock_application_codes": "INTERNAL_SERVER_ERROR"}'
+        }, body: JSON.stringify(payload)
+    });
+    return res;
+}; exports.paypalOrder = paypalOrder;
+
+const paypalCapture = async () => {
+    const accessToken = await paypalToken();
+    const res = await fetch(`${paypalEndpoint}/v2/checkout/orders/${req.params.order}/capture`, {
+        method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}`,
+            // Uncomment one of these to force an error for negative testing (in sandbox mode only).
+            // Documentation:
+            // https://developer.paypal.com/tools/sandbox/negative-testing/request-headers/
+            // "PayPal-Mock-Response": '{"mock_application_codes": "INSTRUMENT_DECLINED"}'
+            // "PayPal-Mock-Response": '{"mock_application_codes": "TRANSACTION_REFUSED"}'
+            // "PayPal-Mock-Response": '{"mock_application_codes": "INTERNAL_SERVER_ERROR"}'
+        }
+    });
+    return res;
+}; exports.paypalCapture = paypalCapture;

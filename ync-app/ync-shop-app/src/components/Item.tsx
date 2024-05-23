@@ -29,7 +29,7 @@ function Item({ id, add, goto }) {
         </div>
     );
 
-    function handleClick() { add(id); goto(); };
+    function handleClick() { add(id, item.price); goto(); };
     const price = ( // HTML button rendering
         <button className="item-button" id={id} onClick={handleClick}>
             {(!item) ? "" : item.price}$

@@ -1,9 +1,9 @@
 import { useState, useContext } from 'react';
 import APIContext from "../context/APIProvider";
 
-function Payment({ basket }) {
-    const { postOrder } = useContext(APIContext);
-    const [command, setForm] = useState({
+function Payment({ basket, price }) {
+    const { fetchItem, postOrder } = useContext(APIContext);
+    const [order, setForm] = useState({
         first_name: '', name: '', phone: '', mail: '',
         address: '', postal_code: '', city: '', country: ''
     });
@@ -22,14 +22,14 @@ function Payment({ basket }) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setForm((command) => ({...command, [name]: value}));
+        setForm((order) => ({...order, [name]: value}));
     };
 
-    const time2Pay = () => {
-        console.log({...command, items: basket});
-        postOrder({...command, items: basket})
+    const time2Pay = async () => {
+        console.log({...order, items: basket, price: price});
+        postOrder({...order, items: basket, price: price})
             .then((res) => console.log(res))
-            .catch((e) => console.error(`[Payment;time2Pay] ${e.message}`));
+            .catch((e) => console.error(`[Payment;time2Pay] ${e.message} (${e.status})`));
     };
 
     return (
