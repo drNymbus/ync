@@ -1,26 +1,27 @@
 # YNS Kubernetes Deployment
 
 All yaml files to start and shutdown the Young New Service.
-You can find all commands needed to startup the entire YNC service in the bash files './start.sh' and './service.sh'; for the entire component chain to run you'll need kubernetes cluster running. To delete all ync-app resources, execute 'shutdown.sh' file.
+
 To set the default namespace: `kubectl config set-context --current --namespace=<my-namespace || default>`
 
 ## ync-database
 
-A configMap volume is created to allow keyspaces to be created when a pod is started. Once the configMap is up, the cassandra StatefulSet can be launched alongside the LoadBalancer service.
+- `database.yaml`: Describes the StatefulSet and Service for the Cassandra node.
+- `storage.yaml`: Describe the Persistent Volume to set and the Persistent Volume Claim to be used by the StatefulSet.
+- `inspector.yaml`: The only purpose of the resource is to monitor the Persistent Volume directly; this also is used to entirely delete the Persistent Volume if needed (see the "delete" section in the "service.sh" bash script).
 
-## ync-shop-api
+The job folder contains every different jobs ran against the StatefulSet, those scripts are able to run only if the Cassandra node is fully initialized.
 
-A simple deployment configuration. The image is locally pulled but that could change if we decide to put all our images on dockerhub or a similar provider. The CASSANDRA_CONTACT_POINT is defined accordingly to the ync-database yaml configuration file (Service.LoadBalancer.spec.clusterIP).
+## ync-api & ync-app
 
-## service.sh
+Each yaml file should contain a Deployment resource to run the API/App with the service associated so that other resources can reach the API/App.
 
-## build.sh
+# Credentials
 
-The 'build.sh' file can be used to build docker images to be used on the kubernetes cluster, the last lines are here to register those images to a k3s cluster. On a local setting you should comment out those lines.
+For the APIs and Applications to be able to connect to the Cassandra cluster we use a Username-Password authentication. Those credentials are stored thanks to kubernetes Secrets resources, then fetched from environment variables in APIs and Applications.
 
+# Bash scripting
 
-# TODO
+- `service.sh`: Every comand needed to start, stop, update, scale and delete the entire service.
 
-- Configure Node API Service
-- Init keyspace automatically after cassandra pod starts
-- How to expose minikube services to the world wide web 
+- `build.sh`: Creates all docker images needed to run the entire service. (An option can be given to register images in a k3s cluster)

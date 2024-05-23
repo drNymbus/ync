@@ -1,7 +1,6 @@
 // Import des modules et composants React nécessaires
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
 
 import { APIProvider } from "./context/APIProvider";
 import App from "./App";
@@ -15,10 +14,8 @@ const root = createRoot(rootElement);
 // BrowserRouter est une composante qui nous permet de gérer la navigation entre les pages de l'application
 root.render(
     <React.StrictMode>
-        <BrowserRouter>
-            <APIProvider>
-                <App />
-            </APIProvider>
-        </BrowserRouter>
+        <APIProvider>
+            <App />
+        </APIProvider>
     </React.StrictMode>
 );

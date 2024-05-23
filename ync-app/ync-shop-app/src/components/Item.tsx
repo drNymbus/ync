@@ -6,7 +6,7 @@ import APIContext from "../context/APIProvider";
  * @param clickFn: the handler to add the item to the basket
  * @return: Item component of the website page
  */
-function Item({ id, clickFn }) {
+function Item({ id, add, goto }) {
 
     const [item, setItem] = useState(null); // Item data
     const { fetchItem } = useContext(APIContext);
@@ -17,21 +17,22 @@ function Item({ id, clickFn }) {
             .catch((err) => { console.error(err); });
     }, []);
 
-    let img = ( // HTML image rendering 
-    
-        <img className="item-image" src={(item === null) ? "" : item.image} width="400"/>
-
-    );
-
-    let desc = ( // HTML description rendering
-        <div className="item-description">
-            <p>{(item === null) ? "" : item.description}</p>
+    const img = ( // HTML image rendering
+        <div className="item-image">
+            <img src={(!item) ? "" : item.image} width="400"/>
         </div>
     );
 
-    let price = ( // HTML button rendering
-        <button className="item-button" onClick={(e) => {clickFn(e, id)}}>
-            {(item === null) ? "" : item.price}$
+    const desc = ( // HTML description rendering
+        <div className="item-description">
+            <p>{(!item) ? "" : item.description}</p>
+        </div>
+    );
+
+    function handleClick() { add(id); goto(); };
+    const price = ( // HTML button rendering
+        <button className="item-button" id={id} onClick={handleClick}>
+            {(!item) ? "" : item.price}$
         </button>
     );
 
