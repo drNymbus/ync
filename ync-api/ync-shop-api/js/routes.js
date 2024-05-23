@@ -80,7 +80,7 @@ const store_post = async (req, res, client) => {
                     if (result.rows[0].items === null) method = utils.basket.set;
                 }
             });
-            await client.execute(method, [req.body.basket, cookie], {prepare: true});
+            await client.execute(method, [req.body.items, cookie], {prepare: true});
             client.execute(utils.basket.select, [cookie]).then((result) => {
                 res.status(200).json(result.rows[0]); // retrieve & send basket
             });
