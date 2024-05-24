@@ -87,7 +87,7 @@ const paypalToken = async () => {
     return data.access_token;
 }; exports.paypalToken = paypalToken;
 
-const paypalOrder = async (order) => {
+const paypalPostOrder = async (order) => {
     const accessToken = await paypalToken();
     const payload = { intent: "CAPTURE", purchase_units: [{ amount: { currency_code: "EUR", value: order.price, } }]};
     const res = await fetch(`${paypalEndpoint}/v2/checkout/orders`, {
@@ -101,13 +101,24 @@ const paypalOrder = async (order) => {
     });
 
     const data = await res.json();
-    data.status = res.status;
+    data.res_status = res.status;
     return data;
-}; exports.paypalOrder = paypalOrder;
+}; exports.paypalPostOrder = paypalPostOrder;
 
-const paypalCapture = async () => {
+const paypalGetOrder = async (order) => {
     const accessToken = await paypalToken();
-    const res = await fetch(`${paypalEndpoint}/v2/checkout/orders/${req.params.order}/capture`, {
+    const res = await fetch(`${paypalEndpoint}/v2/checkout/orders/${order}`, {
+        method: "GET", headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` }
+    });
+
+    const data = await res.json();
+    data.res_status = res.status;
+    return data;
+}; exports.paypalGetOrder = paypalGetOrder;
+
+const paypalCapture = async (order) => {
+    const accessToken = await paypalToken();
+    const res = await fetch(`${paypalEndpoint}/v2/checkout/orders/${order}/capture`, {
         method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}`,
             // Uncomment one of these to force an error for negative testing (in sandbox mode only).
             // Documentation:
@@ -119,7 +130,6 @@ const paypalCapture = async () => {
     });
 
     const data = await res.json();
-    console.log("paypalCapture", data);
-
+    data.res_status = res.status;
     return data;
 }; exports.paypalCapture = paypalCapture;

@@ -1,11 +1,25 @@
 import { useState, useContext } from 'react';
 import { createPortal } from 'react-dom';
+import { isChrome, isFirefox, isSafari, isOpera, isIE } from 'react-device-detect';
 // import Popup from 'reactjs-popup';
 // import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import APIContext from "../context/APIProvider";
 
+function getBrowserOptions() {
+    const windowFeatures = "left=100,top=100,width=600,height=800";
+    if (isChrome) {
+        return ["chromeWindow", windowFeatures];
+    } else if (isFirefox) {
+        return ["mozillaWindow", windowFeatures];
+    } else if (isOpera || isSafari) {
+        return [];
+    } else if (isIE) {
+        return ["IEWindow", windowFeatures];
+    }
+}
+
 function Payment({ basket }) {
-    const { fetchItem, postOrder } = useContext(APIContext);
+    const { fetchItem, fetchOrder, postOrder, captureOrder } = useContext(APIContext);
 
     const [order, setForm] = useState({
         first_name: '', name: '', phone: '', mail: '',
@@ -20,17 +34,6 @@ function Payment({ basket }) {
         setForm((order) => ({...order, [name]: value}));
     };
 
-    // const paypalOptions = {
-    //     "client-id": "AbJEuHlreYGdf5pC3ZoSRC6JfKS1KvOB4wir-Nb38srSNJrPlex1IOPe4YOLukiHplsIW0vlwXdLih8_",
-    //     "enable-funding": "paypal",
-    //     "disable-funding": "creditcard",
-    //     // country: "CA",
-    //     currency: "EUR",
-    //     "data-page-type": "product-details",
-    //     components: "buttons",
-    //     "data-sdk-integration-source": "developer-studio",
-    //   };
-
     const time2Pay = async () => {
         let price = 0;
         for (let item in basket) {
@@ -39,12 +42,20 @@ function Payment({ basket }) {
                 .catch(e => console.error(`[Payment;time2pay | fetchItem] ${e.message} (${e.status})`));
         }
 
-        console.log({...order, items: basket, price: price});
-        const res = await postOrder({...order, items: basket, price: price});
-        console.log(res);
-        await setPaypalPage(res.links[1].href);
-        setPaying(true);
-        // Maybe wait for an event in useEffect to set the modal to false and redirecting to thank you page ?;
+        let res = await postOrder({...order, items: basket, price: price});
+        console.log("post", res);
+        let popup = window.open(res.links[1].href, ...getBrowserOptions());
+
+        let processed = false;
+        while (!processed) {
+            let order = await fetchOrder(res.id);
+            console.log("fetch", order);
+            if (order.status === 'APPROVED') processed = true;
+            await new Promise(r => setTimeout(r, 5000));
+        }
+
+        await captureOrder(res.id);
+        popup?.close();
     };
 
     return (

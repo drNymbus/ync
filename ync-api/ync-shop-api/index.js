@@ -14,6 +14,9 @@ const cassandra = require('cassandra-driver');
 
 // Utils functions
 const routes = require('./js/routes.js');
+const _get = require('./js/get.js');
+const _post = require('./js/post.js');
+const _delete = require('./js/delete.js');
 
 // Set up express app
 const app = express();

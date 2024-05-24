@@ -1,4 +1,7 @@
 const utils = require('./utils.js');
+const _get = require('./get.js');
+const _post = require('./post.js');
+const _delete = require('./delete.js');
 
 // Method: GET, Route: /store
 const store_get = async (req, res, client) => {
@@ -55,6 +58,12 @@ const store_get = async (req, res, client) => {
                 res.status(200).json(result.rows); // send order
             });
 
+        } else if (req.query.capture === true) { // Retrieve paypal's order status
+            if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
+
+            const content = await utils.paypalGetOrder(req.query.id);
+            res.status(content.res_status).json(content);
+
         } else { utils.failed_request(res, 400, {'error': 'Bad Request'}); }
 
     } catch (err) {
@@ -98,14 +107,17 @@ const store_post = async (req, res, client) => {
             res.status(200).json({completed: valid_ids, rejected: unvalid_ids}); // send all ids (completed & rejected)
 
         } else if (req.query.order === true) { // Add order to database
-            const content = await utils.paypalOrder(req.body.order);
-            // const paypalResponse = { json: res.json(), status: response.status};
-
+            const content = await utils.paypalPostOrder(req.body.order);
             let order = {...req.body.order, cookie: cookie, id: utils.generate_cookie()};
-            client.execute(utils.order.insert, order, {prepare:true}).then(() => { // add order to table
-                // res.status(200).json(paypalResponse);
-            });
-            res.status(content.status).json(content);
+            await client.execute(utils.order.insert, order, {prepare:true});
+
+            res.status(content.res_status).json(content);
+
+        } else if (req.query.capture === true) { // Retrieve paypal's order status
+            if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
+
+            const content = await utils.paypalCapture(req.body.order);
+            res.status(content.res_status).json(content);
 
         } else { utils.failed_request(res, 400, {'error': 'Bad Request'}); }
 
@@ -117,12 +129,13 @@ const store_post = async (req, res, client) => {
 exports.store_post = store_post;
 
 const store_capture = async (req, res, client) => {
+    utils.log_query('post (capture)', req);
     try {
         const cookie = req.signedCookies.ync_shop;
         if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
-        const paypalRes = await utils.paypalCapture();
-        res.status(paypalRes.status).json(paypalRes.json());
+        const content = await utils.paypalCapture();
+        res.status(content.status).json(content);
 
     } catch (err) {
         console.log({'error': err});

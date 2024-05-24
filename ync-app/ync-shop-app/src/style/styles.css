@@ -136,3 +136,8 @@ body {
     background-color: #bc2efe;
     cursor: grab;
 }
+
+.paypal-page {
+    width: 100%;
+    height: 1000px;
+}

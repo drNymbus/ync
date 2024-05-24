@@ -34,6 +34,13 @@ export const APIProvider = ({ children }) => {
         } catch (e) { console.error(`[postBasket] ${e.message}`); }
     };
 
+    const fetchOrder = async (order) => {
+        try {
+            const res = await axios.get(`${api_address}/store?capture=true&id=${order}`, config);
+            return res.data;
+        } catch (e) { console.error(`[fetchOrder] ${e.message}`); }
+    }
+
     const postOrder = async (order) => {
         try {
             const res = await axios.post(`${api_address}/store?order=true`, {order}, config);
@@ -41,10 +48,15 @@ export const APIProvider = ({ children }) => {
         } catch (e) { console.error(`[postOrder] ${e.message}`); }
     }
 
-    const captureOrder = async (order) => {};
+    const captureOrder = async (order) => {
+        try {
+            const res = await axios.post(`${api_address}/store?capture=true`, {order}, config);
+            return res.data;
+        } catch (e) { console.error(`[captureOrder] ${e.message}`); }
+    };
 
     return (
-        <APIContext.Provider value={{ fetchItem, fetchBasket, postBasket, postOrder, captureOrder }}>
+        <APIContext.Provider value={{ fetchItem, fetchBasket, postBasket, fetchOrder, postOrder, captureOrder }}>
             {children}
         </APIContext.Provider>
     );
