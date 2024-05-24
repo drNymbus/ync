@@ -39,7 +39,7 @@ for app in `ls -d */`; do
 
     docker build -t ${app::-1} ${app}
     if [ "$1" == "k3s" ]; then
-        docker save ${api::-1}:latest | sudo k3s ctr images import -;
+        docker save ${app::-1}:latest | sudo k3s ctr images import -;
     fi
 
     echo "Successfully built: ${app::-1}."
