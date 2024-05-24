@@ -25,7 +25,7 @@ function useBasket() {
             .catch(e => console.error(`[useBasket;useEffect | fetchBasket] ${e.message} (${e.status}))`));
     }, []);
 
-    function addBasket(item, price) {
+    function addBasket(item) {
         let count = 1;
         if (basket[item]) count = basket[item] + 1;
 
@@ -33,7 +33,7 @@ function useBasket() {
         setBasket({...basket, [String(item)]: count});
     };
 
-    function removeBasket(item, price) {
+    function removeBasket(item) {
         if (basket[item]) {
             let count = basket[item] - 1;
 
@@ -97,8 +97,7 @@ function App() {
     );
 
     return ( // HTML website rendering
-        // <Logo content={content} />
-        content
+        <Logo content={content} />
     );
 
 } export default App;

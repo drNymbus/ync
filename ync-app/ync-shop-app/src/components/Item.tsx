@@ -19,7 +19,7 @@ function Item({ id, add, goto }) {
 
     const img = ( // HTML image rendering
         <div className="item-image">
-            <img src={(!item) ? "" : item.image} loading="eager" width="400"/>
+            <img src={(!item) ? "" : item.image} width="400"/>
         </div>
     );
 

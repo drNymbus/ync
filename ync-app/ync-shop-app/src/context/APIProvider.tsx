@@ -6,8 +6,7 @@ const APIContext = createContext();
 
 export const APIProvider = ({ children }) => {
     // const api_address = process.env.API_CONTACT_POINT;
-    // const api_address = 'http://88.174.59.203:15779';
-    const api_address = 'http://127.0.0.1:3001';
+    const api_address = 'http://88.174.59.203:15779';
     const config = {withCredentials: true, headers: {'Content-Type':'application/json', 'Accept':'application/json'}};
 
     const fetchItem = async (item) => { // Récupérer les données de l'article en fonction de id_article
