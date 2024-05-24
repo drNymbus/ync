@@ -13,13 +13,13 @@ function Item({ id, add, goto }) {
 
     useEffect(() => { // Fetch all item's data
         fetchItem(id)
-            .then((data) => { setItem(data); })
-            .catch((err) => { console.error(err); });
+            .then(data => setItem(data))
+            .catch(e => console.error(`[Item;useEffect] ${e.message}`));
     }, []);
 
     const img = ( // HTML image rendering
         <div className="item-image">
-            <img src={(!item) ? "" : item.image} loading="eager" width="400"/>
+            <img src={(!item) ? "" : item.image} width="400"/>
         </div>
     );
 
