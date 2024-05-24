@@ -51,7 +51,7 @@ function Payment({ basket }) {
             let order = await fetchOrder(res.id);
             console.log("fetch", order);
             if (order.status === 'APPROVED') processed = true;
-            await new Promise(r => setTimeout(r, 5000));
+            await new Promise(r => setTimeout(r, 500));
         }
 
         await captureOrder(res.id);

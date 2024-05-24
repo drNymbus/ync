@@ -14,9 +14,6 @@ const cassandra = require('cassandra-driver');
 
 // Utils functions
 const routes = require('./js/routes.js');
-const _get = require('./js/get.js');
-const _post = require('./js/post.js');
-const _delete = require('./js/delete.js');
 
 // Set up express app
 const app = express();
@@ -52,9 +49,6 @@ app.route('/store')
     .get((req, res) => { routes.store_get(req, res, client); })
     .post((req, res) => { routes.store_post(req, res, client); })
     .delete((req, res) => { routes.store_delete(req, res, client); });
-
-app.route('/store/:order/capture')
-    .post((req, res) => { routes.store_capture(req, res, client); })
 
 // Start the server
 app.listen(port, () => {
