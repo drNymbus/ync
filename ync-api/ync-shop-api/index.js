@@ -33,8 +33,8 @@ app.use(
 app.use(cors({ credentials: true, origin: true }));
 
 // Loading secrets for signature's cookies
-const secrets = JSON.parse(fs.readFileSync('./do_not_share.json', 'utf8')); // Retrieve secrets
-app.use(cookieParser(secrets.cookie)); // Hand over the secret string for signed cookies
+const cookie_secret = process.env.COOKIE_SECRET || 'some-string-will-do-the-trick'; // Retrieve secrets
+app.use(cookieParser(cookie_secret)); // Hand over the secret string for signed cookies
 
 // Connect to CassandraDB
 const client = new cassandra.Client({

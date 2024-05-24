@@ -5,7 +5,7 @@ function Logo({ content }) {
     const [videoEnded, setVideoEnded] = useState(false);
     const handleVideoEnd = () => { setVideoEnded(true); };
 
-    var page;
+    let page;
     if (!videoEnded) {
         page = (
             <video autoPlay muted onEnded={handleVideoEnd}>

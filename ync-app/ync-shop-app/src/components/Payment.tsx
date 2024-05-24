@@ -1,56 +1,90 @@
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
+import { createPortal } from 'react-dom';
+import { isChrome, isFirefox, isSafari, isOpera, isIE } from 'react-device-detect';
+// import Popup from 'reactjs-popup';
+// import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import APIContext from "../context/APIProvider";
 
-function Payment({ basket }) {
-    const { postCommand } = useContext(APIContext);
-
-    function time2Pay(form) {
-        let command = {
-            id: 0,
-            items: basket,
-            address: form.get("address"), postal_code: form.get("postal_code"), country: form.get("country"),
-            name: form.get("name"), first_name: form.get("first_name"),
-            mail: form.get("mail"), phone: form.get("phone")
-        };
-        postCommand(command);
+function getBrowserOptions() {
+    const windowFeatures = "left=100,top=100,width=600,height=800";
+    if (isChrome) {
+        return ["chromeWindow", windowFeatures];
+    } else if (isFirefox) {
+        return ["mozillaWindow", windowFeatures];
+    } else if (isOpera || isSafari) {
+        return [];
+    } else if (isIE) {
+        return ["IEWindow", windowFeatures];
     }
+}
+
+function Payment({ basket }) {
+    const { fetchItem, fetchOrder, postOrder, captureOrder } = useContext(APIContext);
+
+    const [order, setForm] = useState({
+        first_name: '', name: '', phone: '', mail: '',
+        address: '', postal_code: '', city: '', country: ''
+    });
+    const [message, setMessage] = useState('');
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setForm((order) => ({...order, [name]: value}));
+    };
+
+    const time2Pay = async () => {
+        let price = 0;
+        for (let item in basket) {
+            await fetchItem(item)
+                .then(data => price += (parseFloat(data.price) * basket[item]))
+                .catch(e => console.error(`[Payment;time2pay | fetchItem] ${e.message} (${e.status})`));
+        }
+
+        let res = await postOrder({...order, items: basket, price: price});
+        let popup = window.open(res.links[1].href, ...getBrowserOptions());
+
+        let processed = false;
+        while (!processed) {
+            let order = await fetchOrder(res.id);
+            if (order.status === 'APPROVED') processed = true;
+            await new Promise(r => setTimeout(r, 100));
+        }
+
+        await captureOrder(res.id);
+        popup?.close();
+    };
 
     return (
-        <form action={time2Pay} >
-            <div className="contact">
+        <div className="payment-form">
+            <div className="payment-contact">
                 <h1>Contact</h1>
-                <input type="email" placeholder="Email"></input>
-                <input name="newsletter"type="checkbox"/>
+                <input type="text" name="first_name" placeholder="Prénom" onChange={handleChange}/>
+                <input type="text" name="name" placeholder="Nom" onChange={handleChange}/>
+                <input type="text" name="phone" placeholder="Téléphone" onChange={handleChange}/>
+                <input type="email" name="mail" placeholder="E-mail" onChange={handleChange}/>
+                <input type="checkbox" name="newsletter" onChange={handleChange}/>
                 <label htmlFor="newsletter">M'envoyer un mail lorsque YNC sort une nouvelle création.</label>
             </div>
 
-            <div className="shipping">
+            <div className="payment-shipping">
                 <h1>Livraison</h1>
-                <input/>
-                <input type="text" name="address" placeholder="Adresse"/>
-                <input type="text" name="postal_code" placeholder="Code Postal"/>
-                <input type="text" name="city" placeholder="Ville"/>
-                <input type="text" name="country" placeholder="Pays"/>
-
-                <input type="text" name="first_name" placeholder="Prénom"/>
-                <input type="text" name="name" placeholder="Nom"/>
-                <input type="text" name="phone" placeholder="Téléphone"/>
-                <input type="text" name="mail" placeholder="E-mail"/>
+                <input type="text" name="address" placeholder="Adresse" onChange={handleChange}/>
+                <input type="text" name="city" placeholder="Ville" onChange={handleChange}/>
+                <input type="text" name="postal_code" placeholder="Code Postal" onChange={handleChange}/>
+                <input type="text" name="country" placeholder="Pays" onChange={handleChange}/>
             </div>
 
-            {/* <div className="shipping-method">
-                <h1>MÉTHODE DE LIVRAISON</h1>
-                <input name="shipping-relay" type="radio"/>
-                <label htmlFor="shipping-relay">Point relai</label>
-                <input name="shipping-address" type="radio"/>
-                <label htmlFor="shipping-address">À mon adresse</label>
-            </div> */}
+            <div className="basket-recap"></div>
 
-            <div className="payment-method">
-                {/* We'll for now stick to a paypal payment */}
-            </div>
+            <button className="payment-button" onClick={time2Pay}>JE FINALISE MON ACHAT</button>
+            <p className="payment-return">{message}</p>
 
-            <button type="submit">JE FINALISE MON ACHAT</button>
-        </form>
+            {/* <Popup trigger={<button> Trigger</button>} position="right center">
+                <div>Popup content here !!</div>
+            </Popup> */}
+            {/* <PayPalScriptProvider options={paypalOptions}>
+                <PayPalButtons />
+            </PayPalScriptProvider> */}
+        </div>
     );
 } export default Payment;

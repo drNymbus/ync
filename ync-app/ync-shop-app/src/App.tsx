@@ -22,7 +22,7 @@ function useBasket() {
     useEffect(() => {
         fetchBasket()
             .then((data) => { if (data) setBasket(data); })
-            .catch((error) => console.error(error));
+            .catch(e => console.error(`[useBasket;useEffect | fetchBasket] ${e.message} (${e.status}))`));
     }, []);
 
     function addBasket(item) {
@@ -90,15 +90,9 @@ function App() {
             <Bandeau name={buttonDisplay} basket={basket} homeFn={homeState} clickFn={updateState}/>
             <Section name={section.name} image={section.image}/>
 
-            <div style={{display: (state == "HOME") ? "block" : "none" }}>
-                <Item id="quelconque" add={addBasket} goto={basketState}/>
-            </div>
-            <div style={{display: (state == "BASKET") ? "block" : "none" }}>
-                <Basket basket={basket} add={addBasket} rm={removeBasket} next={paymentState}/>
-            </div>
-            <div style={{display: (state == "PAYMENT") ? "block" : "none" }}>
-                <Payment/>
-            </div>
+            {(state === "HOME") && <Item id="quelconque" add={addBasket} goto={basketState}/>}
+            {(state === "BASKET") && <Basket basket={basket} add={addBasket} rm={removeBasket} next={paymentState}/>}
+            {(state === "PAYMENT") && <Payment basket={basket}/>}
         </div>
     );
 
