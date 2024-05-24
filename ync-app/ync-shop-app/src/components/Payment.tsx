@@ -26,8 +26,6 @@ function Payment({ basket }) {
         address: '', postal_code: '', city: '', country: ''
     });
     const [message, setMessage] = useState('');
-    const [paying, setPaying] = useState(false);
-    const [paypalPage, setPaypalPage] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -43,15 +41,13 @@ function Payment({ basket }) {
         }
 
         let res = await postOrder({...order, items: basket, price: price});
-        console.log("post", res);
         let popup = window.open(res.links[1].href, ...getBrowserOptions());
 
         let processed = false;
         while (!processed) {
             let order = await fetchOrder(res.id);
-            console.log("fetch", order);
             if (order.status === 'APPROVED') processed = true;
-            await new Promise(r => setTimeout(r, 500));
+            await new Promise(r => setTimeout(r, 100));
         }
 
         await captureOrder(res.id);
@@ -89,7 +85,6 @@ function Payment({ basket }) {
             {/* <PayPalScriptProvider options={paypalOptions}>
                 <PayPalButtons />
             </PayPalScriptProvider> */}
-            {paying && createPortal(<iframe className="paypal-page" src={paypalPage}></iframe>, document.body)}
         </div>
     );
 } export default Payment;
