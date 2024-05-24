@@ -18,9 +18,8 @@ if [ "$1" == "start" ]; then
         sleep 90 # Sleep until database is fully initialized and operational
 
         kubectl apply -f ync-database/job/admin.yaml
-        job_status_check "ync-init-admin" > /dev/k8s-job/job-admin.log
+        sleep 10
         kubectl apply -f ync-database/job/keyspace.yaml
-        job_status_check "ync-init-keyspace" > /dev/k8s-job/job-keyspace.log
 
     # @desc: Create all apis
     elif [ "$2" == "api" ]; then
@@ -37,12 +36,8 @@ if [ "$1" == "start" ]; then
         sleep 90 # Sleep until database is fully initialized and operational
 
         kubectl apply -f ync-database/job/admin.yaml
-        job_status_check "ync-init-admin" > /dev/k8s-job/job-admin.log
-        kubectl delete -f ync-database/job/admin.yaml
-
+        sleep 10
         kubectl apply -f ync-database/job/keyspace.yaml
-        job_status_check "ync-init-keyspace" > /dev/k8s-job/job-keyspace.log
-        kubectl delete -f ync-database/job/keyspace.yaml
 
         for component in `ls ync-api/*.yaml`; do kubectl apply -f ${component}; done
         for component in `ls ync-app/*.yaml`; do kubectl apply -f ${component}; done
