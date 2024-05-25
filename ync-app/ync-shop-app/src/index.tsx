@@ -2,7 +2,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 
-import { APIProvider } from "./context/APIProvider";
+import { ShopAPIProvider } from "./context/ShopAPIProvider";
 import App from "./App";
 
 // Sélection de l'élément DOM où l'application sera rendue et créartion d'une variable capable de rendre dynamiquement l'application
@@ -14,8 +14,8 @@ const root = createRoot(rootElement);
 // BrowserRouter est une composante qui nous permet de gérer la navigation entre les pages de l'application
 root.render(
     <React.StrictMode>
-        <APIProvider>
+        <ShopAPIProvider>
             <App />
-        </APIProvider>
+        </ShopAPIProvider>
     </React.StrictMode>
 );

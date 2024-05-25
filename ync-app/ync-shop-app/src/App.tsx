@@ -2,7 +2,8 @@
 import { useState, useContext, useEffect } from "react";
 
 /* Custom context imports */
-import APIContext from "./context/APIProvider";
+import ShopAPIContext from "./context/ShopAPIProvider";
+import { MailAPIProvider } from "./context/MailAPIProvider";
 
 /* Custom component imports */
 import Bandeau from "./components/Bandeau";
@@ -16,7 +17,7 @@ import Payment from "./components/Payment";
 import "./style/styles.css";
 
 function useBasket() {
-    const { fetchBasket, postBasket } = useContext(APIContext);
+    const { fetchBasket, postBasket } = useContext(ShopAPIContext);
     const [basket, setBasket] = useState({});
 
     useEffect(() => {
@@ -91,13 +92,14 @@ function App() {
             <Section name={section.name} image={section.image}/>
 
             {(state === "HOME") && <Item id="quelconque" add={addBasket} goto={basketState}/>}
-            {(state === "BASKET") && <Basket basket={basket} add={addBasket} rm={removeBasket} next={paymentState}/>}
-            {(state === "PAYMENT") && <Payment basket={basket}/>}
+            {(state === "BASKET") && <Basket basket={basket} compact={false} add={addBasket} rm={removeBasket} next={paymentState}/>}
+            {(state === "PAYMENT") && (<MailAPIProvider><Payment basket={basket}/></MailAPIProvider>)}
         </div>
     );
 
     return ( // HTML website rendering
-        <Logo content={content} />
+        // <Logo content={content} />
+        content
     );
 
 } export default App;

@@ -13,7 +13,7 @@ const cookieParser = require('cookie-parser');
 const cassandra = require('cassandra-driver');
 
 // Utils functions
-const routes = require('./js/routes.js');
+const routes = require('./routes.js');
 
 // Set up express app
 const app = express();

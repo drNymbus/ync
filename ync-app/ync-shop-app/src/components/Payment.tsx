@@ -1,9 +1,10 @@
 import { useState, useContext } from 'react';
-import { createPortal } from 'react-dom';
 import { isChrome, isFirefox, isSafari, isOpera, isIE } from 'react-device-detect';
-// import Popup from 'reactjs-popup';
-// import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import APIContext from "../context/APIProvider";
+
+import ShopAPIContext from "../context/ShopAPIProvider";
+import MailAPIContext from "../context/MailAPIProvider";
+
+import Basket from "./Basket";
 
 function getBrowserOptions() {
     const windowFeatures = "left=100,top=100,width=600,height=800";
@@ -18,14 +19,30 @@ function getBrowserOptions() {
     }
 }
 
+async function paypalPage(order, fetchOrder, captureOrder) {
+    let popup = window.open(order.links[1].href, ...getBrowserOptions());
+
+    let res = {status: 'NONE'};
+    let processed = false;
+    while (!processed) {
+        res = await fetchOrder(order.id);
+        if (res.status === 'APPROVED' || res.status === 'COMPLETED') processed = true;
+    }
+
+    await captureOrder(order.id);
+    popup?.close();
+    return res;
+}
+
 function Payment({ basket }) {
-    const { fetchItem, fetchOrder, postOrder, captureOrder } = useContext(APIContext);
+    const { fetchItem, fetchOrder, postOrder, captureOrder } = useContext(ShopAPIContext);
+    const { mailConfirmation } = useContext(MailAPIContext);
 
     const [order, setForm] = useState({
         first_name: '', name: '', phone: '', mail: '',
         address: '', postal_code: '', city: '', country: ''
     });
-    const [message, setMessage] = useState('');
+    const [approved, setApproved] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -41,50 +58,48 @@ function Payment({ basket }) {
         }
 
         let res = await postOrder({...order, items: basket, price: price});
-        let popup = window.open(res.links[1].href, ...getBrowserOptions());
-
-        let processed = false;
-        while (!processed) {
-            let order = await fetchOrder(res.id);
-            if (order.status === 'APPROVED') processed = true;
-            await new Promise(r => setTimeout(r, 100));
-        }
-
-        await captureOrder(res.id);
-        popup?.close();
+        await paypalPage(res, fetchOrder, captureOrder).then((order) => {
+            // @TODO
+            // Page element to thank user;
+            setApproved(order.status);
+            // mailConfirmation(order);
+        }).catch(e => console.error(`[Payment;time2pay] ${e.message} (${e.status})`));
     };
 
     return (
-        <div className="payment-form">
-            <div className="payment-contact">
-                <h1>Contact</h1>
-                <input type="text" name="first_name" placeholder="Prénom" onChange={handleChange}/>
-                <input type="text" name="name" placeholder="Nom" onChange={handleChange}/>
-                <input type="text" name="phone" placeholder="Téléphone" onChange={handleChange}/>
-                <input type="email" name="mail" placeholder="E-mail" onChange={handleChange}/>
-                <input type="checkbox" name="newsletter" onChange={handleChange}/>
-                <label htmlFor="newsletter">M'envoyer un mail lorsque YNC sort une nouvelle création.</label>
+        <div className="payment">
+            <div className="payment-form">
+                <div className="payment-contact">
+                    <h1>Contact</h1>
+                    <input type="text" name="first_name" placeholder="Prénom" onChange={handleChange}/>
+                    <input type="text" name="name" placeholder="Nom" onChange={handleChange}/>
+                    <input type="text" name="phone" placeholder="Téléphone" onChange={handleChange}/>
+                    <input type="email" name="mail" placeholder="E-mail" onChange={handleChange}/>
+                    <input type="checkbox" name="newsletter" onChange={handleChange}/>
+                    <label htmlFor="newsletter">M'envoyer un mail lorsque YNC sort une nouvelle création.</label>
+                </div>
+
+                <div className="payment-shipping">
+                    <h1>Livraison</h1>
+                    <input type="text" name="address" placeholder="Adresse" onChange={handleChange}/>
+                    <input type="text" name="city" placeholder="Ville" onChange={handleChange}/>
+                    <input type="text" name="postal_code" placeholder="Code Postal" onChange={handleChange}/>
+                    <input type="text" name="country" placeholder="Pays" onChange={handleChange}/>
+                </div>
+
+                <div className="basket-recap"></div>
+
+                <button className="payment-button" onClick={time2Pay}>JE FINALISE MON ACHAT</button>
             </div>
-
-            <div className="payment-shipping">
-                <h1>Livraison</h1>
-                <input type="text" name="address" placeholder="Adresse" onChange={handleChange}/>
-                <input type="text" name="city" placeholder="Ville" onChange={handleChange}/>
-                <input type="text" name="postal_code" placeholder="Code Postal" onChange={handleChange}/>
-                <input type="text" name="country" placeholder="Pays" onChange={handleChange}/>
+            <div className="payment-basket">
+                <Basket basket={basket}/>
             </div>
-
-            <div className="basket-recap"></div>
-
-            <button className="payment-button" onClick={time2Pay}>JE FINALISE MON ACHAT</button>
-            <p className="payment-return">{message}</p>
-
-            {/* <Popup trigger={<button> Trigger</button>} position="right center">
-                <div>Popup content here !!</div>
-            </Popup> */}
-            {/* <PayPalScriptProvider options={paypalOptions}>
-                <PayPalButtons />
-            </PayPalScriptProvider> */}
+            {(approved !== '') && (
+                <div className="payment-message">
+                    <p>Thanks!</p>
+                </div>
+            )}
         </div>
+
     );
 } export default Payment;

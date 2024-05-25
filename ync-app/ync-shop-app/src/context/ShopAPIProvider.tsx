@@ -2,9 +2,9 @@ import { createContext } from 'react';
 import axios from 'axios';
 
 // init Context
-const APIContext = createContext();
+const ShopAPIContext = createContext();
 
-export const APIProvider = ({ children }) => {
+export const ShopAPIProvider = ({ children }) => {
     // const api_address = process.env.API_CONTACT_POINT;
     const api_address = 'http://88.174.59.203:15779';
     const config = {withCredentials: true, headers: {'Content-Type':'application/json', 'Accept':'application/json'}};
@@ -55,11 +55,11 @@ export const APIProvider = ({ children }) => {
     };
 
     return (
-        <APIContext.Provider value={{ fetchItem, fetchBasket, postBasket, fetchOrder, postOrder, captureOrder }}>
+        <ShopAPIContext.Provider value={{ fetchItem, fetchBasket, postBasket, fetchOrder, postOrder, captureOrder }}>
             {children}
-        </APIContext.Provider>
+        </ShopAPIContext.Provider>
     );
 
 };
 
-export default APIContext;
+export default ShopAPIContext;
