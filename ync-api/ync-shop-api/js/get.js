@@ -45,6 +45,7 @@ const item = async (req, res, client) => {
 }; exports.item = item;
 
 const order = (req, res, client) => {
+    // Send permanent cookie associated if different from actual
     // client.execute(utils.order.select, [req.query.id.split(','), cookie]).then((result) => { // retrieve order
     //     res.status(200).json(result.rows); // send order
     // });

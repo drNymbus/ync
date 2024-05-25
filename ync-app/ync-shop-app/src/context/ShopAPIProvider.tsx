@@ -36,6 +36,7 @@ export const ShopAPIProvider = ({ children }) => {
     const fetchOrder = async (order) => {
         try {
             const res = await axios.get(`${api_address}/store?capture=true&id=${order}`, config);
+            // If new cookie in response, goto connect route to retrieve old session token
             return res.data;
         } catch (e) { console.error(`[fetchOrder] ${e.message}`); }
     }
