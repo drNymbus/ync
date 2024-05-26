@@ -3,7 +3,6 @@ import { useState, useContext, useEffect } from "react";
 
 /* Custom context imports */
 import ShopAPIContext from "./context/ShopAPIProvider";
-import { MailAPIProvider } from "./context/MailAPIProvider";
 
 /* Custom component imports */
 import Bandeau from "./components/Bandeau";
@@ -93,7 +92,7 @@ function App() {
 
             {(state === "HOME") && <Item id="quelconque" add={addBasket} goto={basketState}/>}
             {(state === "BASKET") && <Basket basket={basket} compact={false} add={addBasket} rm={removeBasket} next={paymentState}/>}
-            {(state === "PAYMENT") && (<MailAPIProvider><Payment basket={basket}/></MailAPIProvider>)}
+            {(state === "PAYMENT") && <Payment basket={basket}/>}
         </div>
     );
 

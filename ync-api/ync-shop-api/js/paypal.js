@@ -12,7 +12,6 @@ const auth = async () => {
     });
 
     const data = await response.json();
-    // console.log("paypalToken", data);
     return data.access_token;
 };
 
@@ -25,8 +24,11 @@ const getOrder = async (order) => {
         method: "GET", headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` }
     });
 
-    const data = await res.json();
-    data.res_status = res.status;
+    let data = {status: res.status, data:res.body};
+    if (res.status == 200 || res.status == 201) {
+        data = await res.json();
+        data.res_status = res.status;
+    }
     return data;
 }; exports.getOrder = getOrder;
 
@@ -46,8 +48,11 @@ const postOrder = async (order) => {
         }, body: JSON.stringify(payload)
     });
 
-    const data = await res.json();
-    data.res_status = res.status;
+    let data = {res_status: res.status, data:res.body};
+    if (res.status == 200 || res.status == 201) {
+        data = await res.json();
+        data.res_status = res.status;
+    }
     return data;
 }; exports.postOrder = postOrder;
 
@@ -64,7 +69,10 @@ const postCapture = async (order) => {
         }
     });
 
-    const data = await res.json();
-    data.res_status = res.status;
+    let data = {res_status: res.status, data:res.body};
+    if (res.status == 200 || res.status == 201) {
+        data = await res.json();
+        data.res_status = res.status;
+    }
     return data;
 }; exports.postCapture = postCapture;

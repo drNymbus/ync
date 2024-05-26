@@ -9,7 +9,8 @@ import (
 )
 
 func getSession() *gocql.Session {
-    cluster := gocql.NewCluster(os.Getenv("CASSANDRA_CONTACT_POINTS")) // Cluster accepts multiple addresses separated by commas
+    // Cluster accepts multiple addresses separated by commas
+    cluster := gocql.NewCluster(os.Getenv("CASSANDRA_CONTACT_POINTS"))
     cluster.Authenticator = gocql.PasswordAuthenticator{
         Username: os.Getenv("CASSANDRA_USERNAME"),
         Password: os.Getenv("CASSANDRA_PASSWORD")
@@ -36,8 +37,6 @@ func getMail(mail string) {
     session := getSession()
     query := strings.Join([]string{"SELECT * FROM store.mailing WHERE id = ", mail})
     iter := session.Query(query).Iter()
-
-    return void
 }
 
 type Basket struct {

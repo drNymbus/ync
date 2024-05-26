@@ -31,13 +31,21 @@ const item = async (req, res, client) => {
 
 const order = async (req, res, client) => {
     const content = await paypal.postOrder(req.body.order);
+
     let order = {...req.body.order, cookie: req.signedCookies.ync_shop, id: uuid.random()};
     await client.execute(utils.order.insert, order, {prepare:true});
 
-    res.status(content.res_status).json(content);
+    res.status(content.res_status).json({...content, uuid: order.id});
 }; exports.order = order;
 
 const capture = async (req, res, client) => {
-    const content = await paypal.postCapture(req.body.order);
+    const content = await paypal.postCapture(req.body.order.id);
+    await client.execute(utils.order.paid, [req.signedCookies.ync_shop, req.body.order.uuid], {prepare:true})
+        .then(_ => {
+            client.execute(utils.order.select, [req.signedCookies.ync_shop, req.body.order.uuid], {prepare: true})
+                .then((result) => utils.send_confirmation_mail(result.rows[0]));
+        })
+        .catch(() => console.error('Order UUID not found'));
+
     res.status(content.res_status).json(content);
 }; exports.capture = capture;

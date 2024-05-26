@@ -2,7 +2,6 @@ import { useState, useContext } from 'react';
 import { isChrome, isFirefox, isSafari, isOpera, isIE } from 'react-device-detect';
 
 import ShopAPIContext from "../context/ShopAPIProvider";
-import MailAPIContext from "../context/MailAPIProvider";
 
 import Basket from "./Basket";
 
@@ -29,14 +28,13 @@ async function paypalPage(order, fetchOrder, captureOrder) {
         if (res.status === 'APPROVED' || res.status === 'COMPLETED') processed = true;
     }
 
-    await captureOrder(order.id);
+    await captureOrder({id: order.id, uuid: order.uuid});
     popup?.close();
     return res;
 }
 
 function Payment({ basket }) {
     const { fetchItem, fetchOrder, postOrder, captureOrder } = useContext(ShopAPIContext);
-    const { mailConfirmation } = useContext(MailAPIContext);
 
     const [order, setForm] = useState({
         first_name: '', name: '', phone: '', mail: '',
@@ -58,6 +56,7 @@ function Payment({ basket }) {
         }
 
         let res = await postOrder({...order, items: basket, price: price});
+        console.log(res);
         await paypalPage(res, fetchOrder, captureOrder).then((order) => {
             // @TODO
             // Page element to thank user;

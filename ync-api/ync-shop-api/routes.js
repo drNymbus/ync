@@ -89,6 +89,5 @@ const store_delete = async (req, res, client) => {
         console.error({'error': err});
         utils.failed_request(res, 500, {'error': 'Something went wrong...'});
     }
-
 };
 exports.store_delete = store_delete;
