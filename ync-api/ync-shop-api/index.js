@@ -13,7 +13,14 @@ const cookieParser = require('cookie-parser');
 const cassandra = require('cassandra-driver');
 
 // Utils functions
-const routes = require('./routes.js');
+const utils = require('./js/utils.js');
+const session = require('./js/session.js');
+const basket = require('./js/basket.js');
+const item = require('./js/item.js');
+const order = require('./js/order.js');
+const capture = require('./js/capture.js');
+
+// const routes = require('./routes.js');
 
 // Set up express app
 const app = express();
@@ -45,10 +52,36 @@ const client = new cassandra.Client({
 });
 
 // Routes
-app.route('/store')
-    .get((req, res) => { routes.store_get(req, res, client); })
-    .post((req, res) => { routes.store_post(req, res, client); })
-    .delete((req, res) => { routes.store_delete(req, res, client); });
+app.route('/store/connect')
+    .get((req, res) => {
+        const cookie = req.signedCookies.ync_shop;
+        if (!cookie) {
+            handleResponse(session.createSession, req, res, client, assertCookie=false);
+        } else {
+            session.retrieveSession(req, res, client, cookie);
+        }
+    });
+
+app.route('/store/basket')
+    .get((req, res) => basket.get(req, res, client))
+    .post((req, res) => basket.post(req, res, client));
+
+app.route('/store/item')
+    .get((req, res) => { item.get(req, res, client); })
+    .post((req, res) => { item.post(req, res, client); })
+    .delete((req, res) => { item.remove(req, res, client); });
+    // .get((req, res) => { routes.store_get(req, res, client); })
+    // .post((req, res) => { routes.store_post(req, res, client); })
+    // .delete((req, res) => { routes.store_delete(req, res, client); });
+
+app.route('/store/order')
+    .get((req, res) => order.get(req, res, client))
+    .post((req, res) => order.post(req, res, client))
+    .delete((req, res) => order.remove(req, res, client));
+
+app.route('/store/capture')
+    .get((req, res) => capture.get(req, res, client))
+    .post((req, res) => capture.post(req, res, client));
 
 // Start the server
 app.listen(port, () => {

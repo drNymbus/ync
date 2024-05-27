@@ -39,29 +39,17 @@ exports.failed_request = failed_request;
 const log_query = (m, req) => { console.log({method: m, cookie: req.signedCookies, url: req.url, query: req.query, body: req.body}); };
 exports.log_query = log_query;
 
-const send_confirmation_mail = async (order) => {
-    const transporter = nodemailer.createTransport({
-        host: "smtp.zoho.eu", port: 465,
-        secure: true, // Use `true` for port 465, `false` for all other ports
-        auth: {
-            user: "yng.corporation@zohomail.eu",
-            pass: "pQ1*LbzBvKApeIkN",
-        },
-    });
+const handleResponse = (obj) => {
+    try {
+        if (obj.assertCookie && !assert_cookie(obj.client, obj.req.signedCookies.ync_shop))
+            return failed_request(res, 401, {'error': 'Invalid cookie'});
 
-    // send mail with defined transport object
-    const info = await transporter.sendMail({
-        from: '"Young New Corporation" <yng.corporation@zohomail.eu>',
-        to: "alexis.lottin33@gmail.com, xxvmelanconxx@gmail.com",
-
-        subject: "Yooo",
-        text: "Viens derrière le bus mercredi après les cours." + order,
-        html: "<b>Viens derrière le bus mercredi après les cours.</b><p>" + order + "</p>"
-    });
-
-    console.log("Message sent: %s", info.messageId);
-    // Message sent: <d786aa62-4e0a-070a-47ed-0b0666549519@ethereal.email>
-}; exports.send_confirmation_mail = send_confirmation_mail;
+        call(req, res, client);
+    } catch (err) {
+        console.error({'error': err});
+        failed_request(res, 500, {'error': 'Something went wrong...'});
+    }
+}; exports.handleResponse = handleResponse;
 
 const session = {
     select: "SELECT * FROM store.session WHERE cookie = ?",

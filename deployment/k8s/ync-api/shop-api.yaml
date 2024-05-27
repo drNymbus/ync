@@ -29,6 +29,10 @@ spec:
           value: ""
         - name: PAYPAL_CLIENT_SECRET
           value: ""
+        - name: ZOHO_MAIL
+          value: ""
+        - name: ZOHO_PASSWORD
+          value: ""
 ---
 apiVersion: v1
 kind: Service
