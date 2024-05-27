@@ -10,14 +10,6 @@ export const ShopAPIProvider = ({ children }) => {
     const api_address = 'http://localhost:3001';
     const config = {withCredentials: true, headers: {'Content-Type':'application/json', 'Accept':'application/json'}};
 
-    const fetchItem = async (item) => { // Récupérer les données de l'article en fonction de id_article
-        try {
-            // await axios.get(api_address + `/store?connect=true`, config); // Init cookie
-            const res = await axios.get(`${api_address}/store/item?id=${item}`, config);
-            return res.data[0];
-        } catch (e) { console.error(`[fetchItem] ${e.message}`); }
-    };
-
     const fetchBasket = async () => { // Fonction pour récupérer le panier
         try {
             const res = await axios.get(`${api_address}/store/connect`, config);
@@ -34,6 +26,13 @@ export const ShopAPIProvider = ({ children }) => {
         } catch (e) { console.error(`[postBasket] ${e.message}`); }
     };
 
+    const fetchItem = async (item) => { // Récupérer les données de l'article en fonction de id_article
+        try {
+            const res = await axios.get(`${api_address}/store/item?id=${item}`, config);
+            return res.data[0];
+        } catch (e) { console.error(`[fetchItem] ${e.message}`); }
+    };
+
     const fetchOrder = async (order) => {
         try {
             const res = await axios.get(`${api_address}/store/capture?id=${order}`, config);
@@ -45,6 +44,7 @@ export const ShopAPIProvider = ({ children }) => {
     const postOrder = async (order) => {
         try {
             const res = await axios.post(`${api_address}/store/order`, {order}, config);
+            console.log(res.data);
             return res.data;
         } catch (e) { console.error(`[postOrder] ${e.message}`); }
     }
@@ -57,7 +57,7 @@ export const ShopAPIProvider = ({ children }) => {
     };
 
     return (
-        <ShopAPIContext.Provider value={{ fetchItem, fetchBasket, postBasket, fetchOrder, postOrder, captureOrder }}>
+        <ShopAPIContext.Provider value={{ fetchBasket, postBasket, fetchItem, fetchOrder, postOrder, captureOrder }}>
             {children}
         </ShopAPIContext.Provider>
     );

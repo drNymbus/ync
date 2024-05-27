@@ -1,13 +1,19 @@
 const utils = require('./utils.js');
 
 const get = async (req, res, client) => {
+    utils.log_query('item.get', req);
+
     const cookie = req.signedCookies.ync_shop;
     if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
     if (req.query.id === undefined) { // Retrieve all store items
-        client.execute(utils.item.select_all).then((result) => { // retrieve item
-            res.status(200).json(result.rows); // send item
+        client.execute(utils.item.select_all)
+        .then((result) => res.status(200).json(result.rows))
+        .catch((error) => {
+            console.error('item.get', error);
+            res.status(500).json({'error': 'Internal server error'});
         });
+
     } else { // Retrieve items specified in query id field
         client.execute(utils.item.select, [req.query.id.split(',')]).then((result) => { // retrieve item.s
             let data = result.rows;
@@ -23,6 +29,8 @@ const get = async (req, res, client) => {
 }; exports.get = get;
 
 const post = async (req, res, client) => {
+    utils.log_query('item.post', req);
+
     const cookie = req.signedCookies.ync_shop;
     if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
@@ -38,12 +46,17 @@ const post = async (req, res, client) => {
 }; exports.post = post;
 
 const remove = async (req, res, client) => {
+    utils.log_query('item.remove', req);
+
     const cookie = req.signedCookies.ync_shop;
     if (!utils.assert_cookie(client, cookie)) return utils.failed_request(res, 401, {'error': 'Invalid cookie'});
 
     await client.execute(utils.item.delete, [req.query.id.split(',')]); // delete item from database
-    client.execute(utils.basket.select, [req.signedCookies.ync_shop]).then(() => { // retrieve basket
-        res.status(200).json({'message': 'Item deleted'}); // send basket
-    });
+    client.execute(utils.basket.select, [req.signedCookies.ync_shop])
+        .then(() => res.status(200).json({'message': 'Item deleted'}))
+        .catch((error) => {
+            console.error('item.remove', error);
+            res.status(500).json({'error': 'Internal server error'});
+        });
 }; exports.remove = remove;
 

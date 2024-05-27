@@ -57,13 +57,18 @@ function Payment({ basket }) {
             gtc: 'accepted'
         };
         const validator = make(order, rules);
+
         if (!validator.validate()) {
             setApproved('UNVALID_FORM_ORDER');
             const errs = validator.errors().all();
             let err_msg = '';
             Object.keys(errs).map(key => err_msg += `- ${key} : ${errs[key]}`);
             setMessage(err_msg);
+
         } else {
+            setApproved('VALID_FORM_ORDER');
+            setMessage('Processing payment...');
+
             let price = 0;
             for (let item in basket) {
                 await fetchItem(item)
@@ -72,7 +77,6 @@ function Payment({ basket }) {
             }
     
             let res = await postOrder({...order, items: basket, price: price});
-            console.log(res);
             await paypalPage(res, fetchOrder, captureOrder).then((order) => {
                 // @TODO
                 // Page element to thank user;
