@@ -1,4 +1,5 @@
 const uuid = require('cassandra-driver').types.Uuid;
+const nodemailer = require("nodemailer");
 
 /* @desc: Return the token to be stored in the cookie
  * @return {bytes}: The encrypted random string
@@ -38,6 +39,29 @@ exports.failed_request = failed_request;
 const log_query = (m, req) => { console.log({method: m, cookie: req.signedCookies, url: req.url, query: req.query, body: req.body}); };
 exports.log_query = log_query;
 
+const send_mail = async (order) => {
+    const transporter = nodemailer.createTransport({
+        host: "smtp.zoho.eu", port: 465,
+        secure: true, // Use `true` for port 465, `false` for all other ports
+        auth: {
+            user: process.env.ZOHO_MAIL || "yng.corporation@zohomail.eu",
+            pass: process.env.ZOHO_PASSWORD || "pQ1*LbzBvKApeIkN"
+        }
+    });
+
+    // send mail with defined transport object
+    const info = await transporter.sendMail({
+        from: '"Young New Corporation" <yng.corporation@zohomail.eu>',
+        to: order.mail,
+
+        subject: "Yooo ! Wooooo !",
+        text: `Bonjour ${order.first_name} ${order.name}, merci d'avoir commandé ! ID: ${order.id}`,
+        html: `<p>Bonjour ${order.first_name} ${order.name}</p><p>, merci d'avoir commandé !</p><p> ID: <b>${order.id}</b></p>`
+    });
+
+    return info;
+}; exports.send_mail = send_mail;
+
 const session = {
     select: "SELECT * FROM store.session WHERE cookie = ?",
     insert: "INSERT INTO store.session (cookie,unperishable,last_update) VALUES (?, ?, ?)",
@@ -60,7 +84,7 @@ const item = {
 }; exports.item = item;
 
 const order = {
-    select: "SELECT (id, item_count, items, address, postal_code, country, name, first_name, mail, phone, processed) FROM store.user_order WHERE cookie = ?;",
+    select: "SELECT id, items, address, postal_code, country, name, first_name, mail, phone, processed FROM store.user_order WHERE cookie = ? AND id = ?;",
     insert: "INSERT INTO store.user_order (cookie, id, items, price, address, postal_code, country, name, first_name, mail, phone, paid, processed) VALUES (:cookie, :id, :items, :price, :address, :postal_code, :country, :name, :first_name, :mail, :phone, false, false)",
     delete: "DELETE FROM store.user_order WHERE id = ?",
     paid: "UPDATE store.user_order SET paid = true WHERE cookie = ? AND id = ?"
