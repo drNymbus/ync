@@ -5,9 +5,7 @@ import axios from 'axios';
 const ShopAPIContext = createContext();
 
 export const ShopAPIProvider = ({ children }) => {
-    // const api_address = process.env.API_CONTACT_POINT;
-    // const api_address = 'http://88.174.59.203:15779';
-    const api_address = 'http://localhost:3001';
+    const api_address = process.env.API_CONTACT_POINT + ':' + process.env.API_PORT;
     const config = {withCredentials: true, headers: {'Content-Type':'application/json', 'Accept':'application/json'}};
 
     const fetchBasket = async () => { // Fonction pour récupérer le panier

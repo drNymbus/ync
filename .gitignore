@@ -1,6 +1,9 @@
 .gitignore
 do_not_share.json
 
+docs/k3s-users.md
+docs/secrets.md
+
 ync-database/jobs/credentials/go.sum
 ync-database/jobs/initializer/go.sum
 
