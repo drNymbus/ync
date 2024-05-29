@@ -23,7 +23,7 @@ const assert_cookie = (client, cookie) => {
             if (result.rows.length === 0) asserted = false;
         });
     }
-
+    console.log('COOKIE ASSERTED: %s', cookie);
     return asserted;
 }; exports.assert_cookie = assert_cookie;
 
@@ -64,7 +64,7 @@ const send_mail = async (order) => {
 
 const session = {
     select: "SELECT * FROM store.session WHERE cookie = ?",
-    insert: "INSERT INTO store.session (cookie,unperishable,last_update) VALUES (?, ?, ?)",
+    insert: "INSERT INTO store.session (cookie,unperishable,last_update) VALUES (?, False, ?)",
     update: "UPDATE store.session SET last_update = ? WHERE cookie = ?",
     unperishable: "UPDATE store.session SET unperishable = true WHERE cookie = ?"
 }; exports.session = session;
