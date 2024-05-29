@@ -9,7 +9,7 @@ if [[ "$1" == "all" || "$1" == "db" ]]; then
         # Build image and register it to k3s
         docker build -t ${cmp::-1} ${cmp}
         if [ "$2" == "k3s" ]; then
-            docker save ${cmp::-1}:latest | sudo k3s ctr images import -;
+            docker save ${cmp::-1}:latest | k3s ctr images import -;
         fi
     done
     cd ..
@@ -22,7 +22,7 @@ if [[ "$1" == "all" || "$1" == "api" ]]; then
         # Build image and register it to k3s
         docker build -t ${api::-1} ${api}
         if [ "$2" == "k3s" ]; then
-            docker save ${api::-1}:latest | sudo k3s ctr images import -;
+            docker save ${api::-1}:latest | k3s ctr images import -;
         fi
     done
     cd ..
@@ -34,7 +34,7 @@ if [[ "$1" == "all" || "$1" == "app" ]]; then
     for app in `ls -d */`; do
         docker build -t ${app::-1} ${app}
         if [ "$2" == "k3s" ]; then
-            docker save ${app::-1}:latest | sudo k3s ctr images import -;
+            docker save ${app::-1}:latest | k3s ctr images import -;
         fi
     done
     cd ..
