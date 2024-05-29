@@ -35,8 +35,6 @@ spec:
           # value: "yng.corporation@gmail.com"
         - name: ZOHO_PASSWORD
           # value: "?*"
-        - name: APP_ADDRESS
-          value: "http://10.43.6.2:15778"
 ---
 apiVersion: v1
 kind: Service

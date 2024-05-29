@@ -20,8 +20,8 @@ const assert_cookie = (client, cookie) => {
         asserted = false;
     } else {
         client.execute(session.select, [cookie]).then((result) => {
+            console.log(cookie, result.rows[0].cookie);
             if (result.rows.length === 0) asserted = false;
-            else console.log('COOKIE ASSERTED: %s', cookie);
         });
     }
     return asserted;

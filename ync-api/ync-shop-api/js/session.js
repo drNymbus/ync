@@ -9,8 +9,14 @@ const createSession = async (req, res, client) => {
     await client.execute(utils.session.insert, [cookie, Date.now()]);
     client.execute(utils.basket.select, [cookie])
         .then((result) => {
+
             res.cookie('ync_shop', cookie, {
-                path: '/store', signed: true, SameSite: true, Partitionned: undefined
+                path: '/',
+                httpOnly: true,
+                secure: true,
+                expires: expires,
+                sameSite: "none",
+                domain: "localhost",
             });
             res.status(200).json(result.rows[0]);
         })
