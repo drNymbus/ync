@@ -6,7 +6,7 @@ const createSession = async (req, res, client) => {
     // No existing session: generate and sign a new cookie
     let cookie = uuid.random();
 
-    await client.execute(utils.session.insert, [cookie, false, Date.now()]);
+    await client.execute(utils.session.insert, [cookie, Date.now()]);
     client.execute(utils.basket.select, [cookie])
         .then((result) => {
             res.cookie('ync_shop', cookie, {

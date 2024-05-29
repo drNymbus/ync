@@ -17,7 +17,7 @@ spec:
       containers:
       - name: shop-app
         image: ync-shop-app:latest
-        imagePullPolicy: Always
+        imagePullPolicy: Never
         ports:
         - containerPort: 3000
         env:

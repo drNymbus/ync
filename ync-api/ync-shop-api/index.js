@@ -34,6 +34,7 @@ app.use(
     })
 );
 app.use(cors({ credentials: true, origin: true }));
+// app.use(cors({credentials:true}));
 
 // Loading secrets for signature's cookies
 const cookie_secret = process.env.COOKIE_SECRET || 'some-string-will-do-the-trick';
