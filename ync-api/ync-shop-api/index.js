@@ -33,10 +33,10 @@ app.use(
       parseList: true
     })
 );
-app.use(cors({ credentials: true, origin: true }));
+app.use(cors({ credentials: true, origin: (process.env.APP_ADDRESS || 'http://localhost:3000'), }));
 // app.use(cors({credentials:true}));
 
-// Loading secrets for signature's cookies
+  // Loading secrets for signature's cookies
 const cookie_secret = process.env.COOKIE_SECRET || 'some-string-will-do-the-trick';
 app.use(cookieParser(cookie_secret));
 
