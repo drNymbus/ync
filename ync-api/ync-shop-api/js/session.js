@@ -10,12 +10,12 @@ const createSession = async (req, res, client) => {
     client.execute(utils.basket.select, [cookie])
         .then((result) => {
             // const expires = new Date(Date.now() + 60 * 60 * 1000);
-            res.cookie('ync_shop', cookie, {signed:true, sameSite:true});
+            res.cookie('ync_shop', cookie, {signed:true, sameSite:'None', secure:true, httpOnly:true});
             res.status(200).json(result.rows[0]);
         })
         .catch((error) => {
             console.error('session.createSession', error);
-            res.status(500).json({'error': 'Internal server error'})
+            res.status(500).json({'error': 'Internal server error'});
         });
 }; exports.createSession = createSession;
 
@@ -31,6 +31,6 @@ const retrieveSession = async (req, res, client) => {
         .then((result) => res.status(200).json(result.rows[0]))
         .catch((error) => {
             console.error('session.retrieveSession', error);
-            res.status(500).json({'error': 'Internal server error'})
+            res.status(500).json({'error': 'Internal server error'});
         });
 }; exports.retrieveSession = retrieveSession;

@@ -1,4 +1,5 @@
 const express = require('express');
+const https = require('https');
 
 // Request parsers
 const { queryParser } = require('express-query-parser');
@@ -78,6 +79,11 @@ app.route('/store/capture')
     .post((req, res) => capture.post(req, res, client));
 
 // Start the server
-app.listen(port, () => {
+const privateKey  = fs.readFileSync('sslcert/key.pem', 'utf8');
+const certificate = fs.readFileSync('sslcert/cert.pem', 'utf8');
+
+const credentials = {key:privateKey, cert:certificate};
+
+https.createServer(credentials, app).listen(port, function() {
     console.log(`Server is running on port ${port}`);
 });
