@@ -33,7 +33,8 @@ app.use(
       parseList: true
     })
 );
-app.use(cors({credentials:true, origin:true}));
+
+app.use(cors({origin:true, credentials:true}));
 
 // Loading secrets for signature's cookies
 const cookie_secret = process.env.COOKIE_SECRET || 'some-string-will-do-the-trick';

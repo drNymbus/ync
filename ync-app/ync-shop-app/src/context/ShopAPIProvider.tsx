@@ -6,8 +6,8 @@ const ShopAPIContext = createContext();
 
 export const ShopAPIProvider = ({ children }) => {
     // const api_address = process.env.API_CONTACT_POINT + ':' + process.env.API_PORT;
-    // const api_address = "http://88.174.59.203:15779";
-    const api_address = 'http://localhost:3001';
+    const api_address = "http://88.174.59.203:15779";
+    // const api_address = 'http://localhost:3001';
     const config = {withCredentials: true, headers: {'Content-Type':'application/json', 'Accept':'application/json'}};
 
     const fetchBasket = async () => { // Fonction pour récupérer le panier
@@ -15,7 +15,6 @@ export const ShopAPIProvider = ({ children }) => {
             const res = await axios.get(`${api_address}/store/connect`, config);
             let basket = res.data.items;
             for (const k in basket) basket[k] = parseInt(basket[k]);
-            console.log('fBasket', res);
             return basket;
         } catch (e) { console.error('[fetchBasket]', e); }
     };
@@ -29,10 +28,10 @@ export const ShopAPIProvider = ({ children }) => {
 
     const fetchItem = async (item) => { // Récupérer les données de l'article en fonction de id_article
         try {
-            let res = await axios.get(`${api_address}/store/connect`, config);
-            console.log('fItem 1', res);
-            res = await axios.get(`${api_address}/store/item?id=${item}`, config);
-            console.log('fItem 2', res);
+            // let res = await axios.get(`${api_address}/store/connect`, config);
+            // console.log('fItem 1', res);
+            const res = await axios.get(`${api_address}/store/item?id=${item}`, config);
+            // console.log('fItem 2', res);
             return res.data[0];
         } catch (e) { console.error('[fetchItem]', e); }
     };

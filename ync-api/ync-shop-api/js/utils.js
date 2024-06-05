@@ -20,10 +20,11 @@ const assert_cookie = (client, cookie) => {
         asserted = false;
     } else {
         client.execute(session.select, [cookie]).then((result) => {
-            console.log(cookie, result.rows[0].cookie);
             if (result.rows.length === 0) asserted = false;
         });
     }
+
+    console.log("ASSERTION: ", asserted, cookie);
     return asserted;
 }; exports.assert_cookie = assert_cookie;
 
@@ -53,8 +54,7 @@ const send_mail = async (order) => {
     const info = await transporter.sendMail({
         from: '"Young New Corporation" <yng.corporation@zohomail.eu>',
         to: order.mail,
-
-        subject: "Yooo ! Wooooo !",
+        subject: "Yooo! Wooooo!",
         text: `Bonjour ${order.first_name} ${order.name}, merci d'avoir commandé ! ID: ${order.id}`,
         html: `<p>Bonjour ${order.first_name} ${order.name}</p><p>, merci d'avoir commandé !</p><p> ID: <b>${order.id}</b></p>`
     });
