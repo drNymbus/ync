@@ -9,8 +9,7 @@ const createSession = async (req, res, client) => {
     await client.execute(utils.session.insert, [cookie, Date.now()]);
     client.execute(utils.basket.select, [cookie])
         .then((result) => {
-            // const expires = new Date(Date.now() + 60 * 60 * 1000);
-            res.cookie('ync_shop', cookie, {signed:true, sameSite:'None', secure:true, httpOnly:true});
+            res.cookie('ync_shop', cookie, {signed:true, sameSite:'None', secure:true});
             res.status(200).json(result.rows[0]);
         })
         .catch((error) => {

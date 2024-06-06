@@ -12,7 +12,10 @@ ENV PORT=3000
 # If you are building your code for production
 # RUN npm ci --omit=dev
 
-COPY . .
+COPY sslcert ./sslcert
+COPY js ./js
+
+COPY index.js ./index.js
 
 EXPOSE ${PORT}/tcp
 
