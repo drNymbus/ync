@@ -95,6 +95,8 @@ In case a request cannot be completed or fails the response will update the stat
 
 ## Deployment
 
+Need to determine a way to have a "private" api (only accessible by other kube components) and a public api that could be accessed also by outer requests.
+
 # Docker
 
 You can generate an image of this API with the help of Docker:

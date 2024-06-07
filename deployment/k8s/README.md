@@ -26,4 +26,4 @@ For the APIs and Applications to be able to connect to the Cassandra cluster we 
 
 - `build.sh`: Creates all docker images needed to run the entire service. (An option can be given to register images in a k3s cluster)
 
-We will switch to Dagger and (Apache airflow)[https://github.com/apache/airflow-client-go] in Go to handle the CI/CD loop and kubernetes resources
+We will switch to [Dagger](https://dagger.io/) and [Apache airflow](https://github.com/apache/airflow-client-go) in Go to handle the CI/CD loop and kubernetes resources

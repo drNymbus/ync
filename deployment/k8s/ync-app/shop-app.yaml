@@ -22,7 +22,7 @@ spec:
         - containerPort: 3000
         env:
         - name: API_CONTACT_POINT
-          value: "http://10.43.6.1"
+          value: "10.43.6.1"
         - name: API_PORT
           value: "15779"
 ---

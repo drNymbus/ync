@@ -1,11 +1,14 @@
 import { createContext } from 'react';
+import env from "react-dotenv";
 import axios from 'axios';
 
 // init Context
 const ShopAPIContext = createContext();
 
 export const ShopAPIProvider = ({ children }) => {
-    const api_address = `http://${process.env.API_CONTACT_POINT}:${process.env.API_PORT}`;
+    const ip = env.API_CONTACT_POINT;
+    const port = env.API_PORT;
+    const api_address = `http://${ip}:${port}`;
     // const api_address = "https://82.67.90.121:15779";
     // const api_address = "https://localhost:3001";
     const config = {withCredentials: true, headers: {'Content-Type':'application/json', 'Accept':'application/json'}};
