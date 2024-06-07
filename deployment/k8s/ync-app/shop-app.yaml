@@ -21,9 +21,9 @@ spec:
         ports:
         - containerPort: 3000
         env:
-        - name: API_CONTACT_POINT
+        - name: REACT_APP_API_CONTACT_POINT
           value: "10.43.6.1"
-        - name: API_PORT
+        - name: REACT_APP_API_PORT
           value: "15779"
 ---
 apiVersion: v1
