@@ -8,79 +8,38 @@ function job_status_check() {
     done
 }
 
+
 # @desc: Create resources to run the service, database, apis and apps can be ran separately
 if [ "$1" == "start" ]; then
-
-    # @desc: Create PersistentVolume and StatefulSet to run the database service
-    if [ "$2" == "database" ]; then
-        kubectl apply -f ync-database/storage.yaml
-        kubectl apply -f ync-database/database.yaml
-        sleep 90 # Sleep until database is fully initialized and operational
-
-        kubectl apply -f ync-database/job/admin.yaml
-        sleep 10
-        kubectl apply -f ync-database/job/keyspace.yaml
-
-    # @desc: Create all apis
-    elif [ "$2" == "api" ]; then
-        for component in `ls ync-api/*.yaml`; do kubectl apply -f ${component}; done
-
-    # @desc: Create all apps
-    elif [ "$2" == "app" ]; then
-        for component in `ls ync-app/*.yaml`; do kubectl apply -f ${component}; done
-
-    # @desc: If no argument is provided, create all resources: database, apis and apps (in this particular order)
-    else
-        kubectl apply -f ync-database/storage.yaml
-        kubectl apply -f ync-database/database.yaml
-        sleep 90 # Sleep until database is fully initialized and operational
-
-        kubectl apply -f ync-database/job/admin.yaml
-        sleep 10
-        kubectl apply -f ync-database/job/keyspace.yaml
-
-        for component in `ls ync-api/*.yaml`; do kubectl apply -f ${component}; done
-        for component in `ls ync-app/*.yaml`; do kubectl apply -f ${component}; done
-    fi
-
-# @desc: Launch Cassandra's StatefulSet then all apis and apps
-elif [ "$1" == "resume" ]; then
+    # Generate keys/secrets for apis and apps to run properly
+    kubectl apply -f ync-database/storage.yaml
     kubectl apply -f ync-database/database.yaml
+
+    kubectl apply -f inspector.yaml
+
+    kubectl apply -f ync-database/job/admin.yaml
+    kubectl apply -f ync-database/job/keyspace.yaml
+
     for component in `ls ync-api/*.yaml`; do kubectl apply -f ${component}; done
     for component in `ls ync-app/*.yaml`; do kubectl apply -f ${component}; done
-
-# @desc: Delete all resources except for the PersistentVolume storage
-elif [ "$1" == "stop" ]; then
-    for component in `ls ync-app/*.yaml`; do kubectl delete -f ${component}; done
-    for component in `ls ync-api/*.yaml`; do kubectl delete -f ${component}; done
-    kubectl delete -f ync-database/database.yaml
 
 # @desc: Delete all resources
 elif [ "$1" == "delete" ]; then
     for component in `ls ync-app/*.yaml`; do kubectl delete -f ${component}; done
     for component in `ls ync-api/*.yaml`; do kubectl delete -f ${component}; done
+
     kubectl delete -f ync-database/job/keyspace.yaml
     kubectl delete -f ync-database/job/admin.yaml
+
     kubectl delete -f ync-database/database.yaml
 
-    kubectl apply -f ync-database/inspector.yaml
-    sleep 5
-    kubectl exec -it pvc-inspector -- rm -r /pvc/*
-    kubectl delete -f ync-database/inspector.yaml
+    kubectl exec -it inspector -- rm -r /pvc/*
+    kubectl delete -f inspector.yaml
 
     kubectl delete -f ync-database/storage.yaml
+    # Delete all keys/secrets
 
 elif [ "$1" == "status" ]; then
     kubectl get all
-
-elif [ "$1" == "inspect" ]; then
-
-    if [ "$2" == "storage" ]; then
-        kubectl apply -f ync-database/inspector.yaml
-        kubectl exec -it pvc-inspector -- sh
-
-    elif [ "$2" == "database" ]; then
-        kubectl exec -it cassandra-0 -- /bin/bash
-    fi
 
 fi

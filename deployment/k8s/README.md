@@ -25,3 +25,5 @@ For the APIs and Applications to be able to connect to the Cassandra cluster we 
 - `service.sh`: Every comand needed to start, stop, update, scale and delete the entire service.
 
 - `build.sh`: Creates all docker images needed to run the entire service. (An option can be given to register images in a k3s cluster)
+
+We will switch to Dagger and (Apache airflow)[https://github.com/apache/airflow-client-go] in Go to handle the CI/CD loop and kubernetes resources
