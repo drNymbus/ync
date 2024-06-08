@@ -21,10 +21,16 @@ spec:
         ports:
         - containerPort: 3000
         env:
-        - name: REACT_APP_API_CONTACT_POINT
+        - name: API_CONTACT_POINTS
           value: "10.43.6.1"
-        - name: REACT_APP_API_PORT
+        - name: API_PORT
           value: "15779"
+        args:
+        - /bin/sh
+        - "-c"
+        - "echo 'REACT_APP_API_CONTACT_POINTS=$API_CONTACT_POINTS' > .env"
+        - "echo 'REACT_APP_API_PORT=$PORT' > .env"
+        - "npm run serve"
 ---
 apiVersion: v1
 kind: Service

@@ -8,12 +8,10 @@ COPY tsconfig.json ./
 COPY src ./src
 COPY public ./public
 
-ARG REACT_APP_API_CONTACT_POINT
-ENV REACT_APP_API_CONTACT_POINT=${REACT_APP_API_CONTACT_POINT}
-ARG REACT_APP_API_PORT
-ENV REACT_APP_API_PORT=${REACT_APP_API_PORT}
+ENV API_CONTACT_POINTS='127.0.0.1'
+ENV API_PORT=3001
 
-EXPOSE ${PORT}/tcp
+EXPOSE ${API_PORT}/tcp
 
 RUN npm install
 # If you are building your code for production in CI/CD
@@ -22,5 +20,3 @@ RUN npm install
 RUN npm run build
 
 RUN npm install -g serve
-
-ENTRYPOINT ["npm", "run", "serve"]
