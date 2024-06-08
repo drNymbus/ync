@@ -5,8 +5,9 @@ A basic shop application: item listing, basket display and pricing, payment page
 The project is organized with an orchestrator handling main variables and using different components to render the web page.
 The public folder contains all 
 
-# src
+## set-env.sh
 
+This bash files allows to create an .env file for the client side to get the "correct" variables in a kubernetes context.
 
 ## src/index.tsx && src/App.tsx
 

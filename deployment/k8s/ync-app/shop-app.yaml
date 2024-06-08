@@ -25,12 +25,7 @@ spec:
           value: "10.43.6.1"
         - name: API_PORT
           value: "15779"
-        args:
-        - /bin/sh
-        - "-c"
-        - "echo 'REACT_APP_API_CONTACT_POINTS=$API_CONTACT_POINTS' > .env"
-        - "echo 'REACT_APP_API_PORT=$PORT' > .env"
-        - "npm run serve"
+        command: ["./set-env.sh && npm run serve"]
 ---
 apiVersion: v1
 kind: Service
