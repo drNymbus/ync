@@ -18,12 +18,15 @@ function BasketItem({ basket, id, compact, add, rm }) {
 
     return (
         <div className="basket-row">
-            <img className="basket-image" src={(!item) ? "" : item.image}/>
-            <p>{(!item) ? "?" : item.basket_description}</p>
+            <h3>{(!item) ? "?" : item.display_name}</h3>
+            {!compact && <>
+                <img className="basket-image" src={(!item) ? "" : item.image}/>
+                <p>{(!item) ? "?" : item.basket_description}</p>
+            </>}
 
             <div className="basket-icon">
-                {(basket[id] < 5 && !compact) ?
-                    ([...Array(basket[id])].map((_,i) => <img key={i} className="basket-icon" src="assets/home_icon.svg"/>))
+                {(basket[id] < 5 && !compact)
+                    ? ([...Array(basket[id])].map((_,i) => <img key={i} className="basket-icon" src="assets/home_icon.svg"/>))
                     : (<><img className="basket-icon" src="assets/home_icon.svg"/><p>x{basket[id]}</p></>)
                 }
             </div>

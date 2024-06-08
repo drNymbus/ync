@@ -5,13 +5,14 @@ A basic shop application: item listing, basket display and pricing, payment page
 The project is organized with an orchestrator handling main variables and using different components to render the web page.
 The public folder contains all 
 
-## set-env.sh
+## start.sh
 
-This bash files allows to create an .env file for the client side to get the "correct" variables in a kubernetes context.
+This is the container entrypoint, this allows for more flexibility when setting up the environment variables using different deployment tools.
+This bash files creates the '.env' file then builds the static react app to be served.
 
 ## src/index.tsx && src/App.tsx
 
-index.tsx loads all environment variables. App.tsx is the orchestrator
+index.tsx sets up the context and webvitals. App.tsx is the orchestrator.
 
 ## src/context
 
@@ -21,7 +22,7 @@ index.tsx loads all environment variables. App.tsx is the orchestrator
 
 - __Bandeau.tsx__ : Top menu with buttons
 - __Basket.tsx__ : User's basket display, can be configured to be displayed in a compacted format
-- __Item.tsx__ : Item display
+- __Item.tsx__ : Allows for one or multiple items to be displayed.
 - __Payment.tsx__ : Payment page, form for user's contact and shipping address information and basket description
-- __Section.tsx__ : Page title
-- __SplashPage.tsx__ : Loading page, run something before displaying a content given
+- __Section.tsx__ : Title page
+- __SplashPage.tsx__ : Loading page, runs a routine before displaying any element given
