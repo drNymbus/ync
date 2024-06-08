@@ -14,7 +14,7 @@ The job folder contains every different jobs ran against the StatefulSet, those 
 
 ## ync-api & ync-app
 
-Each yaml file should contain a Deployment resource to run the API/App with the service associated so that other resources can reach the API/App.
+Each yaml file should contain a Deployment resource to run the API/App with the service associated so that other resources can reach the API/App. sTo deploy an internal service use ClusterIP.
 
 Weird thing about ync-app/shop-app the service needs to be aware of the external router IP to run properly; is there a better way of doing this env var stuff ? Is it possible to automatize ? It also seems the only way to properly serve the client side with the correct address.
 

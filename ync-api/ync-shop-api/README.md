@@ -2,6 +2,8 @@
 
 This application uses Express and CassandraDB to manage a simple shopping cart system. Not only the user's cart can be managed from this API, but also items present in the shop and commands passed by users.
 
+Each action requires the user to be authenticated via a signed HTTP cookie. The system generates and updates these cookies as needed (through the 'connect' route under the method GET) to track session and cart information securely. For a smoother user's experience across all browsers we should use HTTPS, by creating a certificate then validate it (see Let's encrypt for a free certficate validation). This also implies the API to regularly check if the certificate is still valid and generate/re-evaluating in case it is revoked.
+
 ## Exposed Routes and Methods
 
 ### /store
@@ -84,8 +86,6 @@ This application uses Express and CassandraDB to manage a simple shopping cart s
 - **DELETE `/store/item?id=<item_id>`**: Removes an item from the table then returns the status of the query: 200 if successful, 500 otherwise.
 
 - **DELETE `/store/order?id=<item_id>`**: Removes a command from the table then returns the status of the query: 200 if successful, 500 otherwise.
-
-Each action requires the user to be authenticated via a signed cookie. The system generates and updates these cookies as needed (through the 'connect' route under the method GET) to track session and cart information securely.
 
 In case a request cannot be completed or fails the response will update the status accordingly to the error type and contain an error message under a json format:
 
