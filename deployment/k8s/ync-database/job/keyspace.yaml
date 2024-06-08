@@ -9,7 +9,7 @@ spec:
       - name: ync-init-keyspace
         image: ync-job:latest
         imagePullPolicy: Never
-        args: ["keyspace", "all"]
+        args: ["keyspace", "store"]
         env:
         - name: CASSANDRA_CONTACT_POINTS
           value: "10.43.6.0"

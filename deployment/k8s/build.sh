@@ -1,47 +1,37 @@
 #!/usr/bin/bash
 
-cd ../..
+if [[ "$1" == "all" || "$1" == "db" ]]; then
+    # Build Database images
+    for cmp in ../../ync-database/*/; do
+        echo "${cmp}" $(basename ${cmp})
+        # Build image and register it to k3s
+        docker build -t $(basename ${cmp}) "${cmp}/."
+        if [ "$2" == "k3s" ]; then
+            docker save $(basename ${cmp}):latest | k3s ctr images import -;
+        fi
+    done
+fi
 
-# Build Database images
-cd ync-database
-for cmp in `ls -d */`; do
-    echo "Building ${cmp::-1}..."
+if [[ "$1" == "all" || "$1" == "api" ]]; then
+    # Build API images
+    for api in ../../ync-api/*/; do
+        echo "${api}" $(basename ${api})
+        # Build image and register it to k3s
+        docker build -t $(basename ${api}) "${api}/."
+        if [ "$2" == "k3s" ]; then
+            docker save $(basename ${api}):latest | k3s ctr images import -;
+        fi
+    done
+fi
 
-    # Build image and register it to k3s
-    docker build -t ${cmp::-1} ${cmp}
-    if [ "$1" == "k3s" ]; then
-        docker save ${cmp::-1}:latest | sudo k3s ctr images import -;
-    fi
-
-    echo "Successfully built: ${cmp::-1}.\n"
-done
-cd ..
-
-# Build API images
-cd ync-api
-for api in `ls -d */`; do
-    echo "Building ${api::-1}..."
-
-    # Build image and register it to k3s
-    docker build -t ${api::-1} ${api}
-    if [ "$1" == "k3s" ]; then
-        docker save ${api::-1}:latest | sudo k3s ctr images import -;
-    fi
-
-    echo "Successfully built: ${api::-1}.\n"
-done
-cd ..
-
-# Build Application images
-cd ync-app
-for app in `ls -d */`; do
-    echo "Building ${app::-1}..."
-
-    docker build -t ${app::-1} ${app}
-    if [ "$1" == "k3s" ]; then
-        docker save ${api::-1}:latest | sudo k3s ctr images import -;
-    fi
-
-    echo "Successfully built: ${app::-1}.\n"
-done
-cd ..
+if [[ "$1" == "all" || "$1" == "app" ]]; then
+    # Build Application images
+    for app in ../../ync-app/*/; do
+        echo "${app}" $(basename ${app})
+        # Build image and register it to k3s
+        docker build -t $(basename ${app}) "${app}/."
+        if [ "$2" == "k3s" ]; then
+            docker save $(basename ${app}):latest | k3s ctr images import -;
+        fi
+    done
+fi

@@ -25,6 +25,16 @@ spec:
           value: "10.43.6.0"
         - name: PORT
           value: "3001"
+        - name: COOKIE_SECRET
+          value: "some-string-will-do-the-trick"
+        - name: PAYPAL_CLIENT_ID
+          # value: "?sandbox credentials"
+        - name: PAYPAL_CLIENT_SECRET
+          # value: "?sandbox credentials"
+        - name: ZOHO_MAIL
+          # value: "yng.corporation@gmail.com"
+        - name: ZOHO_PASSWORD
+          # value: "?*"
 ---
 apiVersion: v1
 kind: Service

@@ -1,4 +1,7 @@
+// const http = require('http');
+const https = require('https');
 const express = require('express');
+const fs = require('fs');
 
 // Request parsers
 const { queryParser } = require('express-query-parser');
@@ -6,14 +9,17 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 // Cookie parsers
-const fs = require('fs');
 const cookieParser = require('cookie-parser');
 
 // Database driver
 const cassandra = require('cassandra-driver');
 
-// Utils functions
-const routes = require('./js/routes.js');
+// Route's functions
+const session = require('./js/session.js');
+const basket = require('./js/basket.js');
+const item = require('./js/item.js');
+const order = require('./js/order.js');
+const capture = require('./js/capture.js');
 
 // Set up express app
 const app = express();
@@ -30,11 +36,12 @@ app.use(
       parseList: true
     })
 );
-app.use(cors({ credentials: true, origin: true }));
+
+app.use(cors({origin:true, credentials:true}));
 
 // Loading secrets for signature's cookies
-const secrets = JSON.parse(fs.readFileSync('./do_not_share.json', 'utf8')); // Retrieve secrets
-app.use(cookieParser(secrets.cookie)); // Hand over the secret string for signed cookies
+const cookie_secret = process.env.COOKIE_SECRET || 'some-string-will-do-the-trick';
+app.use(cookieParser(cookie_secret));
 
 // Connect to CassandraDB
 const client = new cassandra.Client({
@@ -45,15 +52,42 @@ const client = new cassandra.Client({
 });
 
 // Routes
-app.route('/store')
-    .get((req, res) => { routes.store_get(req, res, client); })
-    .post((req, res) => { routes.store_post(req, res, client); })
-    .delete((req, res) => { routes.store_delete(req, res, client); });
+app.route('/store/connect').get((req, res) => {
+    const cookie = req.signedCookies.ync_shop;
+    if (!cookie) {
+        session.createSession(req, res, client);
+    } else {
+        session.retrieveSession(req, res, client, cookie);
+    }
+});
 
-app.route('/store/:order/capture')
-    .post((req, res) => { routes.store_capture(req, res, client); })
+app.route('/store/basket')
+    .get((req, res) => basket.get(req, res, client))
+    .post((req, res) => basket.post(req, res, client));
+
+app.route('/store/item')
+    .get((req, res) => { item.get(req, res, client); })
+    .post((req, res) => { item.post(req, res, client); })
+    .delete((req, res) => { item.remove(req, res, client); });
+
+app.route('/store/order')
+    .get((req, res) => order.get(req, res, client))
+    .post((req, res) => order.post(req, res, client))
+    .delete((req, res) => order.remove(req, res, client));
+
+app.route('/store/capture')
+    .get((req, res) => capture.get(req, res, client))
+    .post((req, res) => capture.post(req, res, client));
 
 // Start the server
+// const credentials = {
+//     key : fs.readFileSync('sslcert/key.pem', 'utf8'),
+//     cert : fs.readFileSync('sslcert/cert.pem', 'utf8')
+// };
+
+// https.createServer(credentials, app).listen(port, () => {
+//     console.log(`Server is running on port ${port}`);
+// });
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

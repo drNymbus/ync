@@ -4,7 +4,7 @@ CREATE KEYSPACE IF NOT EXISTS store WITH replication = {'class': 'SimpleStrategy
 -- @desc: Session record
 DROP TABLE IF EXISTS store.session;
 CREATE TABLE IF NOT EXISTS store.session (
-    cookie_id UUID PRIMARY KEY,
+    cookie UUID PRIMARY KEY,
     unperishable boolean,
     last_update timestamp
 );
@@ -12,15 +12,15 @@ CREATE TABLE IF NOT EXISTS store.session (
 -- @desc: Basket associated to session
 DROP TABLE IF EXISTS store.basket;
 CREATE TABLE IF NOT EXISTS store.basket (
-    cookie_id UUID PRIMARY KEY,
+    cookie UUID PRIMARY KEY,
     items map<text, bigint>
 );
 
 -- @desc: Command associated to session
-DROP TABLE IF EXISTS store.order;
-CREATE TABLE IF NOT EXISTS store.order (
-    cookie_id UUID,
-    command_id text,
+DROP TABLE IF EXISTS store.user_order;
+CREATE TABLE IF NOT EXISTS store.user_order (
+    cookie UUID,
+    id UUID,
     items map<text, bigint>,
     price bigint,
     address text,
@@ -32,17 +32,28 @@ CREATE TABLE IF NOT EXISTS store.order (
     phone text,
     paid boolean,
     processed boolean,
-    PRIMARY KEY (cookie_id, command_id)
+    PRIMARY KEY (cookie, id)
 );
 
 -- @desc: Item
 DROP TABLE IF EXISTS store.item;
-CREATE TABLE IF NOT EXISTS store.item(
-    item_id text PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS store.item (
+    id text PRIMARY KEY,
     category text,
     image blob,
     display_name text,
     description text,
     basket_description text,
     price decimal
+);
+
+DROP TABLE IF EXISTS store.mailing;
+CREATE TABLE IF NOT EXISTS store.mailing (
+    mail text PRIMARY KEY,
+    phone text,
+    name text,
+    first_name text,
+    address text,
+    postal_code text,
+    country text
 );
