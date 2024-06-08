@@ -1,70 +1,33 @@
-# Getting Started with Create React App
+# Shop Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A basic shop application: item listing, basket display and pricing, payment page and thank you page.
 
-## Available Scripts
+The project is organized with an orchestrator handling main variables and using different components to render the web page.
+The public folder contains all 
 
-In the project directory, you can run:
+## src/index.tsx && src/App.tsx
 
-### `npm start`
+index.tsx sets up the context and webvitals. App.tsx is the orchestrator.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## src/context
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- __ShopAPIProvider__ : context to communicate with store api.
 
-### `npm test`
+## src/components
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- __Bandeau.tsx__ : Top menu with buttons
+- __Basket.tsx__ : User's basket display, can be configured to be displayed in a compacted format
+- __Item.tsx__ : Allows for one or multiple items to be displayed.
+- __Payment.tsx__ : Payment page, form for user's contact and shipping address information and basket description
+- __Section.tsx__ : Title page
+- __SplashPage.tsx__ : Loading page, runs a routine before displaying any element given
 
-### `npm run build`
+# Deployment
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+To deploy this app you need to build it first so that the server can service a static version of the application. Deployment has been eased up thanks to a Dockerfile that build the react application and creating the environment variables. For a container to run properly, the api url and port should be set and the container should be exposed at 3000.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Creating the environment variables at runtime has brought us a lot of problems. Multiple implementations are available:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Modify env variables with the Dockerfile: does not work in a kubernetes deployment since the environment variables will not be part of the container.
+- env-config.js: Basically a kube configMap, env file would be loaded after building the app and then used to set REACT_APP env variables.
+- Custom entrypoint bash file: this option allows to build the app at container runtime and then to capture env variables given to kubernetes, this is also the easiest solution for all deployment size.

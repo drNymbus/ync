@@ -1,4 +1,7 @@
+// const http = require('http');
+const https = require('https');
 const express = require('express');
+const fs = require('fs');
 
 // Request parsers
 const { queryParser } = require('express-query-parser');
@@ -33,7 +36,8 @@ app.use(
       parseList: true
     })
 );
-app.use(cors({ credentials: true, origin: true }));
+
+app.use(cors({origin:true, credentials:true}));
 
 // Loading secrets for signature's cookies
 const cookie_secret = process.env.COOKIE_SECRET || 'some-string-will-do-the-trick';
@@ -48,15 +52,14 @@ const client = new cassandra.Client({
 });
 
 // Routes
-app.route('/store/connect')
-    .get((req, res) => {
-        const cookie = req.signedCookies.ync_shop;
-        if (!cookie) {
-            session.createSession(req, res, client);
-        } else {
-            session.retrieveSession(req, res, client, cookie);
-        }
-    });
+app.route('/store/connect').get((req, res) => {
+    const cookie = req.signedCookies.ync_shop;
+    if (!cookie) {
+        session.createSession(req, res, client);
+    } else {
+        session.retrieveSession(req, res, client, cookie);
+    }
+});
 
 app.route('/store/basket')
     .get((req, res) => basket.get(req, res, client))
@@ -77,6 +80,14 @@ app.route('/store/capture')
     .post((req, res) => capture.post(req, res, client));
 
 // Start the server
+// const credentials = {
+//     key : fs.readFileSync('sslcert/key.pem', 'utf8'),
+//     cert : fs.readFileSync('sslcert/cert.pem', 'utf8')
+// };
+
+// https.createServer(credentials, app).listen(port, () => {
+//     console.log(`Server is running on port ${port}`);
+// });
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

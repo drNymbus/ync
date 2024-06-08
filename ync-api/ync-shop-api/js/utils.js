@@ -24,6 +24,7 @@ const assert_cookie = (client, cookie) => {
         });
     }
 
+    console.log("ASSERTION: ", asserted, cookie);
     return asserted;
 }; exports.assert_cookie = assert_cookie;
 
@@ -53,8 +54,7 @@ const send_mail = async (order) => {
     const info = await transporter.sendMail({
         from: '"Young New Corporation" <yng.corporation@zohomail.eu>',
         to: order.mail,
-
-        subject: "Yooo ! Wooooo !",
+        subject: "Yooo! Wooooo!",
         text: `Bonjour ${order.first_name} ${order.name}, merci d'avoir commandé ! ID: ${order.id}`,
         html: `<p>Bonjour ${order.first_name} ${order.name}</p><p>, merci d'avoir commandé !</p><p> ID: <b>${order.id}</b></p>`
     });
@@ -64,7 +64,7 @@ const send_mail = async (order) => {
 
 const session = {
     select: "SELECT * FROM store.session WHERE cookie = ?",
-    insert: "INSERT INTO store.session (cookie,unperishable,last_update) VALUES (?, ?, ?)",
+    insert: "INSERT INTO store.session (cookie,unperishable,last_update) VALUES (?, False, ?)",
     update: "UPDATE store.session SET last_update = ? WHERE cookie = ?",
     unperishable: "UPDATE store.session SET unperishable = true WHERE cookie = ?"
 }; exports.session = session;

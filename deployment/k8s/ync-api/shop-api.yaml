@@ -17,7 +17,7 @@ spec:
       containers:
       - name: shop-api
         image: ync-shop-api:latest
-        imagePullPolicy: Always
+        imagePullPolicy: Never
         ports:
         - containerPort: 3001
         env:
@@ -25,14 +25,16 @@ spec:
           value: "10.43.6.0"
         - name: PORT
           value: "3001"
+        - name: COOKIE_SECRET
+          value: "some-string-will-do-the-trick"
         - name: PAYPAL_CLIENT_ID
-          value: ""
+          # value: "?sandbox credentials"
         - name: PAYPAL_CLIENT_SECRET
-          value: ""
+          # value: "?sandbox credentials"
         - name: ZOHO_MAIL
-          value: ""
+          # value: "yng.corporation@gmail.com"
         - name: ZOHO_PASSWORD
-          value: ""
+          # value: "?*"
 ---
 apiVersion: v1
 kind: Service

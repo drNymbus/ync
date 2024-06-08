@@ -14,7 +14,9 @@ The job folder contains every different jobs ran against the StatefulSet, those 
 
 ## ync-api & ync-app
 
-Each yaml file should contain a Deployment resource to run the API/App with the service associated so that other resources can reach the API/App.
+Each yaml file should contain a Deployment resource to run the API/App with the service associated so that other resources can reach the API/App. sTo deploy an internal service use ClusterIP.
+
+Weird thing about ync-app/shop-app the service needs to be aware of the external router IP to run properly; is there a better way of doing this env var stuff ? Is it possible to automatize ? It also seems the only way to properly serve the client side with the correct address.
 
 # Credentials
 
@@ -25,3 +27,5 @@ For the APIs and Applications to be able to connect to the Cassandra cluster we 
 - `service.sh`: Every comand needed to start, stop, update, scale and delete the entire service.
 
 - `build.sh`: Creates all docker images needed to run the entire service. (An option can be given to register images in a k3s cluster)
+
+We will switch to [Dagger](https://dagger.io/) and [Apache airflow](https://github.com/apache/airflow-client-go) in Go to handle the CI/CD loop and kubernetes resources

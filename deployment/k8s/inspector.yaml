@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: pvc-inspector
+  name: inspector
 spec:
   containers:
   - image: busybox
-    name: pvc-inspector
+    name: inspector
     command: ["tail"]
     args: ["-f", "/dev/null"]
     volumeMounts:
