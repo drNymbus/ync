@@ -26,27 +26,47 @@ spec:
         - name: PORT
           value: "3001"
         - name: COOKIE_SECRET
-          value: "some-string-will-do-the-trick"
+          valueFrom:
+            secretKeyRef:
+              name: all-secrets
+              key: SHOP_API_COOKIE_SECRET
+          # value: "some-string-will-do-the-trick"
         - name: PAYPAL_CLIENT_ID
-          # value: "?sandbox credentials"
+          valueFrom:
+            secretKeyRef:
+              name: all-secrets
+              key: SHOP_API_PAYPAL_CLIENT_ID
+        # value: "?sandbox credentials"
         - name: PAYPAL_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: all-secrets
+              key: SHOP_API_PAYPAL_CLIENT_SECRET
           # value: "?sandbox credentials"
         - name: ZOHO_MAIL
+          valueFrom:
+            secretKeyRef:
+              name: all-secrets
+              key: SHOP_API_ZOHO_MAIL
           # value: "yng.corporation@gmail.com"
         - name: ZOHO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: all-secrets
+              key: SHOP_API_ZOHO_PASSWORD
           # value: "?*"
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: shop-api
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     - protocol: TCP
       port: 3001
       targetPort: 3001
-      nodePort: 15779
   clusterIP: 10.43.6.1
   selector:
     app: shop-api
