@@ -31,6 +31,8 @@ spec:
               name: all-secrets
               key: SHOP_API_COOKIE_SECRET
           # value: "some-string-will-do-the-trick"
+        - name: PAYPAL_ENDPOINT
+          value: "https://api-m.paypal.com"
         - name: PAYPAL_CLIENT_ID
           valueFrom:
             secretKeyRef:
