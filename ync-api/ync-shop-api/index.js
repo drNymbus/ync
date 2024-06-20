@@ -40,12 +40,12 @@ app.use(
 app.use(cors({origin:true, credentials:true}));
 
 // Loading secrets for signature's cookies
-const cookie_secret = process.env.COOKIE_SECRET || 'some-string-will-do-the-trick';
+const cookie_secret = process.env.COOKIE_SECRET;
 app.use(cookieParser(cookie_secret));
 
 // Connect to CassandraDB
 const client = new cassandra.Client({
-    contactPoints: [process.env.CASSANDRA_CONTACT_POINTS || '127.0.0.1'],
+    contactPoints: [process.env.CASSANDRA_CONTACT_POINTS],
     localDataCenter: 'datacenter1',
     keyspace: 'store',
     credentials: { username: 'shop_api', password: 'shopapi' }

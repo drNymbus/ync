@@ -1,8 +1,8 @@
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 const PAYPAL_ENDPOINT = process.env.PAYPAL_ENDPOINT || "https://api-m.sandbox.paypal.com";
-const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID || "AbJEuHlreYGdf5pC3ZoSRC6JfKS1KvOB4wir-Nb38srSNJrPlex1IOPe4YOLukiHplsIW0vlwXdLih8_";
-const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET || "EENOKNWI9ypsTYljgc7di_ifAhBHjyHobGo_rNtWm-U0fy9FJf0T4yFQUkK4dNRJDW1GS1KkeT9k_Fvh";
+const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
+const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET;
 
 const auth = async () => {
     const auth = Buffer.from(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`).toString("base64");

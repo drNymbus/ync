@@ -45,8 +45,8 @@ const send_mail = async (order) => {
         host: "smtp.zoho.eu", port: 465,
         secure: true, // Use `true` for port 465, `false` for all other ports
         auth: {
-            user: process.env.ZOHO_MAIL || "yng.corporation@zohomail.eu",
-            pass: process.env.ZOHO_PASSWORD || "pQ1*LbzBvKApeIkN"
+            user: process.env.ZOHO_MAIL,
+            pass: process.env.ZOHO_PASSWORD
         }
     });
 
