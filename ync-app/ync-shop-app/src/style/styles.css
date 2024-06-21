@@ -93,7 +93,7 @@ body {
     display: flex;
     height: 50vh; /*Prends 50% de la hauteur du viewport*/
     margin-top: 50px; /*Centre l'image au centre de la page*/
-    margin-left: 35%; /*Centre l'image au centre de la page*/
+    margin-left: 40vw; /*Centre l'image au centre de la page*/
 }
 
     .item-image {

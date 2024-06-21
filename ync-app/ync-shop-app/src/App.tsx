@@ -103,7 +103,8 @@ function App() {
     );
 
     return ( // HTML website rendering
-        <Logo content={content} />
+        // <Logo content={content} />
+        content
     );
 
 } export default App;
