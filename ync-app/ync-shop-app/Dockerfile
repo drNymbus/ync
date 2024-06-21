@@ -1,19 +1,14 @@
-FROM node:16
+FROM node:22.2
 
 WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package*.json ./
-RUN npm install
+COPY tsconfig.json ./
+COPY src ./src
+COPY public ./public
 
-ENV API_CONTACT_POINT='127.0.0.1'
-ENV PORT=3000
+COPY start.sh ./start.sh
+RUN chmod +x start.sh
 
-# If you are building your code for production
-# RUN npm ci --omit=dev
-
-COPY . .
-
-EXPOSE ${PORT}/tcp
-
-ENTRYPOINT ["npm", "start"]
+ENTRYPOINT ["./start.sh"]

@@ -1,0 +1,4 @@
+Thank for your order !!!
+
+You can track your order here: {{url}}
+Order id: {{id}}

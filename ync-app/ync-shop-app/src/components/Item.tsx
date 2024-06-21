@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState } from "react";
-import APIContext from "../context/APIProvider";
+import APIContext from "../context/ShopAPIProvider";
 
 /* @desc: This component is used to display all informations about an item in store
  * @param id: the item identifier, used to retrieve item's data
@@ -13,8 +13,8 @@ function Item({ id, add, goto }) {
 
     useEffect(() => { // Fetch all item's data
         fetchItem(id)
-            .then((data) => { setItem(data); })
-            .catch((err) => { console.error(err); });
+            .then(data => setItem(data))
+            .catch(e => console.error(`[Item;useEffect] ${e.message}`));
     }, []);
 
     const img = ( // HTML image rendering

@@ -1,4 +1,9 @@
 .gitignore
+do_not_share.json
+
+docs/k3s-users.md
+docs/secrets.md
+docs/cookies.md
 
 ync-database/jobs/credentials/go.sum
 ync-database/jobs/initializer/go.sum
@@ -6,8 +11,9 @@ ync-database/jobs/initializer/go.sum
 ync-api/ync-shop-api/.dockerignore
 ync-api/ync-shop-api/package-lock.json
 ync-api/ync-shop-api/node_modules/*
-ync-api/ync-shop-api/do_not_share.json
+ync-api/ync-shop-api/sslcert/*
 
 ync-app/ync-shop-app/.dockerignore
 ync-app/ync-shop-app/package-lock.json
 ync-app/ync-shop-app/node_modules/*
+ync-app/ync-shop-app/build/*
