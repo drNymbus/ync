@@ -27,6 +27,7 @@ export const ShopAPIProvider = ({ children }) => {
 
     const fetchItem = async (item) => { // Récupérer les données de l'article en fonction de id_article
         try {
+            await axios.get(`${api_address}/store/connect`, config);
             const res = await axios.get(`${api_address}/store/item?id=${item}`, config);
             return res.data[0];
         } catch (e) { console.error('[fetchItem]', e); }

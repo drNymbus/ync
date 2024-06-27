@@ -20,3 +20,7 @@ ync-app/ync-shop-app/build/*
 
 deployment/k8s/secrets.yaml
 deployment/k8s/ync-database/credentials.yaml
+
+cert-delivery/.dockerignore
+cert-delivery/package-lock.json
+cert-delivery/node_modules/*

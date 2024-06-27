@@ -1,7 +1,6 @@
-// const http = require('http');
-const https = require('https');
 const express = require('express');
-const fs = require('fs');
+// const http = require('http');
+// const https = require('https');
 
 // Request parsers
 const { queryParser } = require('express-query-parser');
@@ -37,15 +36,15 @@ app.use(
     })
 );
 
-app.use(cors({origin:true, credentials:true}));
+app.use(cors({origin: true, credentials: true}));
 
 // Loading secrets for signature's cookies
-const cookie_secret = process.env.COOKIE_SECRET;
+const cookie_secret = process.env.COOKIE_SECRET || 'little-secret';
 app.use(cookieParser(cookie_secret));
 
 // Connect to CassandraDB
 const client = new cassandra.Client({
-    contactPoints: [process.env.CASSANDRA_CONTACT_POINTS],
+    contactPoints: [process.env.CASSANDRA_CONTACT_POINTS || '127.0.0.1'],
     localDataCenter: 'datacenter1',
     keyspace: 'store',
     credentials: { username: 'shop_api', password: 'shopapi' }
@@ -60,6 +59,8 @@ app.route('/store/connect').get((req, res) => {
         session.retrieveSession(req, res, client, cookie);
     }
 });
+
+app.route('/').get((req, res) => { res.send("HELLO WORLD WIDE WEB!") });
 
 app.route('/store/basket')
     .get((req, res) => basket.get(req, res, client))
@@ -85,9 +86,14 @@ app.route('/store/capture')
 //     cert : fs.readFileSync('sslcert/cert.pem', 'utf8')
 // };
 
-// https.createServer(credentials, app).listen(port, () => {
+// https.createServer(credentials, app).listen(https_port, () => {
 //     console.log(`Server is running on port ${port}`);
 // });
+
+// http.createServer(app).listen(http_port, () => {
+//     console.log(`Server is running on port ${port}`);
+// });
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
