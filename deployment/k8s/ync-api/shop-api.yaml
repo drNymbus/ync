@@ -19,12 +19,17 @@ spec:
         image: ync-shop-api:latest
         imagePullPolicy: Never
         ports:
-        - containerPort: 3001
+        - containerPort: 80
+          name: http_port
+        - containerPort: 443
+          name: https_port
         env:
         - name: CASSANDRA_CONTACT_POINTS
           value: "10.43.6.0"
-        - name: PORT
-          value: "3001"
+        - name: HTTP_PORT
+          value: "80"
+        - name: HTTPS_PORT
+          value: "443"
         - name: COOKIE_SECRET
           valueFrom:
             secretKeyRef:
@@ -57,19 +62,33 @@ spec:
               name: all-secrets
               key: SHOP_API_ZOHO_PASSWORD
           # value: "?*"
-
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
-  name: shop-api
+  name: shop-api-http
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
     - protocol: TCP
-      port: 3001
-      targetPort: 3001
+      port: 80
+      targetPort: 80
+      nodePort: 31000
+  clusterIP: 10.43.6.1
+  selector:
+    app: shop-api
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shop-api-https
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 443
+      nodePort: 31001
   clusterIP: 10.43.6.1
   selector:
     app: shop-api

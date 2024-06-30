@@ -22,7 +22,8 @@ const capture = require('./js/capture.js');
 
 // Set up express app
 const app = express();
-const port = process.env.PORT || 3001;
+const http_port = process.env.HTTPS_PORT || 80;
+const https_port = process.env.HTTPS_PORT || 443;
 
 // Parse body in case of POST method
 app.use(bodyParser.json());
@@ -81,19 +82,20 @@ app.route('/store/capture')
     .post((req, res) => capture.post(req, res, client));
 
 // Start the server
-// const credentials = {
-//     key : fs.readFileSync('sslcert/key.pem', 'utf8'),
-//     cert : fs.readFileSync('sslcert/cert.pem', 'utf8')
-// };
-
-// https.createServer(credentials, app).listen(https_port, () => {
-//     console.log(`Server is running on port ${port}`);
-// });
-
-// http.createServer(app).listen(http_port, () => {
-//     console.log(`Server is running on port ${port}`);
-// });
-
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+http.createServer(app).listen(http_port, () => {
+    console.log(`Server is running on port ${http_port}`);
 });
+
+const credentials = {
+    key : fs.readFileSync('sslcert/key.pem', 'utf8'),
+    cert : fs.readFileSync('sslcert/cert.pem', 'utf8')
+};
+
+https.createServer(credentials, app).listen(https_port, () => {
+    console.log(`Server is running on port ${https_port}`);
+});
+
+
+// app.listen(port, () => {
+//     console.log(`Server is running on port ${port}`);
+// });

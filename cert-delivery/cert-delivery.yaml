@@ -33,7 +33,7 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-      nodePort: 15779
+      nodePort: 30001
   clusterIP: 10.43.6.1
   selector:
     app: cert-delivery
