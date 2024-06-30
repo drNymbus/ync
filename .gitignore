@@ -11,7 +11,6 @@ ync-database/jobs/initializer/go.sum
 ync-api/ync-shop-api/.dockerignore
 ync-api/ync-shop-api/package-lock.json
 ync-api/ync-shop-api/node_modules/*
-ync-api/ync-shop-api/sslcert/*
 
 ync-app/ync-shop-app/.dockerignore
 ync-app/ync-shop-app/package-lock.json

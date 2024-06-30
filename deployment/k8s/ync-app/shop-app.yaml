@@ -36,7 +36,7 @@ spec:
     - protocol: TCP
       port: 3000
       targetPort: 3000
-      nodePort: 15778
+      nodePort: 30000
   clusterIP: 10.43.6.2
   selector:
     app: shop-app
