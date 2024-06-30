@@ -1,0 +1,5 @@
+configMapGenerator:
+- name: ssl
+  files:
+  - /etc/letsencrypt/live/yn-corp.xyz/privkey.pem
+  - /etc/letsencrypt/live/yn-corp.xyz/fullchain.pem
