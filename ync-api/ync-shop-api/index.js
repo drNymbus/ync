@@ -1,6 +1,6 @@
 const express = require('express');
-// const http = require('http');
-// const https = require('https');
+const https = require('https');
+const fs = require('fs');
 
 // Request parsers
 const { queryParser } = require('express-query-parser');
@@ -22,7 +22,6 @@ const capture = require('./js/capture.js');
 
 // Set up express app
 const app = express();
-const http_port = process.env.HTTPS_PORT || 80;
 const https_port = process.env.HTTPS_PORT || 443;
 
 // Parse body in case of POST method
@@ -82,20 +81,11 @@ app.route('/store/capture')
     .post((req, res) => capture.post(req, res, client));
 
 // Start the server
-http.createServer(app).listen(http_port, () => {
-    console.log(`Server is running on port ${http_port}`);
-});
-
 const credentials = {
-    key : fs.readFileSync('sslcert/key.pem', 'utf8'),
-    cert : fs.readFileSync('sslcert/cert.pem', 'utf8')
+    key : fs.readFileSync('sslcert/live/yn-corp.xyz/privkey.pem', 'utf8'),
+    cert : fs.readFileSync('sslcert/live/yn-corp.xyz/fullchain.pem', 'utf8')
 };
 
 https.createServer(credentials, app).listen(https_port, () => {
     console.log(`Server is running on port ${https_port}`);
 });
-
-
-// app.listen(port, () => {
-//     console.log(`Server is running on port ${port}`);
-// });
