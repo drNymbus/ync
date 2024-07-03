@@ -20,9 +20,9 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 80
-          name: http_port
+          name: http-port
         - containerPort: 443
-          name: https_port
+          name: https-port
         env:
         - name: CASSANDRA_CONTACT_POINTS
           value: "10.43.6.0"
@@ -66,21 +66,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: shop-api-http
-spec:
-  type: NodePort
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-      nodePort: 31000
-  clusterIP: 10.43.6.1
-  selector:
-    app: shop-api
----
-apiVersion: v1
-kind: Service
-metadata:
   name: shop-api-https
 spec:
   type: NodePort
@@ -89,6 +74,6 @@ spec:
       port: 443
       targetPort: 443
       nodePort: 31001
-  clusterIP: 10.43.6.1
+  clusterIP: 10.43.6.2
   selector:
     app: shop-api
