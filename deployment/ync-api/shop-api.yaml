@@ -74,6 +74,6 @@ spec:
       port: 443
       targetPort: 443
       nodePort: 31001
-  clusterIP: 10.43.6.2
+  clusterIP: 10.43.6.1
   selector:
     app: shop-api
