@@ -18,7 +18,9 @@ ync-app/ync-shop-app/node_modules/*
 ync-app/ync-shop-app/build/*
 
 deployment/secrets.yaml
+deployment/cluster-permissions.sh
 deployment/ync-database/credentials.yaml
+deployment/ssl.yaml
 
 cert-delivery/.dockerignore
 cert-delivery/package-lock.json
