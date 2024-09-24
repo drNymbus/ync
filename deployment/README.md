@@ -1,27 +1,42 @@
-# Deployment
+# YNS Deployment
 
-The ync projects thought as three services (ync-database, ync-api & ync-app) will ease us the way we can plan to deploy either a limited number of components. Deploying the ync project is pretty straightforward and will consists of two moving blocks: storage (ync-database) and programs (ync-api, ync-app). We've automated a Docker compose and a Kubernetes (k8s) deployment. From any setting perspective, production or development, Docker and k8s are entirely reliable. The Docker approach is thought out to ease the deployment on lighter installations.
+All yaml files to start and shutdown the Young New Service.
 
-To deploy the full chain of services (ync-database, ync-api & ync-app),  two options are entirely built out for you:
+To set the default namespace: `kubectl config set-context --current --namespace=<my-namespace || default>`
 
-- Docker Compose: this option is best suited for local development as you'll be able to run the different components of the service independently.
-- Kubernetes: this allows for an easier maintenance when running all services. this egally make things easier to support future APIs and applications development. 
+## ync-database
 
-In other cases, you would deploy only the needed components. To run this locally, you'll first need to have a minikube working (some help can be found in the 'deployment' folder of this repository). You can deploy all components thanks to the 'deployment/start.sh' bash file in a single command line ! If you wish to get deeper explanations on how each component is deployed, go to the 'deployment' folder of this repository.
+- `database.yaml`: Describes the StatefulSet and Service for the Cassandra node.
+- `storage.yaml`: Describe the Persistent Volume to set and the Persistent Volume Claim to be used by the StatefulSet.
+- `inspector.yaml`: The only purpose of the resource is to monitor the Persistent Volume directly; this also is used to entirely delete the Persistent Volume if needed (see the "delete" section in the "service.sh" bash script).
 
-## Docker
+The job folder contains every different jobs ran against the StatefulSet, those scripts are able to run only if the Cassandra node is fully initialized.
 
-### Install
+## ync-api & ync-app
 
-### Docker Compose
+Each yaml file should contain a Deployment resource to run the API/App with the service associated so that other resources can reach the API/App. sTo deploy an internal service use ClusterIP.
 
-### Uninstall
+Weird thing about ync-app/shop-app the service needs to be aware of the external router IP to run properly; is there a better way of doing this env var stuff ? Is it possible to automatize ? It also seems the only way to properly serve the client side with the correct address.
 
-## Kubernetes (k8s)
+# Credentials
+
+For the APIs and Applications to be able to connect to the Cassandra cluster we use a Username-Password authentication. Those credentials are stored thanks to kubernetes Secrets resources, then fetched from environment variables in APIs and Applications.
+
+# Bash scripting
+
+- `service.sh`: Every comand needed to start, stop, update, scale and delete the entire service.
+
+- `build.sh`: Creates all docker images needed to run the entire service. (An option can be given to register images in a k3s cluster)
+
+We will switch to [Dagger](https://dagger.io/) and [Apache airflow](https://github.com/apache/airflow-client-go) in Go to handle the CI/CD loop and kubernetes resources
+
+----
+
+# Kubernetes (k8s)
 
 Many installation tools can be used. In first place, Minikube was chosen for a minimal installation for development purposes, where a lot of network functionality aren’t built the same as in a full scale model. We are currently running on a i5, 7Go RAM, 2To PC. A limited ram setup and also a single unite made us look directly to k3s
 
-### Install
+## Install
 
 Before installing anything you will need a Daemon running, if you are running something else than Docker, you may need to specify it during some commands throughout this guide.
 
@@ -46,7 +61,7 @@ curl -sfL [https://get.k3s.io](https://get.k3s.io/) | sh -
 
 Check for Ready node, takes ~30 seconds:`sudo k3s kubectl get node`  
 
-### Minikube
+## Minikube
 
 To run this locally, you'll first need to have a minikube working (some help can be found in the 'deployment' folder of this repository). You can deploy all components thanks to the 'deployment/start.sh' bash file in a single command line! If you wish to get deeper explanations of each component deployment, go to the 'deployment' folder of this repository.
 
@@ -79,7 +94,7 @@ minikube tunnel
 
 Once your minikube is set up, you'll be able to run the bash file 'start.sh'. To delete all ync-app resources without effort, execute 'shutdown.sh' file.
 
-### k3s
+## k3s
 
 If you wish to go deeper: https://docs.k3s.io/
 
@@ -87,22 +102,22 @@ If you wish to go deeper: https://docs.k3s.io/
 - **STOP**:  `sudo systemctl stop k3s`
 - **RESET ENV**:  `sudo /usr/local/bin/k3s-killall.sh`
 
-### Service
+## Service
 
 Dechaine tes morts sur comment on fait les yamls tout ca tout ca
 
-### Start & Stop
+## Start & Stop
 
-### Scaling
+## Scaling
 
 (What’s next also applies to Deployments, to a certain extent)
 
-### Use kubectl to scale StatefulSets
+## Use kubectl to scale StatefulSets
 
 1. First, find the StatefulSet you want to scale: `kubectl get statefulsets <stateful-set-name>`
 2. Change the number of replicas of your StatefulSet: `kubectl scale statefulsets <stateful-set-name> --replicas=<new-replicas>`
 
-### Make in-place updates on your StatefulSets
+## Make in-place updates on your StatefulSets
 
 Alternatively, you can do [in-place updates](https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/#in-place-updates-of-resources) on your StatefulSets.
 

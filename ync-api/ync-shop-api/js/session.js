@@ -7,15 +7,8 @@ const createSession = async (req, res, client) => {
     let cookie = uuid.random();
 
     await client.execute(utils.session.insert, [cookie, Date.now()]);
-    client.execute(utils.basket.select, [cookie])
-        .then((result) => {
-            res.cookie('ync_shop', cookie, {signed:true});
-            res.status(200).json(result.rows[0]);
-        })
-        .catch((error) => {
-            console.error('session.createSession', error);
-            res.status(500).json({'error': 'Internal server error'});
-        });
+    res.cookie('ync_shop', cookie, {signed: true, sameSite: 'None', secure: true});
+    res.status(200).json({});
 }; exports.createSession = createSession;
 
 const retrieveSession = async (req, res, client) => {

@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shop-api
+  labels:
+    app: shop-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shop-api
+  template:
+    metadata:
+      labels:
+        app: shop-api
+    spec:
+      containers:
+      - name: shop-api
+        image: ync-shop-api:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+          name: http-port
+        - containerPort: 443
+          name: https-port
+        env:
+        - name: CASSANDRA_CONTACT_POINTS
+          value: "10.43.6.0"
+        - name: HTTPS_PORT
+          value: "443"
+        - name: COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: all-secrets
+              key: SHOP_API_COOKIE_SECRET
+          # value: "some-string-will-do-the-trick"
+        - name: PAYPAL_ENDPOINT
+          value: "https://api-m.paypal.com"
+        - name: PAYPAL_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: all-secrets
+              key: SHOP_API_PAYPAL_CLIENT_ID
+        # value: "?sandbox credentials"
+        - name: PAYPAL_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: all-secrets
+              key: SHOP_API_PAYPAL_CLIENT_SECRET
+          # value: "?sandbox credentials"
+        - name: ZOHO_MAIL
+          valueFrom:
+            secretKeyRef:
+              name: all-secrets
+              key: SHOP_API_ZOHO_MAIL
+          # value: "yng.corporation@gmail.com"
+        - name: ZOHO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: all-secrets
+              key: SHOP_API_ZOHO_PASSWORD
+          # value: "?*"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shop-api
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 443
+      nodePort: 31001
+  clusterIP: 10.43.6.1
+  selector:
+    app: shop-api
