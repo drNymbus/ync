@@ -96,6 +96,13 @@ Once your minikube is set up, you'll be able to run the bash file 'start.sh'. To
 
 ## k3s
 
+To install follow those links:
+
+1. https://docs.k3s.io/quick-start
+2. https://docs.k3s.io/cluster-access
+
+----
+
 If you wish to go deeper: https://docs.k3s.io/
 
 - **START**: `sudo systemctl start k3s`
