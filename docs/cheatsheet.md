@@ -7,9 +7,9 @@ see also some kubernetes / k8s stuff:
 
 # chmod
 
-1 = execution
-2 = writing
-4 = reading
+- 1 = execution
+- 2 = writing
+- 4 = reading
 
 -R : recusive
 
@@ -19,7 +19,7 @@ see also some kubernetes / k8s stuff:
 
 ```
 kubectl config get-contexts
-kubectl config set-context --current --namespace=kube-system
+    kubectl config set-context --current --namespace=kube-system
 ```
 
 # k3s
