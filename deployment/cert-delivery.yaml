@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cert-delivery
+  namespace: ync
   labels:
     app: cert-delivery
 spec:

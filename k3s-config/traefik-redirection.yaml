@@ -4,7 +4,7 @@ metadata:
   name: traefik
   namespace: kube-system
 spec:
-  valuesContent:
+  valuesContent: |-
     image:
       name: traefik
       tag: 2.9.10
@@ -16,7 +16,7 @@ spec:
     ingressRoute:
       - kind: IngressRoute
         name: redirect-root
-        namespace: kube-system
+        namespace: ync
         spec:
           entryPoints:
             - web
@@ -29,7 +29,7 @@ spec:
 
       - kind: IngressRoute
         name: redirect-api
-        namespace: kube-system
+        namespace: ync
         spec:
           entryPoints:
             - web
@@ -42,7 +42,7 @@ spec:
 
       - kind: IngressRoute
         name: redirect-root
-        namespace: kube-system
+        namespace: ync
         spec:
           entryPoints:
             - web
