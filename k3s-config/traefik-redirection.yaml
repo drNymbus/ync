@@ -4,7 +4,7 @@ metadata:
   name: traefik
   namespace: kube-system
 spec:
-  valuesContent: |-
+  valuesContent:
     image:
       name: traefik
       tag: 2.9.10
@@ -24,8 +24,8 @@ spec:
             - match: PathPrefix(`/`)
               kind: Rule
               services:
-                - name: service-root
-                  port: 31002
+                - name: cert-delivery
+                  port: 30000
 
       - kind: IngressRoute
         name: redirect-api
@@ -34,10 +34,10 @@ spec:
           entryPoints:
             - web
           routes:
-            - match: PathPrefix(`/api`)
+            - match: PathPrefix(`/shop-api`)
               kind: Rule
               services:
-                - name: service-api
+                - name: shop-api
                   port: 31001
 
       - kind: IngressRoute
@@ -50,5 +50,5 @@ spec:
             - match: PathPrefix(`/shop`)
               kind: Rule
               services:
-                - name: service-shop
-                  port: 31002
+                - name: shop-app
+                  port: 30001
