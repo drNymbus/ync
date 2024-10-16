@@ -81,9 +81,19 @@ rm -rf /var/lib/rancher /etc/rancher/ /var/lib/longhorn/;
 
 - Try removing `/var/lib/docker/network`: `rm -rf /var/lib/docker/network`
 
-## No K3s permissions
+## K3s
 
-- Try restart `cluster-permissions` service: `sudo systemctl start cluster-permissions`
+- K3s commands stuck because of permissions: try to restart `cluster-permissions` service (`sudo systemctl start cluster-permissions`)
+
+## K8s
+
+- Namespace stuck in terminating state:
+
+    ```
+    kubectl get namespace <YOUR_NAMESPACE> -o json > <YOUR_NAMESPACE>.json
+    # remove kubernetes from finalizers array which is under spec
+    kubectl replace --raw "/api/v1/namespaces/<YOUR_NAMESPACE>/finalize" -f ./<YOUR_NAMESPACE>.json
+    ```
 
 ## Github (fetch/pull) permission denied
 
