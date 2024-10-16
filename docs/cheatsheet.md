@@ -19,8 +19,10 @@ see also some kubernetes / k8s stuff:
 
 ```
 kubectl config get-contexts
-    kubectl config set-context --current --namespace=kube-system
+kubectl config set-context --current --namespace=kube-system
 ```
+
+To view current context, run `kubectl config 
 
 # k3s
 
@@ -72,3 +74,25 @@ k3s-killall.sh
 k3s-uninstall.sh
 rm -rf /var/lib/rancher /etc/rancher/ /var/lib/longhorn/;
 ```
+
+# Useful troubleshooting
+
+## Docker service won't start
+
+- Try removing `/var/lib/docker/network`: `rm -rf /var/lib/docker/network`
+
+## No K3s permissions
+
+- Try restart `cluster-permissions` service: `sudo systemctl start cluster-permissions`
+
+## Github (fetch/pull) permission denied
+
+Make sure your pub key has been added to github (settings/ssh & gpg keys). In case your key has been correctly set up and it's still not working try adding the key to your agent:
+
+    eval $(ssh-agent -s)
+    ssh-add ~/.ssh/your_key
+
+## Traefik logs
+
+- "Skipping service: no endpoints found": Pod is not running properly
+- "Cannot create service: service port not found": Service might not be suitable for an ingress controller

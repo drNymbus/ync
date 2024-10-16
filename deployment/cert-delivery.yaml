@@ -27,17 +27,18 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name:  cert-delivery
+  name: cert-delivery
   namespace: ync
 spec:
-  selector:
-    app:  cert-delivery
-  type:  ClusterIP
+  type: NodePort
   ports:
-  - name:  http
-    port:  8080
-    targetPort: 80
-    protocol: TCP  # optional protocol
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30000
+  clusterIP: 10.43.6.2
+  selector:
+    app: cert-delivery
 
 ---
 
@@ -48,8 +49,7 @@ metadata:
   namespace: ync
 spec:
   rules:
-  - host: "yn-corp.xyz"
-    http:
+  - http:
       paths:
       - path: /
         pathType: Prefix
@@ -57,4 +57,4 @@ spec:
           service:
             name: cert-delivery
             port:
-              number: 80
+              number: 8080
