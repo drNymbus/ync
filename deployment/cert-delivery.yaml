@@ -30,15 +30,11 @@ metadata:
   name: cert-delivery
   namespace: ync
 spec:
-  type: NodePort
+  selector:
+    app: cert-delivery
   ports:
     - protocol: TCP
       port: 8080
-      targetPort: 8080
-      nodePort: 30000
-  clusterIP: 10.43.6.2
-  selector:
-    app: cert-delivery
 
 ---
 
@@ -49,12 +45,13 @@ metadata:
   namespace: ync
 spec:
   rules:
-  - http:
+  - host: yn-corp.xyz
+    http:
       paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: cert-delivery
-            port:
-              number: 8080
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: cert-delivery
+              port:
+                number: 8080
