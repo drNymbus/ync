@@ -102,7 +102,8 @@ Make sure your pub key has been added to github (settings/ssh & gpg keys). In ca
     eval $(ssh-agent -s)
     ssh-add ~/.ssh/your_key
 
-## Traefik logs
+## Traefik
 
 - "Skipping service: no endpoints found": Pod is not running properly
 - "Cannot create service: service port not found": Service might not be suitable for an ingress controller
+- Ingress resource returns "502: Bad Gateway": Make sure your firewall is disabled

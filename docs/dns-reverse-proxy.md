@@ -20,10 +20,6 @@ In k3s configuration we can find an already configured traefik. We can find this
 
 So K3s pre-installed and configured traefik for us ! This is great news ! We now only need to add/configure [ingress routes](https://kubernetes.io/docs/concepts/services-networking/ingress/) for each service that we wish to make available.
 
-## ClusterIP or NodePort ?
-
-Some questions arise when creating an Ingress component ... Does it work the same for a ClusterIP service and a NodePort service ? If not, why and can we make it work ?
-
 ----
 
 Additional resources:
@@ -32,5 +28,25 @@ Additional resources:
 - [traefik docs](https://doc.traefik.io/traefik/routing/routers/#path-pathprefix-and-pathregexp)
 
 - [Great tutorial](https://www.youtube.com/watch?v=n5dpQLqOfqM), explaining everything from traefik config to ingress routes
+
+Ingress route example:
+
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+    name: cert-delivery
+    annotations:
+        ingressClassName: traefik
+    spec:
+    rules:
+    - http:
+        paths:
+        - path: /
+            pathType: Prefix
+            backend:
+            service:
+                name: cert-delivery
+                port:
+                number: 80
 
 <!-- __Warning__: While modifying the default configuration of the k3s service, you might end up with a k3s service that won't restart. In case the error is due to missing files (such as "k3s-server" or "k3s-agent"), you can fix this by re-"installing" or downloading the k3s with the command: `curl -sfL https://get.k3s.io | sh -`; if you're looking for a specific version run this command instead: `curl -sfL https://get.k3s.io 23 | INSTALL_K3S_VERSION=<k3s-version> sh -s - server` -->
