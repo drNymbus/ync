@@ -68,12 +68,30 @@ metadata:
   name: shop-api
   namespace: ync
 spec:
-  type: NodePort
-  ports:
-    - protocol: TCP
-      port: 443
-      targetPort: 443
-      nodePort: 31001
+  type: ClusterIP
   clusterIP: 10.43.6.1
   selector:
     app: shop-api
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 31001
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: shop-api
+  namespace: ync
+  annotations:
+    ingressClassName: traefik
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /api/shop
+        pathType: Prefix
+        backend:
+          service:
+            name: shop-api
+            port:
+              number: 80
