@@ -13,43 +13,36 @@ see also some kubernetes / k8s stuff:
 
 -R : recusive
 
+# Docker
+- Docker service won't start: Try removing `/var/lib/docker/network`: `rm -rf /var/lib/docker/network`
+
 # k8s
 
-## set default namespace
+- set default namespace:
+    ```
+    kubectl config get-contexts
+    kubectl config set-context --current --namespace=kube-system
+    ```
 
-```
-kubectl config get-contexts
-kubectl config set-context --current --namespace=kube-system
-```
-
-To view current context, run `kubectl config 
+- To view current context, run `kubectl config get-contexts`
+- Delete a namespace and all resources associated: `kubectl delete all --all -n <namespace>`
+- Namespace stuck in terminating state:
+    ```
+    kubectl get namespace <YOUR_NAMESPACE> -o json > <YOUR_NAMESPACE>.json
+    # remove kubernetes from finalizers array which is under spec
+    kubectl replace --raw "/api/v1/namespaces/<YOUR_NAMESPACE>/finalize" -f ./<YOUR_NAMESPACE>.json
+    ```
 
 # k3s
 
-## cleanup unused images
-
-that's how things start. cleanup unused images, sometimes I need to do that and besides what kubernetes things since other stuff is also running on the same system (I know).
-
-**list images:**
-
-```
-sudo k3s crictl images
-```
-
-**delete images not currently in use:**
-
-```
-sudo k3s crictl rmi --prune
-```
-
-[source](https://github.com/k3s-io/k3s/issues/1900#issuecomment-644453072)
-
-## delete individual image
-
-```
-sudo k3s crictl rmi docker.io/rancher/image:tag
-sudo k3s crictl rmi docker.io/library/image:tag
-```
+- K3s commands stuck because of permissions: try to restart `cluster-permissions` service (`sudo systemctl start cluster-permissions`)
+- list images: `sudo k3s crictl images`
+- delete images not currently in use: `sudo k3s crictl rmi --prune` (k8s got a [garbage collector](https://github.com/k3s-io/k3s/issues/1900#issuecomment-644453072)).
+- delete individual image:
+    ```
+    sudo k3s crictl rmi docker.io/rancher/image:tag
+    sudo k3s crictl rmi docker.io/library/image:tag
+    ```
 
 ## import docker / container image
 
@@ -76,24 +69,6 @@ rm -rf /var/lib/rancher /etc/rancher/ /var/lib/longhorn/;
 ```
 
 # Useful troubleshooting
-
-## Docker service won't start
-
-- Try removing `/var/lib/docker/network`: `rm -rf /var/lib/docker/network`
-
-## K3s
-
-- K3s commands stuck because of permissions: try to restart `cluster-permissions` service (`sudo systemctl start cluster-permissions`)
-
-## K8s
-
-- Namespace stuck in terminating state:
-
-    ```
-    kubectl get namespace <YOUR_NAMESPACE> -o json > <YOUR_NAMESPACE>.json
-    # remove kubernetes from finalizers array which is under spec
-    kubectl replace --raw "/api/v1/namespaces/<YOUR_NAMESPACE>/finalize" -f ./<YOUR_NAMESPACE>.json
-    ```
 
 ## Github (fetch/pull) permission denied
 
