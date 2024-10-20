@@ -20,10 +20,8 @@ Docker permet de télécharger et de lancer facilement MongoDB avec une simple c
         ```bash
         docker run -d --name mongodb -p 27017:27017 -v ~/mongo-data:/data/db mongo
         ```
-        
-    
+            
     Explication des options :
-    
     - `d` : Exécute le conteneur en mode détaché (en arrière-plan).
     - `-name mongodb` : Nomme le conteneur `mongodb`.
     - `p 27017:27017` : Mappe le port **27017** du conteneur MongoDB au port **27017** de l'hôte. Cela te permet d'accéder à MongoDB depuis ton serveur CentOS ou d'autres machines.

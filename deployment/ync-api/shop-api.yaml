@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: shop-api
+  namespace: ync
   labels:
     app: shop-api
 spec:
@@ -33,7 +34,6 @@ spec:
             secretKeyRef:
               name: all-secrets
               key: SHOP_API_COOKIE_SECRET
-          # value: "some-string-will-do-the-trick"
         - name: PAYPAL_ENDPOINT
           value: "https://api-m.paypal.com"
         - name: PAYPAL_CLIENT_ID
@@ -41,37 +41,52 @@ spec:
             secretKeyRef:
               name: all-secrets
               key: SHOP_API_PAYPAL_CLIENT_ID
-        # value: "?sandbox credentials"
         - name: PAYPAL_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
               name: all-secrets
               key: SHOP_API_PAYPAL_CLIENT_SECRET
-          # value: "?sandbox credentials"
         - name: ZOHO_MAIL
           valueFrom:
             secretKeyRef:
               name: all-secrets
               key: SHOP_API_ZOHO_MAIL
-          # value: "yng.corporation@gmail.com"
         - name: ZOHO_PASSWORD
           valueFrom:
             secretKeyRef:
               name: all-secrets
               key: SHOP_API_ZOHO_PASSWORD
-          # value: "?*"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: shop-api
+  namespace: ync
 spec:
-  type: NodePort
-  ports:
-    - protocol: TCP
-      port: 443
-      targetPort: 443
-      nodePort: 31001
+  type: ClusterIP
   clusterIP: 10.43.6.1
   selector:
     app: shop-api
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 31001
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: shop-api
+  namespace: ync
+  annotations:
+    ingressClassName: traefik
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /api/shop
+        pathType: Prefix
+        backend:
+          service:
+            name: shop-api
+            port:
+              number: 80
