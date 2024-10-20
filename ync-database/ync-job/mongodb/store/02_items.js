@@ -1,3 +1,5 @@
+use store
+
 db.item.insert({
     id: "dummy",  // MongoDB doesn't need an explicit ID, but here it mirrors the CQL primary key
     category: "None",
